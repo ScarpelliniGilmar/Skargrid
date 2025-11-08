@@ -177,7 +177,7 @@ const FilterFeature = {
   clearAllFilters(grid) {
     // Limpa busca global
     grid.searchText = '';
-    const searchInput = grid.container.querySelector('.tablejs-search-input');
+    const searchInput = grid.container.querySelector('.scargrid-search-input');
     if (searchInput) {
       searchInput.value = '';
     }

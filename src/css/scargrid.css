@@ -1,8 +1,8 @@
 /**
- * TableJS - Estilos básicos
+ * scargrid - Estilos básicos
  */
 
-.tablejs {
+.scargrid {
   width: 100%;
   min-width: max-content; /* Garante que a tabela não encolha */
   border-collapse: collapse;
@@ -12,12 +12,12 @@
   font-size: 14px;
 }
 
-.tablejs thead {
+.scargrid thead {
   background-color: #f8f9fa;
   border-bottom: 2px solid #dee2e6;
 }
 
-.tablejs thead th {
+.scargrid thead th {
   padding: 12px 16px;
   text-align: left;
   font-weight: 600;
@@ -30,22 +30,22 @@
 }
 
 /* Colunas ordenáveis */
-.tablejs thead th.sortable {
+.scargrid thead th.sortable {
   cursor: pointer;
   transition: background-color 0.2s ease;
 }
 
-.tablejs thead th.sortable:hover {
+.scargrid thead th.sortable:hover {
   background-color: #e9ecef;
 }
 
-.tablejs thead th.sortable.sorted {
+.scargrid thead th.sortable.sorted {
   background-color: #e7f1ff;
   color: #007bff;
 }
 
 /* Container do conteúdo do cabeçalho */
-.tablejs thead th .th-content {
+.scargrid thead th .th-content {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -53,7 +53,7 @@
   width: 100%;
 }
 
-.tablejs thead th .th-text-sort {
+.scargrid thead th .th-text-sort {
   display: flex;
   align-items: center;
   gap: 6px;
@@ -61,13 +61,13 @@
   min-width: 0;
 }
 
-.tablejs thead th .th-text {
+.scargrid thead th .th-text {
   flex: 1;
   min-width: 0;
 }
 
 /* Ícone de ordenação */
-.tablejs thead th .sort-icon {
+.scargrid thead th .sort-icon {
   font-size: 10px;
   color: #adb5bd;
   transition: color 0.2s ease;
@@ -75,12 +75,12 @@
   opacity: 0.6;
 }
 
-.tablejs thead th.sortable:hover .sort-icon {
+.scargrid thead th.sortable:hover .sort-icon {
   opacity: 1;
   color: #6c757d;
 }
 
-.tablejs thead th.sortable.sorted .sort-icon {
+.scargrid thead th.sortable.sorted .sort-icon {
   opacity: 1;
   color: #007bff;
   font-size: 11px;
@@ -134,7 +134,7 @@
 }
 
 /* === Dropdown de Filtro === */
-.tablejs-filter-dropdown {
+.scargrid-filter-dropdown {
   position: fixed;
   background: white;
   border: 1px solid #dee2e6;
@@ -350,63 +350,63 @@
 }
 
 /* Coluna de seleção */
-.tablejs thead th.tablejs-select-header,
-.tablejs tbody td.tablejs-select-cell {
+.scargrid thead th.scargrid-select-header,
+.scargrid tbody td.scargrid-select-cell {
   width: 40px;
   text-align: center;
   padding: 12px 8px;
 }
 
 /* Checkbox customizado */
-.tablejs-checkbox {
+.scargrid-checkbox {
   width: 18px;
   height: 18px;
   cursor: pointer;
   accent-color: #007bff;
 }
 
-.tablejs tbody tr {
+.scargrid tbody tr {
   border-bottom: 1px solid #dee2e6;
   transition: background-color 0.2s ease, box-shadow 0.2s ease;
 }
 
-.tablejs tbody tr:hover {
+.scargrid tbody tr:hover {
   background-color: #f8f9fa;
 }
 
-.tablejs tbody tr.selected {
+.scargrid tbody tr.selected {
   background-color: #e7f1ff;
   box-shadow: inset 3px 0 0 #007bff;
 }
 
-.tablejs tbody tr.selected:hover {
+.scargrid tbody tr.selected:hover {
   background-color: #d0e7ff;
 }
 
-.tablejs tbody tr:last-child {
+.scargrid tbody tr:last-child {
   border-bottom: none;
 }
 
-.tablejs tbody td {
+.scargrid tbody td {
   padding: 12px 16px;
   color: #212529;
 }
 
 /* Container da tabela */
-.tablejs-container {
+.scargrid-container {
   overflow-x: auto;
   margin: 20px 0;
 }
 
 /* Wrapper da tabela com paginação */
-.tablejs-wrapper {
+.scargrid-wrapper {
   background-color: #ffffff;
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 /* === Busca Global === */
-.tablejs-search-container {
+.scargrid-search-container {
   padding: 16px 20px;
   background-color: #f8f9fa;
   border-bottom: 1px solid #dee2e6;
@@ -417,14 +417,14 @@
   flex-wrap: wrap;
 }
 
-.tablejs-search-wrapper {
+.scargrid-search-wrapper {
   position: relative;
   flex: 1;
   min-width: 280px;
   max-width: 450px;
 }
 
-.tablejs-search-icon {
+.scargrid-search-icon {
   position: absolute;
   left: 12px;
   top: 50%;
@@ -436,11 +436,11 @@
   z-index: 1;
 }
 
-.tablejs-search-icon svg {
+.scargrid-search-icon svg {
   display: block;
 }
 
-.tablejs-search-input {
+.scargrid-search-input {
   width: 100%;
   padding: 10px 40px 10px 40px;
   border: 1px solid #dee2e6;
@@ -453,16 +453,16 @@
   font-family: inherit;
 }
 
-.tablejs-search-input:focus {
+.scargrid-search-input:focus {
   border-color: #007bff;
   box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
 }
 
-.tablejs-search-input::placeholder {
+.scargrid-search-input::placeholder {
   color: #adb5bd;
 }
 
-.tablejs-search-clear {
+.scargrid-search-clear {
   position: absolute;
   right: 10px;
   top: 50%;
@@ -480,13 +480,13 @@
   z-index: 1;
 }
 
-.tablejs-search-clear:hover {
+.scargrid-search-clear:hover {
   background-color: #e9ecef;
   color: #495057;
 }
 
 /* Botão Limpar Filtros */
-.tablejs-clear-filters-btn {
+.scargrid-clear-filters-btn {
   display: flex;
   align-items: center;
   gap: 8px;
@@ -505,29 +505,29 @@
   min-width: fit-content;
 }
 
-.tablejs-clear-filters-btn:hover {
+.scargrid-clear-filters-btn:hover {
   background-color: #f8f9fa;
   border-color: #adb5bd;
   color: #495057;
 }
 
-.tablejs-clear-filters-btn.has-filters {
+.scargrid-clear-filters-btn.has-filters {
   background-color: #007bff;
   border-color: #007bff;
   color: white;
 }
 
-.tablejs-clear-filters-btn.has-filters:hover {
+.scargrid-clear-filters-btn.has-filters:hover {
   background-color: #0069d9;
   border-color: #0069d9;
 }
 
-.tablejs-clear-filters-btn svg {
+.scargrid-clear-filters-btn svg {
   display: block;
   flex-shrink: 0;
 }
 
-.tablejs-clear-filters-btn .filter-count-badge {
+.scargrid-clear-filters-btn .filter-count-badge {
   background-color: white;
   color: #007bff;
   font-size: 11px;
@@ -541,13 +541,13 @@
   line-height: 1;
 }
 
-.tablejs-clear-filters-btn:not(.has-filters) .filter-count-badge {
+.scargrid-clear-filters-btn:not(.has-filters) .filter-count-badge {
   background-color: #007bff;
   color: white;
 }
 
 /* Paginação */
-.tablejs-pagination {
+.scargrid-pagination {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -557,19 +557,19 @@
   gap: 12px;
 }
 
-.tablejs-pagination-info {
+.scargrid-pagination-info {
   color: #6c757d;
   font-size: 14px;
   font-weight: 500;
 }
 
-.tablejs-pagination-controls {
+.scargrid-pagination-controls {
   display: flex;
   gap: 4px;
   align-items: center;
 }
 
-.tablejs-pagination-btn {
+.scargrid-pagination-btn {
   min-width: 36px;
   height: 36px;
   padding: 0 8px;
@@ -583,35 +583,35 @@
   transition: all 0.2s ease;
 }
 
-.tablejs-pagination-btn:hover:not(:disabled) {
+.scargrid-pagination-btn:hover:not(:disabled) {
   background-color: #e9ecef;
   border-color: #adb5bd;
 }
 
-.tablejs-pagination-btn:disabled {
+.scargrid-pagination-btn:disabled {
   cursor: not-allowed;
   opacity: 0.5;
   background-color: #f8f9fa;
 }
 
-.tablejs-pagination-btn.active {
+.scargrid-pagination-btn.active {
   background-color: #007bff;
   color: #ffffff;
   border-color: #007bff;
 }
 
-.tablejs-pagination-btn.active:hover {
+.scargrid-pagination-btn.active:hover {
   background-color: #0056b3;
   border-color: #0056b3;
 }
 
-.tablejs-pagination-ellipsis {
+.scargrid-pagination-ellipsis {
   padding: 0 8px;
   color: #6c757d;
   font-weight: 500;
 }
 
-.tablejs-page-size {
+.scargrid-page-size {
   display: flex;
   align-items: center;
   gap: 8px;
@@ -619,7 +619,7 @@
   font-size: 14px;
 }
 
-.tablejs-page-size-select {
+.scargrid-page-size-select {
   padding: 6px 12px;
   border: 1px solid #dee2e6;
   border-radius: 4px;
@@ -630,16 +630,16 @@
   transition: border-color 0.2s ease;
 }
 
-.tablejs-page-size-select:hover {
+.scargrid-page-size-select:hover {
   border-color: #adb5bd;
 }
-.tablejs-page-size-select:focus {
+.scargrid-page-size-select:focus {
   outline: none;
   border-color: #007bff;
   box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
 }
 /* === Loading Overlay === */
-.tablejs-table-container {
+.scargrid-table-container {
   position: relative;
   min-height: 200px;
   overflow-x: auto;
@@ -647,25 +647,25 @@
 }
 
 /* Estilização do scroll horizontal */
-.tablejs-table-container::-webkit-scrollbar {
+.scargrid-table-container::-webkit-scrollbar {
   height: 12px;
 }
 
-.tablejs-table-container::-webkit-scrollbar-track {
+.scargrid-table-container::-webkit-scrollbar-track {
   background: #f1f1f1;
   border-radius: 6px;
 }
 
-.tablejs-table-container::-webkit-scrollbar-thumb {
+.scargrid-table-container::-webkit-scrollbar-thumb {
   background: #888;
   border-radius: 6px;
 }
 
-.tablejs-table-container::-webkit-scrollbar-thumb:hover {
+.scargrid-table-container::-webkit-scrollbar-thumb:hover {
   background: #555;
 }
 
-.tablejs-loading-overlay {
+.scargrid-loading-overlay {
   position: absolute;
   top: 0;
   left: 0;
@@ -679,7 +679,7 @@
   backdrop-filter: blur(3px);
 }
 
-.tablejs-spinner {
+.scargrid-spinner {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -687,44 +687,44 @@
   color: #007bff;
 }
 
-.tablejs-spinner svg {
+.scargrid-spinner svg {
   color: #007bff;
 }
 
-.tablejs-spinner span {
+.scargrid-spinner span {
   font-size: 14px;
   font-weight: 500;
   color: #495057;
 }
 
-.tablejs-wrapper {
+.scargrid-wrapper {
   position: relative;
 }
 
 /* Responsividade */
 @media screen and (max-width: 768px) {
-  .tablejs {
+  .scargrid {
     font-size: 12px;
   }
 
-  .tablejs thead th,
-  .tablejs tbody td {
+  .scargrid thead th,
+  .scargrid tbody td {
     padding: 8px 12px;
   }
 
-  .tablejs-pagination {
+  .scargrid-pagination {
     flex-direction: column;
     align-items: stretch;
     gap: 12px;
   }
 
-  .tablejs-pagination-info,
-  .tablejs-pagination-controls,
-  .tablejs-page-size {
+  .scargrid-pagination-info,
+  .scargrid-pagination-controls,
+  .scargrid-page-size {
     justify-content: center;
   }
 
-  .tablejs-pagination-btn {
+  .scargrid-pagination-btn {
     min-width: 32px;
     height: 32px;
     font-size: 13px;

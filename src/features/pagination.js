@@ -9,7 +9,7 @@ const PaginationFeature = {
    */
   renderPagination(grid) {
     const paginationDiv = document.createElement('div');
-    paginationDiv.className = 'tablejs-pagination';
+    paginationDiv.className = 'scargrid-pagination';
 
     // Info de registros
     const info = this.renderPaginationInfo(grid);
@@ -31,7 +31,7 @@ const PaginationFeature = {
    */
   renderPaginationInfo(grid) {
     const info = document.createElement('div');
-    info.className = 'tablejs-pagination-info';
+    info.className = 'scargrid-pagination-info';
 
     const totalRecords = grid.filteredData.length;
     const totalOriginal = grid.options.data.length;
@@ -54,12 +54,12 @@ const PaginationFeature = {
    */
   renderPaginationControls(grid) {
     const controls = document.createElement('div');
-    controls.className = 'tablejs-pagination-controls';
+    controls.className = 'scargrid-pagination-controls';
 
     // Botão Primeira Página
     const firstBtn = document.createElement('button');
     firstBtn.textContent = '«';
-    firstBtn.className = 'tablejs-pagination-btn';
+    firstBtn.className = 'scargrid-pagination-btn';
     firstBtn.disabled = grid.currentPage === 1;
     firstBtn.onclick = () => this.goToPage(grid, 1);
     controls.appendChild(firstBtn);
@@ -67,7 +67,7 @@ const PaginationFeature = {
     // Botão Anterior
     const prevBtn = document.createElement('button');
     prevBtn.textContent = '‹';
-    prevBtn.className = 'tablejs-pagination-btn';
+    prevBtn.className = 'scargrid-pagination-btn';
     prevBtn.disabled = grid.currentPage === 1;
     prevBtn.onclick = () => this.goToPage(grid, grid.currentPage - 1);
     controls.appendChild(prevBtn);
@@ -78,12 +78,12 @@ const PaginationFeature = {
       if (pageNum === '...') {
         const ellipsis = document.createElement('span');
         ellipsis.textContent = '...';
-        ellipsis.className = 'tablejs-pagination-ellipsis';
+        ellipsis.className = 'scargrid-pagination-ellipsis';
         controls.appendChild(ellipsis);
       } else {
         const pageBtn = document.createElement('button');
         pageBtn.textContent = pageNum;
-        pageBtn.className = 'tablejs-pagination-btn';
+        pageBtn.className = 'scargrid-pagination-btn';
         if (pageNum === grid.currentPage) {
           pageBtn.classList.add('active');
         }
@@ -95,7 +95,7 @@ const PaginationFeature = {
     // Botão Próximo
     const nextBtn = document.createElement('button');
     nextBtn.textContent = '›';
-    nextBtn.className = 'tablejs-pagination-btn';
+    nextBtn.className = 'scargrid-pagination-btn';
     nextBtn.disabled = grid.currentPage === grid.totalPages;
     nextBtn.onclick = () => this.goToPage(grid, grid.currentPage + 1);
     controls.appendChild(nextBtn);
@@ -103,7 +103,7 @@ const PaginationFeature = {
     // Botão Última Página
     const lastBtn = document.createElement('button');
     lastBtn.textContent = '»';
-    lastBtn.className = 'tablejs-pagination-btn';
+    lastBtn.className = 'scargrid-pagination-btn';
     lastBtn.disabled = grid.currentPage === grid.totalPages;
     lastBtn.onclick = () => this.goToPage(grid, grid.totalPages);
     controls.appendChild(lastBtn);
@@ -155,14 +155,14 @@ const PaginationFeature = {
    */
   renderPageSizeSelector(grid) {
     const selector = document.createElement('div');
-    selector.className = 'tablejs-page-size';
+    selector.className = 'scargrid-page-size';
 
     const label = document.createElement('span');
     label.textContent = 'Itens por página: ';
     selector.appendChild(label);
 
     const select = document.createElement('select');
-    select.className = 'tablejs-page-size-select';
+    select.className = 'scargrid-page-size-select';
 
     grid.options.pageSizeOptions.forEach(size => {
       const option = document.createElement('option');
