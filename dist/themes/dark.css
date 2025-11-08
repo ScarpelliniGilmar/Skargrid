@@ -1,0 +1,121 @@
+/**
+ * ScarGrid - Tema Dark
+ */
+
+:root[data-theme="dark"] {
+  --scargrid-bg: #1a1d23;
+  --scargrid-header-bg: #2c3038;
+  --scargrid-header-text: #e9ecef;
+  --scargrid-border: #3a3f47;
+  --scargrid-hover-bg: #363b45;
+  --scargrid-selected-bg: #1e3a5f;
+  --scargrid-primary: #4a9eff;
+  --scargrid-primary-hover: #6bb0ff;
+  --scargrid-text: #f8f9fa;
+  --scargrid-text-muted: #adb5bd;
+  --scargrid-shadow: rgba(0, 0, 0, 0.3);
+  --scargrid-input-bg: #2c3038;
+  --scargrid-search-bg: #2c3038;
+}
+
+/* Aplicar variáveis CSS ao tema dark */
+.scargrid-theme-dark {
+  background-color: var(--scargrid-bg);
+  color: var(--scargrid-text);
+}
+
+.scargrid-theme-dark .scargrid {
+  background-color: var(--scargrid-bg);
+  color: var(--scargrid-text);
+}
+
+.scargrid-theme-dark .scargrid thead {
+  background-color: var(--scargrid-header-bg);
+  color: var(--scargrid-header-text);
+  border-bottom-color: var(--scargrid-border);
+}
+
+.scargrid-theme-dark .scargrid thead th {
+  color: var(--scargrid-header-text);
+  border-color: var(--scargrid-border);
+}
+
+.scargrid-theme-dark .scargrid thead th.sortable:hover {
+  background-color: var(--scargrid-hover-bg);
+}
+
+.scargrid-theme-dark .scargrid tbody tr {
+  border-bottom-color: var(--scargrid-border);
+}
+
+.scargrid-theme-dark .scargrid tbody tr:hover {
+  background-color: var(--scargrid-hover-bg);
+}
+
+.scargrid-theme-dark .scargrid tbody tr.selected {
+  background-color: var(--scargrid-selected-bg);
+}
+
+.scargrid-theme-dark .scargrid-search-container {
+  background-color: var(--scargrid-search-bg);
+  border-bottom-color: var(--scargrid-border);
+}
+
+.scargrid-theme-dark .scargrid-search-input {
+  background-color: var(--scargrid-input-bg);
+  border-color: var(--scargrid-border);
+  color: var(--scargrid-text);
+}
+
+.scargrid-theme-dark .scargrid-clear-filters-btn {
+  background-color: var(--scargrid-input-bg);
+  border-color: var(--scargrid-border);
+  color: var(--scargrid-text-muted);
+}
+
+.scargrid-theme-dark .scargrid-clear-filters-btn:hover {
+  background-color: var(--scargrid-hover-bg);
+}
+
+.scargrid-theme-dark .scargrid-clear-filters-btn.has-filters {
+  background-color: var(--scargrid-primary);
+  border-color: var(--scargrid-primary);
+  color: white;
+}
+
+.scargrid-theme-dark .scargrid-filter-dropdown {
+  background-color: var(--scargrid-input-bg);
+  border-color: var(--scargrid-border);
+}
+
+.scargrid-theme-dark .filter-dropdown-header {
+  border-bottom-color: var(--scargrid-border);
+  color: var(--scargrid-text);
+}
+
+.scargrid-theme-dark .filter-search-input,
+.scargrid-theme-dark .filter-dropdown-input {
+  background-color: var(--scargrid-bg);
+  border-color: var(--scargrid-border);
+  color: var(--scargrid-text);
+}
+
+.scargrid-theme-dark .scargrid-pagination {
+  border-top-color: var(--scargrid-border);
+}
+
+.scargrid-theme-dark .pagination-button {
+  background-color: var(--scargrid-input-bg);
+  border-color: var(--scargrid-border);
+  color: var(--scargrid-text);
+}
+
+.scargrid-theme-dark .pagination-button:hover:not(:disabled) {
+  background-color: var(--scargrid-hover-bg);
+}
+
+.scargrid-theme-dark .pagination-button.active {
+  background-color: var(--scargrid-primary);
+  border-color: var(--scargrid-primary);
+  color: white;
+}
