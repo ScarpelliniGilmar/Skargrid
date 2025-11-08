@@ -1,9 +1,10 @@
 /**
- * ScarGrid - Biblioteca para criação de tabelas interativas
- * @version 0.6.0
+ * ScarGrid Core - Implementação de renderização e UI
+ * @version 0.7.0
+ * Este é o core de renderização, o ponto de entrada é index.js
  */
 
-class ScarGrid {
+class ScarGridCore {
   constructor(containerId, options = {}) {
     this.container = document.getElementById(containerId);
     if (!this.container) {
@@ -1037,12 +1038,14 @@ class ScarGrid {
   }
 }
 
-// Exporta para uso global
+// Exporta para uso global como ScarGridCore (implementação)
 if (typeof window !== 'undefined') {
-  window.ScarGrid = ScarGrid;
+  window.ScarGridCore = ScarGridCore;
+  // Mantém ScarGrid como alias para compatibilidade retroativa
+  window.ScarGrid = ScarGridCore;
 }
 
 // Suporte para módulos ES6
 if (typeof module !== 'undefined' && module.exports) {
-  module.exports = ScarGrid;
+  module.exports = ScarGridCore;
 }
