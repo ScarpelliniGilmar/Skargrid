@@ -1,390 +1,778 @@
-# 📊 ScarGrid# TableJS 📊
+# 📊 ScarGrid# 📊 ScarGrid# TableJS 📊
 
 
 
-Biblioteca JavaScript para criação de tabelas interativas com paginação, ordenação, filtros e seleção múltipla.> Biblioteca JavaScript moderna, leve e gratuita para criação de tabelas interativas com recursos avançados de filtros, busca, ordenação e seleção múltipla.
+> Biblioteca JavaScript moderna para criação de tabelas interativas com recursos avançados
 
 
+
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)Biblioteca JavaScript para criação de tabelas interativas com paginação, ordenação, filtros e seleção múltipla.> Biblioteca JavaScript moderna, leve e gratuita para criação de tabelas interativas com recursos avançados de filtros, busca, ordenação e seleção múltipla.
+
+[![Version](https://img.shields.io/badge/version-0.7.0-green.svg)](https://github.com/yourusername/scargrid)
+
+
+
+## 🚀 Versão 0.7.0 - Arquitetura Modular Inteligente
 
 ## ✨ Características[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 
+A nova versão introduz uma **arquitetura modular inteligente** onde o `index.js` é o ponto de entrada principal, coordenando automaticamente todos os módulos. Veja [CHANGELOG-v0.7.0.md](CHANGELOG-v0.7.0.md) para detalhes.
+
 [![Version](https://img.shields.io/badge/version-0.6.0-green.svg)](https://github.com/yourusername/tablejs)
+
+## ✨ Características
 
 - 🎯 **Zero dependências** - Vanilla JavaScript puro
 
-- 📦 **Modular** - Arquitetura em módulos separados## 🎯 Destaques
+- 🎯 **Zero dependências** - Vanilla JavaScript puro ES6+
 
-- 🎨 **Customizável** - CSS facilmente personalizável
+- 📦 **Modular** - Arquitetura em módulos separados e independentes- 📦 **Modular** - Arquitetura em módulos separados## 🎯 Destaques
 
-- 📱 **Responsivo** - Adaptável a diferentes tamanhos de tela- 🚀 **Zero dependências** - Puro JavaScript ES6
+- 🎨 **Customizável** - CSS facilmente personalizável + temas
 
-- ⚡ **Performance** - Otimizado para grandes volumes de dados- 💡 **Simples e intuitivo** - API fácil de usar
+- 📱 **Responsivo** - Adaptável a diferentes tamanhos de tela- 🎨 **Customizável** - CSS facilmente personalizável
 
-- 🔍 **Busca Global** - Pesquisa em todas as colunas simultaneamente- 🎨 **Design moderno** - Interface profissional com animações suaves
+- ⚡ **Performance** - Core otimizado (935 linhas, -33% do original)
 
-- 🎛️ **Filtros por Coluna** - Filtros específicos (text, number, date, select)- ⚡ **Performance otimizada** - Renderização parcial do DOM e debounce inteligente
-
-- 📄 **Paginação** - Navegação intuitiva entre páginas- 📱 **Responsivo** - Funciona perfeitamente em qualquer dispositivo
-
-- ⬆️⬇️ **Ordenação** - Ordenação ascendente/descendente por coluna- 🔧 **Altamente configurável** - Personalize cada aspecto da tabela
-
-- ☑️ **Seleção Múltipla** - Checkboxes para seleção de linhas
-
-## 🚀 Funcionalidades
-
-## 📁 Estrutura do Projeto
-
-### ✅ Versão 0.6.0 - Filtros Avançados
-
-```
-
-biblio/#### Recursos Principais
-
-├── src/- ✅ **Filtros por coluna** - Dropdown profissional com ícone no cabeçalho
-
-│   ├── core/- ✅ **Filtro com checkboxes** - Para colunas tipo "select" com múltipla seleção
-
-│   │   └── scargrid.js          # Classe principal (935 linhas)- ✅ **Filtros de input** - Para text, number e date com validação
-
-│   ├── features/- ✅ **Busca interna** - Campo de busca dentro dos dropdowns de filtro
-
-│   │   ├── pagination.js        # Módulo de paginação (245 linhas)- ✅ **Select All/Deselect All** - Selecione ou desmarque todos os itens rapidamente
-
-│   │   ├── sort.js              # Módulo de ordenação (108 linhas)- ✅ **Scroll com estilo** - Lista de checkboxes com scroll personalizado
-
-│   │   ├── selection.js         # Módulo de seleção (125 linhas)- ✅ **Contador de filtros ativos** - Badge mostra quantos itens estão filtrados
-
-│   │   └── filter.js            # Módulo de filtros (199 linhas)- ✅ **Botão "Limpar Filtros"** - Remove todos os filtros (busca + colunas) com um clique
-
-│   ├── css/- ✅ **Posicionamento inteligente** - Dropdown nunca sai da tela
-
-│   │   ├── scargrid.css         # Estilos principais- ✅ **Filtros combinados** - Busca global + filtros de coluna funcionam juntos
-
-│   │   └── themes/
-
-│   │       ├── light.css        # Tema claro#### Recursos Anteriores
-
-│   │       └── dark.css         # Tema escuro- ✅ **Busca global** - Campo de busca que filtra em tempo real em todas as colunas
-
-│   └── index.js                 # Ponto de entrada- ✅ **Paginação completa** - Navegação entre páginas com controles inteligentes
-
-├── examples/- ✅ **Seletor de itens por página** - 10, 25, 50, 100 registros
-
-│   ├── basic.html               # Exemplo básico- ✅ **Ordenação por colunas** - Clique nos cabeçalhos para ordenar (ASC/DESC)
-
-│   ├── pagination.html          # Exemplo com paginação- ✅ **Indicadores visuais** - Ícones SVG mostram direção da ordenação
-
-│   ├── filters.html             # Exemplo com filtros- ✅ **Seleção múltipla** - Checkbox em cada linha para selecionar registros
-
-│   ├── complete.html            # Exemplo completo- ✅ **Selecionar todos** - Checkbox no cabeçalho para selecionar/desselecionar tudo
-
-│   └── test-modular.html        # Teste da arquitetura modular- ✅ **Clique na linha** - Clique em qualquer lugar da linha para selecionar
-
-└── README.md- ✅ **Destaque visual** - Linhas selecionadas ficam destacadas
-
-```- ✅ **API de seleção** - Métodos para obter, selecionar e limpar seleções
-
-- ✅ **Formatadores customizados** - Defina como exibir dados em cada célula
-
-## 🚀 Instalação- ✅ **Comparadores customizados** - Lógica de ordenação personalizada
-
-- ✅ **Renderização otimizada** - Updates parciais do DOM para máxima performance
-
-### Via HTML (carregamento direto)- ✅ **Debounce inteligente** - 300ms para busca fluida sem travamentos
+- 🧠 **Inteligente** - Detecção automática de features disponíveis- 📱 **Responsivo** - Adaptável a diferentes tamanhos de tela- 🚀 **Zero dependências** - Puro JavaScript ES6
 
 
 
-```html## 📋 Roadmap - Próximas Funcionalidades
+## 🎯 Funcionalidades- ⚡ **Performance** - Otimizado para grandes volumes de dados- 💡 **Simples e intuitivo** - API fácil de usar
+
+
+
+- 🔍 **Busca Global** - Pesquisa em tempo real em todas as colunas- 🔍 **Busca Global** - Pesquisa em todas as colunas simultaneamente- 🎨 **Design moderno** - Interface profissional com animações suaves
+
+- 🎛️ **Filtros por Coluna** - 4 tipos: text, number, date, select (com checkboxes)
+
+- 📄 **Paginação** - Navegação intuitiva + seletor de itens por página- 🎛️ **Filtros por Coluna** - Filtros específicos (text, number, date, select)- ⚡ **Performance otimizada** - Renderização parcial do DOM e debounce inteligente
+
+- ⬆️⬇️ **Ordenação** - ASC → DESC → None por coluna
+
+- ☑️ **Seleção Múltipla** - Checkboxes + API para manipulação- 📄 **Paginação** - Navegação intuitiva entre páginas- 📱 **Responsivo** - Funciona perfeitamente em qualquer dispositivo
+
+- 🧹 **Limpar Filtros** - Botão com contador de filtros ativos
+
+- 🎨 **Temas** - Light (padrão) e Dark inclusos- ⬆️⬇️ **Ordenação** - Ordenação ascendente/descendente por coluna- 🔧 **Altamente configurável** - Personalize cada aspecto da tabela
+
+
+
+## 📁 Estrutura do Projeto- ☑️ **Seleção Múltipla** - Checkboxes para seleção de linhas
+
+
+
+```## 🚀 Funcionalidades
+
+biblio/
+
+├── src/## 📁 Estrutura do Projeto
+
+│   ├── index.js              # 🎯 PONTO DE ENTRADA PRINCIPAL
+
+│   ├── bundle.js             # Helper para carregamento### ✅ Versão 0.6.0 - Filtros Avançados
+
+│   ├── core/
+
+│   │   └── scargrid.js       # ScarGridCore - Implementação de UI```
+
+│   ├── features/
+
+│   │   ├── pagination.js     # Módulo de paginação (245 linhas)biblio/#### Recursos Principais
+
+│   │   ├── sort.js           # Módulo de ordenação (108 linhas)
+
+│   │   ├── selection.js      # Módulo de seleção (125 linhas)├── src/- ✅ **Filtros por coluna** - Dropdown profissional com ícone no cabeçalho
+
+│   │   └── filter.js         # Módulo de filtros (199 linhas)
+
+│   └── css/│   ├── core/- ✅ **Filtro com checkboxes** - Para colunas tipo "select" com múltipla seleção
+
+│       ├── scargrid.css      # Estilos principais
+
+│       └── themes/│   │   └── scargrid.js          # Classe principal (935 linhas)- ✅ **Filtros de input** - Para text, number e date com validação
+
+│           ├── light.css
+
+│           └── dark.css│   ├── features/- ✅ **Busca interna** - Campo de busca dentro dos dropdowns de filtro
+
+├── examples/
+
+│   ├── basic.html│   │   ├── pagination.js        # Módulo de paginação (245 linhas)- ✅ **Select All/Deselect All** - Selecione ou desmarque todos os itens rapidamente
+
+│   ├── pagination.html
+
+│   ├── filters.html│   │   ├── sort.js              # Módulo de ordenação (108 linhas)- ✅ **Scroll com estilo** - Lista de checkboxes com scroll personalizado
+
+│   ├── complete.html
+
+│   └── architecture-v07.html # 🆕 Exemplo da nova arquitetura│   │   ├── selection.js         # Módulo de seleção (125 linhas)- ✅ **Contador de filtros ativos** - Badge mostra quantos itens estão filtrados
+
+└── README.md
+
+```│   │   └── filter.js            # Módulo de filtros (199 linhas)- ✅ **Botão "Limpar Filtros"** - Remove todos os filtros (busca + colunas) com um clique
+
+
+
+## 🚀 Instalação│   ├── css/- ✅ **Posicionamento inteligente** - Dropdown nunca sai da tela
+
+
+
+### Via HTML (Browser)│   │   ├── scargrid.css         # Estilos principais- ✅ **Filtros combinados** - Busca global + filtros de coluna funcionam juntos
+
+
+
+```html│   │   └── themes/
 
 <!DOCTYPE html>
 
-<html>### 🔄 Em Planejamento
+<html>│   │       ├── light.css        # Tema claro#### Recursos Anteriores
 
-<head>- [ ] **Redimensionamento de colunas** - Arrastar para ajustar largura das colunas
+<head>
 
-  <!-- CSS -->- [ ] **Fixar colunas** - Manter colunas fixas durante scroll horizontal
+  <!-- CSS -->│   │       └── dark.css         # Tema escuro- ✅ **Busca global** - Campo de busca que filtra em tempo real em todas as colunas
 
-  <link rel="stylesheet" href="src/css/scargrid.css">- [ ] **Agrupamento** - Agrupar dados por valores de colunas
+  <link rel="stylesheet" href="src/css/scargrid.css">
 
-  - [ ] **Exportação** - Exportar para CSV, Excel, PDF
+  │   └── index.js                 # Ponto de entrada- ✅ **Paginação completa** - Navegação entre páginas com controles inteligentes
 
-  <!-- Módulos de features -->- [ ] **Edição inline** - Editar células diretamente na tabela
+  <!-- Features (carregue apenas o que precisa) -->
 
-  <script src="src/features/pagination.js"></script>- [ ] **Temas** - Múltiplos temas visuais pré-configurados
+  <script src="src/features/pagination.js"></script>├── examples/- ✅ **Seletor de itens por página** - 10, 25, 50, 100 registros
 
-  <script src="src/features/sort.js"></script>- [ ] **Drag & Drop** - Reordenar linhas arrastando
+  <script src="src/features/sort.js"></script>
 
-  <script src="src/features/selection.js"></script>- [ ] **Virtualização** - Para tabelas com milhares de registros
+  <script src="src/features/selection.js"></script>│   ├── basic.html               # Exemplo básico- ✅ **Ordenação por colunas** - Clique nos cabeçalhos para ordenar (ASC/DESC)
 
-  <script src="src/features/filter.js"></script>- [ ] **Totalizadores** - Linha de totais com soma, média, etc.
+  <script src="src/features/filter.js"></script>
 
-  
+  │   ├── pagination.html          # Exemplo com paginação- ✅ **Indicadores visuais** - Ícones SVG mostram direção da ordenação
 
-  <!-- Core -->---
+  <!-- Core -->
 
-  <script src="src/core/scargrid.js"></script>
+  <script src="src/core/scargrid.js"></script>│   ├── filters.html             # Exemplo com filtros- ✅ **Seleção múltipla** - Checkbox em cada linha para selecionar registros
 
-</head>## 📦 Instalação
+</head>
 
-<body>
+<body>│   ├── complete.html            # Exemplo completo- ✅ **Selecionar todos** - Checkbox no cabeçalho para selecionar/desselecionar tudo
 
-  <div id="myTable"></div>### Download direto
+  <div id="myTable"></div>
 
-</body>1. Clone ou baixe os arquivos do projeto
+</body>│   └── test-modular.html        # Teste da arquitetura modular- ✅ **Clique na linha** - Clique em qualquer lugar da linha para selecionar
 
-</html>2. Inclua os arquivos CSS e JS no seu HTML:
+</html>
+
+```└── README.md- ✅ **Destaque visual** - Linhas selecionadas ficam destacadas
+
+
+
+### Via ES Modules```- ✅ **API de seleção** - Métodos para obter, selecionar e limpar seleções
+
+
+
+```javascript- ✅ **Formatadores customizados** - Defina como exibir dados em cada célula
+
+// Importa do index.js (ponto de entrada)
+
+import { ScarGrid } from './src/index.js';## 🚀 Instalação- ✅ **Comparadores customizados** - Lógica de ordenação personalizada
+
+
+
+const table = new ScarGrid('myTable', {- ✅ **Renderização otimizada** - Updates parciais do DOM para máxima performance
+
+  data: myData,
+
+  columns: myColumns### Via HTML (carregamento direto)- ✅ **Debounce inteligente** - 300ms para busca fluida sem travamentos
+
+});
 
 ```
 
-```html
 
-## 📖 Uso Básico<link rel="stylesheet" href="src/table.css">
 
-<script src="src/table.js"></script>
+## 📖 Uso Básico```html## 📋 Roadmap - Próximas Funcionalidades
 
-```javascript```
+
+
+```javascript<!DOCTYPE html>
 
 // Dados
 
-const data = [### Via CDN (em breve)
+const data = [<html>### 🔄 Em Planejamento
 
-  { id: 1, nome: 'João Silva', idade: 28, cidade: 'São Paulo' },```html
+  { id: 1, nome: 'João Silva', idade: 28, cidade: 'São Paulo' },
 
-  { id: 2, nome: 'Maria Santos', idade: 34, cidade: 'Rio de Janeiro' },<!-- CSS -->
+  { id: 2, nome: 'Maria Santos', idade: 34, cidade: 'Rio de Janeiro' },<head>- [ ] **Redimensionamento de colunas** - Arrastar para ajustar largura das colunas
 
-  { id: 3, nome: 'Pedro Costa', idade: 25, cidade: 'Belo Horizonte' }<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tablejs/dist/table.min.css">
+  { id: 3, nome: 'Pedro Costa', idade: 25, cidade: 'Belo Horizonte' }
 
-];
+];  <!-- CSS -->- [ ] **Fixar colunas** - Manter colunas fixas durante scroll horizontal
 
-<!-- JavaScript -->
 
-// Configuração das colunas<script src="https://cdn.jsdelivr.net/npm/tablejs/dist/table.min.js"></script>
 
-const columns = [```
+// Configuração das colunas  <link rel="stylesheet" href="src/css/scargrid.css">- [ ] **Agrupamento** - Agrupar dados por valores de colunas
 
-  { field: 'id', title: 'ID', width: '60px' },
+const columns = [
 
-  { field: 'nome', title: 'Nome', sortable: true },---
+  {   - [ ] **Exportação** - Exportar para CSV, Excel, PDF
 
-  { field: 'idade', title: 'Idade', sortable: true, filterable: true, filterType: 'number' },
+    field: 'id', 
 
-  { field: 'cidade', title: 'Cidade', sortable: true, filterable: true, filterType: 'select' }## 🎯 Uso Básico
+    title: 'ID',   <!-- Módulos de features -->- [ ] **Edição inline** - Editar células diretamente na tabela
 
-];
+    width: '60px' 
 
-```javascript
+  },  <script src="src/features/pagination.js"></script>- [ ] **Temas** - Múltiplos temas visuais pré-configurados
 
-// Inicializa a tabela// 1. Defina seus dados
+  { 
 
-const table = new ScarGrid('myTable', {const data = [
+    field: 'nome',   <script src="src/features/sort.js"></script>- [ ] **Drag & Drop** - Reordenar linhas arrastando
 
-  data: data,  { id: 1, nome: 'João Silva', email: 'joao@email.com', idade: 28 },
+    title: 'Nome', 
 
-  columns: columns,  { id: 2, nome: 'Maria Santos', email: 'maria@email.com', idade: 34 },
+    sortable: true,  <script src="src/features/selection.js"></script>- [ ] **Virtualização** - Para tabelas com milhares de registros
 
-  pagination: true,  { id: 3, nome: 'Pedro Oliveira', email: 'pedro@email.com', idade: 25 }
+    filterable: true,
 
-  pageSize: 10,];
-
-  sortable: true,
-
-  selectable: true,// 2. Configure as colunas
-
-  searchable: true,const columns = [
-
-  columnFilters: true  { 
-
-});    field: 'id', 
-
-```    title: 'ID' 
+    filterType: 'text'  <script src="src/features/filter.js"></script>- [ ] **Totalizadores** - Linha de totais com soma, média, etc.
 
   },
 
-## ⚙️ Opções de Configuração  { 
+  {   
 
-    field: 'nome', 
+    field: 'idade', 
 
-| Opção | Tipo | Padrão | Descrição |    title: 'Nome Completo' 
+    title: 'Idade',   <!-- Core -->---
 
-|-------|------|--------|-----------|  },
+    sortable: true, 
 
-| `data` | Array | `[]` | Array de objetos com os dados |  { 
+    filterable: true,   <script src="src/core/scargrid.js"></script>
 
-| `columns` | Array | `[]` | Configuração das colunas |    field: 'email', 
+    filterType: 'number' 
 
-| `pagination` | Boolean | `false` | Ativa/desativa paginação |    title: 'E-mail' 
+  },</head>## 📦 Instalação
 
-| `pageSize` | Number | `10` | Itens por página |  },
+  { 
 
-| `pageSizeOptions` | Array | `[10, 25, 50, 100]` | Opções de tamanho de página |  { 
+    field: 'cidade', <body>
 
-| `sortable` | Boolean | `true` | Habilita ordenação global |    field: 'idade', 
+    title: 'Cidade', 
 
-| `selectable` | Boolean | `false` | Habilita seleção com checkboxes |    title: 'Idade',
+    sortable: true,   <div id="myTable"></div>### Download direto
 
-| `searchable` | Boolean | `false` | Mostra campo de busca global |    formatter: (value) => `${value} anos` // Formatação customizada
+    filterable: true, 
 
-| `columnFilters` | Boolean | `false` | Habilita filtros por coluna |  }
+    filterType: 'select' </body>1. Clone ou baixe os arquivos do projeto
 
-];
+  }
+
+];</html>2. Inclua os arquivos CSS e JS no seu HTML:
+
+
+
+// Inicializa a tabela```
+
+const table = new ScarGrid('myTable', {
+
+  data: data,```html
+
+  columns: columns,
+
+  pagination: true,## 📖 Uso Básico<link rel="stylesheet" href="src/table.css">
+
+  pageSize: 10,
+
+  sortable: true,<script src="src/table.js"></script>
+
+  selectable: true,
+
+  searchable: true,```javascript```
+
+  columnFilters: true
+
+});// Dados
+
+```
+
+const data = [### Via CDN (em breve)
+
+## ⚙️ Opções de Configuração
+
+  { id: 1, nome: 'João Silva', idade: 28, cidade: 'São Paulo' },```html
+
+| Opção | Tipo | Padrão | Descrição |
+
+|-------|------|--------|-----------|  { id: 2, nome: 'Maria Santos', idade: 34, cidade: 'Rio de Janeiro' },<!-- CSS -->
+
+| `data` | Array | `[]` | Array de objetos com os dados |
+
+| `columns` | Array | `[]` | Configuração das colunas |  { id: 3, nome: 'Pedro Costa', idade: 25, cidade: 'Belo Horizonte' }<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tablejs/dist/table.min.css">
+
+| `pagination` | Boolean | `false` | Ativa/desativa paginação |
+
+| `pageSize` | Number | `10` | Itens por página |];
+
+| `pageSizeOptions` | Array | `[10, 25, 50, 100]` | Opções de tamanho |
+
+| `sortable` | Boolean | `true` | Habilita ordenação |<!-- JavaScript -->
+
+| `selectable` | Boolean | `false` | Habilita checkboxes |
+
+| `searchable` | Boolean | `false` | Mostra busca global |// Configuração das colunas<script src="https://cdn.jsdelivr.net/npm/tablejs/dist/table.min.js"></script>
+
+| `columnFilters` | Boolean | `false` | Habilita filtros por coluna |
+
+const columns = [```
 
 ## 🎨 Configuração de Colunas
 
-// 3. Inicialize a tabela
+  { field: 'id', title: 'ID', width: '60px' },
 
-```javascriptconst table = new TableJS('myTable', {
+```javascript
 
-{  data: data,
+{  { field: 'nome', title: 'Nome', sortable: true },---
 
-  field: 'nome',              // Campo do objeto de dados  columns: columns,
+  field: 'nome',              // Campo do objeto de dados
 
-  title: 'Nome Completo',     // Título exibido  pagination: true,      // Ativa a paginação
+  title: 'Nome Completo',     // Título exibido no cabeçalho  { field: 'idade', title: 'Idade', sortable: true, filterable: true, filterType: 'number' },
 
-  width: '200px',             // Largura (opcional)  pageSize: 10,          // Itens por página
+  width: '200px',             // Largura da coluna (opcional)
 
-  sortable: true,             // Permite ordenação  pageSizeOptions: [10, 25, 50, 100],  // Opções de itens por página
+  sortable: true,             // Permite ordenação  { field: 'cidade', title: 'Cidade', sortable: true, filterable: true, filterType: 'select' }## 🎯 Uso Básico
 
-  filterable: true,           // Permite filtro  sortable: true,        // Ativa ordenação
+  filterable: true,           // Permite filtro
 
-  filterType: 'text',         // Tipo: text, number, date, select  selectable: true,      // Ativa seleção múltipla
+  filterType: 'text',         // Tipo: text, number, date, select];
 
-  render: (value, row) => {   // Formatação customizada  searchable: true       // Ativa busca global
+  
 
-    return `<strong>${value}</strong>`;});
+  // Formatação customizada```javascript
 
-  }```
+  render: (value, row) => {
+
+    return `<strong>${value}</strong>`;// Inicializa a tabela// 1. Defina seus dados
+
+  },
+
+  const table = new ScarGrid('myTable', {const data = [
+
+  // Comparador customizado para ordenação
+
+  sortCompare: (a, b) => {  data: data,  { id: 1, nome: 'João Silva', email: 'joao@email.com', idade: 28 },
+
+    return a.localeCompare(b);
+
+  }  columns: columns,  { id: 2, nome: 'Maria Santos', email: 'maria@email.com', idade: 34 },
 
 }
 
-```## 🎨 HTML Necessário
+```  pagination: true,  { id: 3, nome: 'Pedro Oliveira', email: 'pedro@email.com', idade: 25 }
 
 
 
-### Tipos de Filtro```html
+### Tipos de Filtro  pageSize: 10,];
 
-<div id="myTable"></div>
 
-- **text** - Busca parcial case-insensitive```
+
+- **text** - Busca parcial case-insensitive  sortable: true,
 
 - **number** - Comparação exata de números
 
-- **date** - Filtro por data (formato: YYYY-MM-DD)## 📖 API
+- **date** - Filtro por data (formato: YYYY-MM-DD)  selectable: true,// 2. Configure as colunas
 
-- **select** - Lista de checkboxes com valores únicos
+- **select** - Lista de checkboxes com valores únicos da coluna
 
-### Constructor
+  searchable: true,const columns = [
 
 ## 🔧 API Pública
 
+  columnFilters: true  { 
+
+### Métodos de Dados
+
+```javascript});    field: 'id', 
+
+table.updateData(newData)  // Atualiza os dados
+
+table.getData()            // Retorna os dados atuais```    title: 'ID' 
+
+```
+
+  },
+
+### Métodos de Seleção
+
+```javascript## ⚙️ Opções de Configuração  { 
+
+table.getSelectedRows()       // Retorna dados selecionados
+
+table.getSelectedIndices()    // Retorna índices selecionados    field: 'nome', 
+
+table.selectRows([0, 1, 2])   // Seleciona por índices
+
+table.deselectRows([0])       // Desseleciona por índices| Opção | Tipo | Padrão | Descrição |    title: 'Nome Completo' 
+
+table.clearSelection()        // Limpa todas seleções
+
+```|-------|------|--------|-----------|  },
+
+
+
+### Métodos de Filtros| `data` | Array | `[]` | Array de objetos com os dados |  { 
+
 ```javascript
 
-### Métodos de Dadosnew TableJS(containerId, options)
+table.clearSearch()          // Limpa busca global| `columns` | Array | `[]` | Configuração das colunas |    field: 'email', 
 
-- `updateData(newData)` - Atualiza os dados da tabela```
+table.clearAllFilters()      // Limpa busca + filtros de coluna
 
-- `getData()` - Retorna os dados atuais
+table.clearColumnFilters()   // Limpa apenas filtros de coluna| `pagination` | Boolean | `false` | Ativa/desativa paginação |    title: 'E-mail' 
 
-**Parâmetros:**
+```
 
-### Métodos de Seleção- `containerId` (string) - ID do elemento HTML container
+| `pageSize` | Number | `10` | Itens por página |  },
 
-- `getSelectedRows()` - Retorna dados das linhas selecionadas- `options` (object) - Configurações da tabela
+### Métodos de Navegação
 
-- `getSelectedIndices()` - Retorna índices das linhas selecionadas  - `data` (array) - Array de objetos com os dados
+```javascript| `pageSizeOptions` | Array | `[10, 25, 50, 100]` | Opções de tamanho de página |  { 
 
-- `selectRows(indices)` - Seleciona linhas por índices  - `columns` (array) - Array de objetos definindo as colunas
+table.goToPage(3)           // Vai para página 3
 
-- `deselectRows(indices)` - Desseleciona linhas por índices    - `field` (string) - Nome do campo nos dados
+table.changePageSize(25)    // Altera para 25 itens/página| `sortable` | Boolean | `true` | Habilita ordenação global |    field: 'idade', 
 
-- `clearSelection()` - Limpa todas as seleções    - `title` (string) - Título da coluna
+```
 
-    - `formatter` (function) - Função para formatar o valor da célula
-
-### Métodos de Filtros    - `sortable` (boolean) - Se a coluna pode ser ordenada (padrão: true)
-
-- `clearSearch()` - Limpa a busca global    - `sortCompare` (function) - Função customizada para comparação na ordenação
-
-- `clearAllFilters()` - Limpa busca + filtros de coluna  - `className` (string) - Classe CSS customizada (padrão: 'tablejs')
-
-- `clearColumnFilters()` - Limpa apenas filtros de coluna  - `pagination` (boolean) - Ativa/desativa paginação (padrão: false)
-
-  - `pageSize` (number) - Número de itens por página (padrão: 10)
-
-### Métodos de Navegação  - `pageSizeOptions` (array) - Opções para seletor de itens por página (padrão: [10, 25, 50, 100])
-
-- `goToPage(pageNumber)` - Vai para página específica  - `sortable` (boolean) - Ativa/desativa ordenação globalmente (padrão: true)
-
-- `changePageSize(newSize)` - Altera itens por página  - `selectable` (boolean) - Ativa/desativa seleção múltipla (padrão: false)
-
-  - `searchable` (boolean) - Ativa/desativa busca global (padrão: false)
+| `selectable` | Boolean | `false` | Habilita seleção com checkboxes |    title: 'Idade',
 
 ### Métodos de Ordenação
 
-- `clearSort()` - Remove ordenação e restaura ordem original### Métodos
+```javascript| `searchable` | Boolean | `false` | Mostra campo de busca global |    formatter: (value) => `${value} anos` // Formatação customizada
+
+table.clearSort()           // Remove ordenação
+
+```| `columnFilters` | Boolean | `false` | Habilita filtros por coluna |  }
 
 
 
-### Outros#### `updateData(newData)`
-
-- `render()` - Re-renderiza a tabelaAtualiza os dados da tabela, reseta para a página 1, limpa seleções e busca, depois re-renderiza.
-
-- `destroy()` - Destroi a instância
+### Outros];
 
 ```javascript
 
-## 🏗️ Arquitetura Modulartable.updateData([
+table.render()              // Re-renderiza a tabela## 🎨 Configuração de Colunas
 
-  { id: 1, nome: 'Novo Nome', email: 'novo@email.com' }
+table.destroy()             // Destroi a instância
 
-A biblioteca foi modularizada em 4 features independentes:]);
+```// 3. Inicialize a tabela
+
+
+
+## 🏗️ Arquitetura Modular (v0.7.0)```javascriptconst table = new TableJS('myTable', {
+
+
+
+### Detecção Automática de Features{  data: data,
+
+
+
+O ScarGrid detecta automaticamente quais features estão disponíveis:  field: 'nome',              // Campo do objeto de dados  columns: columns,
+
+
+
+```javascript  title: 'Nome Completo',     // Título exibido  pagination: true,      // Ativa a paginação
+
+// Se pagination.js não foi carregado, paginação é desabilitada automaticamente
+
+const table = new ScarGrid('myTable', {  width: '200px',             // Largura (opcional)  pageSize: 10,          // Itens por página
+
+  pagination: true  // Só funciona se PaginationFeature está disponível
+
+});  sortable: true,             // Permite ordenação  pageSizeOptions: [10, 25, 50, 100],  // Opções de itens por página
 
 ```
 
-### 1️⃣ **pagination.js** (245 linhas)
+  filterable: true,           // Permite filtro  sortable: true,        // Ativa ordenação
 
-Gerencia toda a lógica de paginação:#### `getData()`
+### Helpers para Extensões
 
-- `renderPagination()` - UI completa de paginaçãoRetorna os dados atuais da tabela.
+  filterType: 'text',         // Tipo: text, number, date, select  selectable: true,      // Ativa seleção múltipla
+
+```javascript
+
+import {   render: (value, row) => {   // Formatação customizada  searchable: true       // Ativa busca global
+
+  ScarGrid, 
+
+  enableSort,     return `<strong>${value}</strong>`;});
+
+  enableFilter, 
+
+  enablePagination,  }```
+
+  enableSelection
+
+} from './src/index.js';}
+
+
+
+const table = new ScarGrid('container', { ... });```## 🎨 HTML Necessário
+
+
+
+// Habilita features dinamicamente
+
+enableSort(table);
+
+enableFilter(table);### Tipos de Filtro```html
+
+```
+
+<div id="myTable"></div>
+
+### Core vs Index
+
+- **text** - Busca parcial case-insensitive```
+
+- **`index.js`** → Ponto de entrada, coordenação, API pública
+
+- **`scargrid.js`** → ScarGridCore, implementação de renderização- **number** - Comparação exata de números
+
+- **`features/*.js`** → Módulos independentes
+
+- **date** - Filtro por data (formato: YYYY-MM-DD)## 📖 API
+
+O usuário **sempre** interage com `ScarGrid` (do index.js). O `ScarGridCore` é usado internamente.
+
+- **select** - Lista de checkboxes com valores únicos
+
+## 🎨 Temas
+
+### Constructor
+
+### Tema Claro (Padrão)
+
+```html## 🔧 API Pública
+
+<link rel="stylesheet" href="src/css/scargrid.css">
+
+``````javascript
+
+
+
+### Tema Escuro### Métodos de Dadosnew TableJS(containerId, options)
+
+```html
+
+<link rel="stylesheet" href="src/css/scargrid.css">- `updateData(newData)` - Atualiza os dados da tabela```
+
+<link rel="stylesheet" href="src/css/themes/dark.css">
+
+```- `getData()` - Retorna os dados atuais
+
+
+
+## 📚 Exemplos**Parâmetros:**
+
+
+
+Na pasta `examples/`:### Métodos de Seleção- `containerId` (string) - ID do elemento HTML container
+
+
+
+1. **basic.html** - Tabela simples- `getSelectedRows()` - Retorna dados das linhas selecionadas- `options` (object) - Configurações da tabela
+
+2. **pagination.html** - Com paginação (50 registros)
+
+3. **filters.html** - Filtros avançados- `getSelectedIndices()` - Retorna índices das linhas selecionadas  - `data` (array) - Array de objetos com os dados
+
+4. **complete.html** - Todas as features
+
+5. **architecture-v07.html** - 🆕 Nova arquitetura modular- `selectRows(indices)` - Seleciona linhas por índices  - `columns` (array) - Array de objetos definindo as colunas
+
+
+
+## 🛠️ Desenvolvimento- `deselectRows(indices)` - Desseleciona linhas por índices    - `field` (string) - Nome do campo nos dados
+
+
+
+### Adicionando Nova Feature- `clearSelection()` - Limpa todas as seleções    - `title` (string) - Título da coluna
+
+
+
+1. Crie `src/features/minha-feature.js`:    - `formatter` (function) - Função para formatar o valor da célula
+
+```javascript
+
+const MinhaFeature = {### Métodos de Filtros    - `sortable` (boolean) - Se a coluna pode ser ordenada (padrão: true)
+
+  metodo(grid, params) {
+
+    // Acessa grid.options, grid.currentPage, etc- `clearSearch()` - Limpa a busca global    - `sortCompare` (function) - Função customizada para comparação na ordenação
+
+  }
+
+};- `clearAllFilters()` - Limpa busca + filtros de coluna  - `className` (string) - Classe CSS customizada (padrão: 'tablejs')
+
+
+
+// Export para browser- `clearColumnFilters()` - Limpa apenas filtros de coluna  - `pagination` (boolean) - Ativa/desativa paginação (padrão: false)
+
+window.MinhaFeature = MinhaFeature;
+
+  - `pageSize` (number) - Número de itens por página (padrão: 10)
+
+// Export para ES6
+
+module.exports = MinhaFeature;### Métodos de Navegação  - `pageSizeOptions` (array) - Opções para seletor de itens por página (padrão: [10, 25, 50, 100])
+
+```
+
+- `goToPage(pageNumber)` - Vai para página específica  - `sortable` (boolean) - Ativa/desativa ordenação globalmente (padrão: true)
+
+2. Adicione helper em `src/index.js`:
+
+```javascript- `changePageSize(newSize)` - Altera itens por página  - `selectable` (boolean) - Ativa/desativa seleção múltipla (padrão: false)
+
+export function enableMinhaFeature(grid) {
+
+  if (window.MinhaFeature) {  - `searchable` (boolean) - Ativa/desativa busca global (padrão: false)
+
+    grid.features.minhaFeature = window.MinhaFeature;
+
+    return true;### Métodos de Ordenação
+
+  }
+
+  return false;- `clearSort()` - Remove ordenação e restaura ordem original### Métodos
+
+}
+
+```
+
+
+
+3. Use:### Outros#### `updateData(newData)`
+
+```html
+
+<script src="src/features/minha-feature.js"></script>- `render()` - Re-renderiza a tabelaAtualiza os dados da tabela, reseta para a página 1, limpa seleções e busca, depois re-renderiza.
+
+<script src="src/core/scargrid.js"></script>
+
+<script>- `destroy()` - Destroi a instância
+
+  const table = new ScarGrid('container', { ... });
+
+  // Feature já detectada automaticamente!```javascript
+
+</script>
+
+```## 🏗️ Arquitetura Modulartable.updateData([
+
+
+
+## 📜 Versões  { id: 1, nome: 'Novo Nome', email: 'novo@email.com' }
+
+
+
+**v0.7.0** (Atual) - Arquitetura modular inteligenteA biblioteca foi modularizada em 4 features independentes:]);
+
+- ✅ index.js como ponto de entrada principal
+
+- ✅ Detecção automática de features```
+
+- ✅ Helpers para extensões (enableSort, etc)
+
+- ✅ 100% retrocompatível com v0.6.0### 1️⃣ **pagination.js** (245 linhas)
+
+
+
+**v0.6.0** - Arquitetura modularGerencia toda a lógica de paginação:#### `getData()`
+
+- ✅ Separação em módulos features
+
+- ✅ Core reduzido em 33%- `renderPagination()` - UI completa de paginaçãoRetorna os dados atuais da tabela.
+
+- ✅ Todas as features funcionando
 
 - `calculatePagination()` - Cálculo de páginas
 
+Veja [CHANGELOG-v0.7.0.md](CHANGELOG-v0.7.0.md) para detalhes completos.
+
 - `goToPage()` - Navegação entre páginas```javascript
+
+## 📊 Estatísticas
 
 - `changePageSize()` - Alteração de itens por páginaconst currentData = table.getData();
 
-```
+- **Core:** 935 linhas (-33% do original)
 
-### 2️⃣ **sort.js** (108 linhas)
+- **Features:** 677 linhas em 4 módulos```
+
+- **Total:** ~1600 linhas bem organizadas
+
+- **Zero dependências**### 2️⃣ **sort.js** (108 linhas)
+
+- **ES6+ com fallbacks**
 
 Gerencia ordenação de colunas:#### `goToPage(pageNumber)`
 
+## 📄 Licença
+
 - `handleSort()` - Ciclo ASC → DESC → NoneNavega para uma página específica.
+
+MIT License - Use livremente em projetos pessoais e comerciais
 
 - `sortData()` - Algoritmo de ordenação
 
+## 👤 Autor
+
 - Suporte a comparadores customizados```javascript
+
+Gilmar A S Trindade
 
 - Ordenação numérica e alfabéticatable.goToPage(3); // Vai para a página 3
 
+## 🤝 Como Contribuir
+
 ```
 
-### 3️⃣ **selection.js** (125 linhas)
+1. Fork o projeto
 
-Gerencia seleção de linhas:#### `changePageSize(newSize)`
+2. Crie uma branch (`git checkout -b feature/MinhaFeature`)### 3️⃣ **selection.js** (125 linhas)
+
+3. Commit suas mudanças (`git commit -m 'Adiciona MinhaFeature'`)
+
+4. Push para a branch (`git push origin feature/MinhaFeature`)Gerencia seleção de linhas:#### `changePageSize(newSize)`
+
+5. Abra um Pull Request
 
 - `toggleSelectRow()` - Seleciona/desseleciona linhaAltera o número de itens por página e volta para a página 1.
 
+## 🐛 Reportar Bugs
+
 - `toggleSelectAll()` - Seleciona/desseleciona todas
 
-- `getSelectedRows()` - Retorna dados selecionados```javascript
+Abra uma issue com:
 
-- Usa `Set` para performancetable.changePageSize(25); // Mostra 25 itens por página
+- Descrição do problema- `getSelectedRows()` - Retorna dados selecionados```javascript
+
+- Passos para reproduzir
+
+- Comportamento esperado vs atual- Usa `Set` para performancetable.changePageSize(25); // Mostra 25 itens por página
+
+- Screenshots (se aplicável)
 
 ```
 
+---
+
 ### 4️⃣ **filter.js** (199 linhas)
 
+⭐ **Se você gostou, dê uma estrela no repositório!**
+
 Gerencia busca e filtros:#### `clearSort()`
+
+**Última atualização:** v0.7.0 - Novembro 2025
 
 - `applyFilters()` - Aplica busca + filtros de colunaRemove a ordenação atual e restaura a ordem original dos dados.
 
