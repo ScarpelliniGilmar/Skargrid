@@ -15,6 +15,7 @@ class ScarGridCore {
       data: options.data || [],
       columns: options.columns || [],
       className: options.className || 'scargrid',
+      theme: options.theme || 'light', // 'light' ou 'dark'
       pagination: options.pagination !== undefined ? options.pagination : false,
       pageSize: options.pageSize || 10,
       pageSizeOptions: options.pageSizeOptions || [10, 25, 50, 100],
@@ -101,6 +102,11 @@ class ScarGridCore {
     // Cria wrapper principal
     const wrapper = document.createElement('div');
     wrapper.className = 'scargrid-wrapper';
+    
+    // Aplica tema
+    if (this.options.theme === 'dark') {
+      wrapper.classList.add('scargrid-dark');
+    }
 
     // Adiciona campo de busca se habilitado
     if (this.options.searchable) {
@@ -1094,6 +1100,31 @@ class ScarGridCore {
    */
   destroy() {
     this.container.innerHTML = '';
+  }
+
+  /**
+   * Altera o tema da tabela dinamicamente
+   * @param {string} theme - 'light' ou 'dark'
+   */
+  setTheme(theme) {
+    if (theme !== 'light' && theme !== 'dark') {
+      console.warn(`Tema inválido: ${theme}. Use 'light' ou 'dark'.`);
+      return;
+    }
+
+    this.options.theme = theme;
+    
+    const wrapper = this.container.querySelector('.scargrid-wrapper');
+    if (!wrapper) {
+      console.warn('Wrapper não encontrado. A tabela foi renderizada?');
+      return;
+    }
+
+    if (theme === 'dark') {
+      wrapper.classList.add('scargrid-dark');
+    } else {
+      wrapper.classList.remove('scargrid-dark');
+    }
   }
 }
 

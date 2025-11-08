@@ -67,9 +67,38 @@
       border-radius: 8px;
       box-shadow: 0 2px 8px rgba(0,0,0,0.1);
     }
+    
+    .theme-toggle {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: white;
+      border: 2px solid #667eea;
+      color: #667eea;
+      padding: 12px 24px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      transition: all 0.3s ease;
+      z-index: 1000;
+    }
+    
+    .theme-toggle:hover {
+      background: #667eea;
+      color: white;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+    }
+    
+    .theme-toggle:active {
+      transform: translateY(0);
+    }
   </style>
 </head>
 <body>
+  <button class="theme-toggle" id="themeToggle">🌙 Tema Escuro</button>
+  
   <div class="header">
     <h1>🚀 ScarGrid - Dataset Completo</h1>
     <p>Teste com 25 colunas e 100 registros com dados variados (texto, números, datas, status)</p>
@@ -405,6 +434,23 @@
       colunas: columns.length,
       filtráveis: columns.filter(c => c.filterable).length,
       ordenáveis: columns.filter(c => c.sortable).length
+    });
+
+    // Toggle de tema
+    const themeToggle = document.getElementById('themeToggle');
+    let currentTheme = 'light';
+    
+    themeToggle.addEventListener('click', () => {
+      currentTheme = currentTheme === 'light' ? 'dark' : 'light';
+      table.setTheme(currentTheme);
+      
+      if (currentTheme === 'dark') {
+        themeToggle.textContent = '☀️ Tema Claro';
+        document.body.style.background = '#1a1a1a';
+      } else {
+        themeToggle.textContent = '🌙 Tema Escuro';
+        document.body.style.background = '#f5f5f5';
+      }
     });
   </script>
 </body>
