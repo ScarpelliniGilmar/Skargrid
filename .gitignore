@@ -5,6 +5,7 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 lerna-debug.log*
+pnpm-debug.log*
 
 # Dependency directories
 node_modules/
@@ -23,6 +24,7 @@ jspm_packages/
 .env
 .env.test
 .env.production
+.env.local
 
 # IDE
 .vscode/
@@ -31,17 +33,28 @@ jspm_packages/
 *.swo
 *~
 .DS_Store
+*.sublime-project
+*.sublime-workspace
 
-# Build files
-dist/
-build/
-*.min.js
-*.min.css
+# Build files (IMPORTANT: Mantém dist/ no repositório para CDN/uso direto)
+# dist/ - NÃO ignorar, é necessário para distribuição
+# *.min.js - NÃO ignorar, é o bundle principal
+# *.min.css - NÃO ignorar, é o CSS minificado
 
 # Coverage directory
 coverage/
 *.lcov
+.nyc_output/
 
 # Temporary files
 tmp/
 temp/
+*.tmp
+
+# OS files
+Thumbs.db
+Desktop.ini
+
+# Debug files
+debug/
+*.debug.js

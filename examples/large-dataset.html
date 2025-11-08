@@ -436,13 +436,6 @@
       persistColumnConfig: true  // Salva configuração de colunas no localStorage
     });
 
-    console.log('✅ Tabela carregada!', {
-      registros: data.length,
-      colunas: columns.length,
-      filtráveis: columns.filter(c => c.filterable).length,
-      ordenáveis: columns.filter(c => c.sortable).length
-    });
-
     // Toggle de tema
     const themeToggle = document.getElementById('themeToggle');
     let currentTheme = 'light';
