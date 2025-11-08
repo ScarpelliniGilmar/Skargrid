@@ -1,0 +1,23 @@
+{
+  "name": "tablejs",
+  "version": "0.6.0",
+  "description": "Biblioteca JavaScript moderna para criação de tabelas interativas com filtros, ordenação e seleção múltipla",
+  "main": "src/table.js",
+  "scripts": {
+    "dev": "echo 'Abra o arquivo example/index.html no navegador para testar'"
+  },
+  "keywords": [
+    "table",
+    "datatable",
+    "grid",
+    "javascript",
+    "ui",
+    "pagination",
+    "sorting",
+    "selection",
+    "filters",
+    "column-filters"
+  ],
+  "author": "GILMAR A S TRINDADE",
+  "license": "MIT"
+}

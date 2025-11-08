@@ -1,0 +1,691 @@
+/**
+ * TableJS - Estilos básicos
+ */
+
+.tablejs {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: #ffffff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  font-size: 14px;
+}
+
+.tablejs thead {
+  background-color: #f8f9fa;
+  border-bottom: 2px solid #dee2e6;
+}
+
+.tablejs thead th {
+  padding: 12px 16px;
+  text-align: left;
+  font-weight: 600;
+  color: #495057;
+  text-transform: uppercase;
+  font-size: 12px;
+  letter-spacing: 0.5px;
+  position: relative;
+  user-select: none;
+}
+
+/* Colunas ordenáveis */
+.tablejs thead th.sortable {
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.tablejs thead th.sortable:hover {
+  background-color: #e9ecef;
+}
+
+.tablejs thead th.sortable.sorted {
+  background-color: #e7f1ff;
+  color: #007bff;
+}
+
+/* Container do conteúdo do cabeçalho */
+.tablejs thead th .th-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 4px;
+  width: 100%;
+}
+
+.tablejs thead th .th-text-sort {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex: 1;
+  min-width: 0;
+}
+
+.tablejs thead th .th-text {
+  flex: 1;
+  min-width: 0;
+}
+
+/* Ícone de ordenação */
+.tablejs thead th .sort-icon {
+  font-size: 10px;
+  color: #adb5bd;
+  transition: color 0.2s ease;
+  flex-shrink: 0;
+  opacity: 0.6;
+}
+
+.tablejs thead th.sortable:hover .sort-icon {
+  opacity: 1;
+  color: #6c757d;
+}
+
+.tablejs thead th.sortable.sorted .sort-icon {
+  opacity: 1;
+  color: #007bff;
+  font-size: 11px;
+}
+
+/* Botão de filtro no header */
+.th-filter-btn {
+  background: none;
+  border: none;
+  padding: 4px 6px;
+  cursor: pointer;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  transition: all 0.2s ease;
+  position: relative;
+  flex-shrink: 0;
+  color: #6c757d;
+}
+
+.th-filter-btn:hover {
+  background-color: rgba(0, 123, 255, 0.1);
+  color: #007bff;
+}
+
+.th-filter-btn.has-filter {
+  color: #007bff;
+  background-color: rgba(0, 123, 255, 0.1);
+}
+
+.th-filter-btn svg {
+  display: block;
+}
+
+.th-filter-btn .filter-count {
+  position: absolute;
+  top: 0;
+  right: 0;
+  background-color: #007bff;
+  color: white;
+  font-size: 9px;
+  font-weight: 600;
+  border-radius: 50%;
+  width: 14px;
+  height: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+}
+
+/* === Dropdown de Filtro === */
+.tablejs-filter-dropdown {
+  position: fixed;
+  background: white;
+  border: 1px solid #dee2e6;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  z-index: 9999;
+  min-width: 250px;
+  max-width: 320px;
+  width: 280px;
+  animation: dropdownFadeIn 0.2s ease;
+  box-sizing: border-box;
+}
+
+@keyframes dropdownFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.filter-dropdown-header {
+  padding: 12px 16px;
+  border-bottom: 1px solid #dee2e6;
+  font-size: 14px;
+  font-weight: 600;
+  color: #495057;
+  word-break: break-word;
+}
+
+/* Campo de busca interno do filtro */
+.filter-search-wrapper {
+  padding: 12px 16px;
+  border-bottom: 1px solid #f1f3f5;
+  box-sizing: border-box;
+}
+
+.filter-search-input {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid #ced4da;
+  border-radius: 4px;
+  font-size: 13px;
+  outline: none;
+  transition: border-color 0.2s ease;
+  box-sizing: border-box;
+}
+
+.filter-search-input:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.1);
+}
+
+/* Select All */
+.filter-select-all {
+  padding: 10px 16px;
+  border-bottom: 1px solid #f1f3f5;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background-color: #f8f9fa;
+  font-weight: 500;
+  font-size: 13px;
+}
+
+.filter-select-all input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+  accent-color: #007bff;
+}
+
+.filter-select-all label {
+  cursor: pointer;
+  user-select: none;
+  color: #495057;
+}
+
+/* Lista de checkboxes com scroll */
+.filter-list-wrapper {
+  max-height: 300px;
+  overflow-y: auto;
+  padding: 8px 0;
+}
+
+.filter-list-wrapper::-webkit-scrollbar {
+  width: 8px;
+}
+
+.filter-list-wrapper::-webkit-scrollbar-track {
+  background: #f1f3f5;
+}
+
+.filter-list-wrapper::-webkit-scrollbar-thumb {
+  background: #adb5bd;
+  border-radius: 4px;
+}
+
+.filter-list-wrapper::-webkit-scrollbar-thumb:hover {
+  background: #6c757d;
+}
+
+.filter-list-item {
+  padding: 8px 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: background-color 0.15s ease;
+}
+
+.filter-list-item:hover {
+  background-color: #f8f9fa;
+}
+
+.filter-list-item input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+  accent-color: #007bff;
+  flex-shrink: 0;
+}
+
+.filter-list-item label {
+  cursor: pointer;
+  user-select: none;
+  font-size: 13px;
+  color: #495057;
+  flex: 1;
+}
+
+/* Input filter (para text/number/date) */
+.filter-input-wrapper {
+  padding: 16px;
+  box-sizing: border-box;
+}
+
+.filter-dropdown-input {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid #ced4da;
+  border-radius: 4px;
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.2s ease;
+  box-sizing: border-box;
+}
+
+.filter-dropdown-input:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.1);
+}
+
+/* Footer com botões */
+.filter-dropdown-footer {
+  padding: 12px 16px;
+  border-top: 1px solid #dee2e6;
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+  background-color: #f8f9fa;
+  border-radius: 0 0 8px 8px;
+}
+
+.filter-btn-clear,
+.filter-btn-apply {
+  padding: 6px 16px;
+  border: none;
+  border-radius: 4px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.filter-btn-clear {
+  background-color: #e9ecef;
+  color: #495057;
+}
+
+.filter-btn-clear:hover {
+  background-color: #dee2e6;
+}
+
+.filter-btn-apply {
+  background-color: #007bff;
+  color: white;
+}
+
+.filter-btn-apply:hover {
+  background-color: #0056b3;
+}
+
+/* Coluna de seleção */
+.tablejs thead th.tablejs-select-header,
+.tablejs tbody td.tablejs-select-cell {
+  width: 40px;
+  text-align: center;
+  padding: 12px 8px;
+}
+
+/* Checkbox customizado */
+.tablejs-checkbox {
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+  accent-color: #007bff;
+}
+
+.tablejs tbody tr {
+  border-bottom: 1px solid #dee2e6;
+  transition: background-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.tablejs tbody tr:hover {
+  background-color: #f8f9fa;
+}
+
+.tablejs tbody tr.selected {
+  background-color: #e7f1ff;
+  box-shadow: inset 3px 0 0 #007bff;
+}
+
+.tablejs tbody tr.selected:hover {
+  background-color: #d0e7ff;
+}
+
+.tablejs tbody tr:last-child {
+  border-bottom: none;
+}
+
+.tablejs tbody td {
+  padding: 12px 16px;
+  color: #212529;
+}
+
+/* Container da tabela */
+.tablejs-container {
+  overflow-x: auto;
+  margin: 20px 0;
+}
+
+/* Wrapper da tabela com paginação */
+.tablejs-wrapper {
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* === Busca Global === */
+.tablejs-search-container {
+  padding: 16px 20px;
+  background-color: #f8f9fa;
+  border-bottom: 1px solid #dee2e6;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.tablejs-search-wrapper {
+  position: relative;
+  flex: 1;
+  min-width: 280px;
+  max-width: 450px;
+}
+
+.tablejs-search-icon {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #6c757d;
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+  z-index: 1;
+}
+
+.tablejs-search-icon svg {
+  display: block;
+}
+
+.tablejs-search-input {
+  width: 100%;
+  padding: 10px 40px 10px 40px;
+  border: 1px solid #dee2e6;
+  border-radius: 6px;
+  font-size: 14px;
+  color: #495057;
+  background-color: #ffffff;
+  transition: all 0.2s ease;
+  outline: none;
+  font-family: inherit;
+}
+
+.tablejs-search-input:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+}
+
+.tablejs-search-input::placeholder {
+  color: #adb5bd;
+}
+
+.tablejs-search-clear {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  color: #6c757d;
+  cursor: pointer;
+  padding: 6px;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1;
+}
+
+.tablejs-search-clear:hover {
+  background-color: #e9ecef;
+  color: #495057;
+}
+
+/* Botão Limpar Filtros */
+.tablejs-clear-filters-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 18px;
+  background-color: #ffffff;
+  border: 1px solid #dee2e6;
+  border-radius: 6px;
+  color: #6c757d;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+  position: relative;
+  flex-shrink: 0;
+  min-width: fit-content;
+}
+
+.tablejs-clear-filters-btn:hover {
+  background-color: #f8f9fa;
+  border-color: #adb5bd;
+  color: #495057;
+}
+
+.tablejs-clear-filters-btn.has-filters {
+  background-color: #007bff;
+  border-color: #007bff;
+  color: white;
+}
+
+.tablejs-clear-filters-btn.has-filters:hover {
+  background-color: #0069d9;
+  border-color: #0069d9;
+}
+
+.tablejs-clear-filters-btn svg {
+  display: block;
+  flex-shrink: 0;
+}
+
+.tablejs-clear-filters-btn .filter-count-badge {
+  background-color: white;
+  color: #007bff;
+  font-size: 11px;
+  font-weight: 600;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+}
+
+.tablejs-clear-filters-btn:not(.has-filters) .filter-count-badge {
+  background-color: #007bff;
+  color: white;
+}
+
+/* Paginação */
+.tablejs-pagination {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 20px;
+  border-top: 1px solid #dee2e6;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.tablejs-pagination-info {
+  color: #6c757d;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.tablejs-pagination-controls {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+}
+
+.tablejs-pagination-btn {
+  min-width: 36px;
+  height: 36px;
+  padding: 0 8px;
+  border: 1px solid #dee2e6;
+  background-color: #ffffff;
+  color: #495057;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+}
+
+.tablejs-pagination-btn:hover:not(:disabled) {
+  background-color: #e9ecef;
+  border-color: #adb5bd;
+}
+
+.tablejs-pagination-btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+  background-color: #f8f9fa;
+}
+
+.tablejs-pagination-btn.active {
+  background-color: #007bff;
+  color: #ffffff;
+  border-color: #007bff;
+}
+
+.tablejs-pagination-btn.active:hover {
+  background-color: #0056b3;
+  border-color: #0056b3;
+}
+
+.tablejs-pagination-ellipsis {
+  padding: 0 8px;
+  color: #6c757d;
+  font-weight: 500;
+}
+
+.tablejs-page-size {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #6c757d;
+  font-size: 14px;
+}
+
+.tablejs-page-size-select {
+  padding: 6px 12px;
+  border: 1px solid #dee2e6;
+  border-radius: 4px;
+  background-color: #ffffff;
+  color: #495057;
+  font-size: 14px;
+  cursor: pointer;
+  transition: border-color 0.2s ease;
+}
+
+.tablejs-page-size-select:hover {
+  border-color: #adb5bd;
+}
+.tablejs-page-size-select:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+}
+/* === Loading Overlay === */
+.tablejs-table-container {
+  position: relative;
+  min-height: 200px;
+}
+
+.tablejs-loading-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(255, 255, 255, 0.95);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  backdrop-filter: blur(3px);
+}
+
+.tablejs-spinner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  color: #007bff;
+}
+
+.tablejs-spinner svg {
+  color: #007bff;
+}
+
+.tablejs-spinner span {
+  font-size: 14px;
+  font-weight: 500;
+  color: #495057;
+}
+
+.tablejs-wrapper {
+  position: relative;
+}
+
+/* Responsividade */
+@media screen and (max-width: 768px) {
+  .tablejs {
+    font-size: 12px;
+  }
+
+  .tablejs thead th,
+  .tablejs tbody td {
+    padding: 8px 12px;
+  }
+
+  .tablejs-pagination {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+  }
+
+  .tablejs-pagination-info,
+  .tablejs-pagination-controls,
+  .tablejs-page-size {
+    justify-content: center;
+  }
+
+  .tablejs-pagination-btn {
+    min-width: 32px;
+    height: 32px;
+    font-size: 13px;
+  }
+}
