@@ -17,7 +17,7 @@ Execute estes comandos no terminal (substitua a URL pela sua):
 
 ```bash
 # Adicionar o remote (substitua pela URL do seu repositório)
-git remote add origin https://github.com/SEU_USUARIO/scargrid.git
+git remote add origin https://github.com/ScarpelliniGilmar/scargrid.git
 
 # Renomear a branch para main (padrão do GitHub)
 git branch -M main

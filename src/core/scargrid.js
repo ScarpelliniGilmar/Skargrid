@@ -69,14 +69,8 @@ class ScarGrid {
    * Calcula informações de paginação
    */
   calculatePagination() {
-    if (this.options.pagination) {
-      const totalRecords = this.filteredData.length;
-      this.totalPages = Math.ceil(totalRecords / this.options.pageSize);
-      
-      // Garante que a página atual é válida
-      if (this.currentPage > this.totalPages) {
-        this.currentPage = this.totalPages || 1;
-      }
+    if (typeof PaginationFeature !== 'undefined') {
+      PaginationFeature.calculatePagination(this);
     }
   }
 
@@ -84,13 +78,10 @@ class ScarGrid {
    * Obtém os dados da página atual
    */
   getPageData() {
-    if (!this.options.pagination) {
-      return this.filteredData;
+    if (typeof PaginationFeature !== 'undefined') {
+      return PaginationFeature.getPageData(this);
     }
-
-    const startIndex = (this.currentPage - 1) * this.options.pageSize;
-    const endIndex = startIndex + this.options.pageSize;
-    return this.filteredData.slice(startIndex, endIndex);
+    return this.filteredData;
   }
 
   /**
@@ -383,14 +374,8 @@ class ScarGrid {
    * Conta quantos filtros estão ativos para uma coluna
    */
   getActiveFilterCount(field) {
-    const selected = this.columnFilterSelected[field];
-    if (selected && selected.length > 0) {
-      // Para select com checkboxes, conta quantos foram desmarcados
-      const allValues = this.getUniqueColumnValues(field);
-      return allValues.length - selected.length;
-    }
-    if (this.columnFilterValues[field]) {
-      return 1;
+    if (typeof FilterFeature !== 'undefined') {
+      return FilterFeature.getActiveFilterCount(this, field);
     }
     return 0;
   }
@@ -399,11 +384,10 @@ class ScarGrid {
    * Obtém valores únicos de uma coluna
    */
   getUniqueColumnValues(field) {
-    return [...new Set(
-      this.options.data
-        .map(row => row[field])
-        .filter(val => val !== null && val !== undefined && val !== '')
-    )].sort();
+    if (typeof FilterFeature !== 'undefined') {
+      return FilterFeature.getUniqueColumnValues(this, field);
+    }
+    return [];
   }
 
   /**
@@ -783,202 +767,28 @@ class ScarGrid {
    * Renderiza os controles de paginação
    */
   renderPagination() {
-    const paginationDiv = document.createElement('div');
-    paginationDiv.className = 'tablejs-pagination';
-
-    // Info de registros
-    const info = this.renderPaginationInfo();
-    paginationDiv.appendChild(info);
-
-    // Controles de navegação
-    const controls = this.renderPaginationControls();
-    paginationDiv.appendChild(controls);
-
-    // Seletor de itens por página
-    const sizeSelector = this.renderPageSizeSelector();
-    paginationDiv.appendChild(sizeSelector);
-
-    return paginationDiv;
-  }
-
-  /**
-   * Renderiza informação sobre registros exibidos
-   */
-  renderPaginationInfo() {
-    const info = document.createElement('div');
-    info.className = 'tablejs-pagination-info';
-
-    const totalRecords = this.filteredData.length;
-    const totalOriginal = this.options.data.length;
-    const startRecord = totalRecords === 0 ? 0 : (this.currentPage - 1) * this.options.pageSize + 1;
-    const endRecord = Math.min(this.currentPage * this.options.pageSize, totalRecords);
-
-    let text = `Mostrando ${startRecord} até ${endRecord} de ${totalRecords} registros`;
-    
-    // Adiciona info de filtro se houver busca ativa
-    if (this.searchText && totalRecords < totalOriginal) {
-      text += ` (filtrados de ${totalOriginal} total)`;
+    if (typeof PaginationFeature !== 'undefined') {
+      return PaginationFeature.renderPagination(this);
     }
-
-    info.textContent = text;
-
-    return info;
-  }
-
-  /**
-   * Renderiza controles de navegação (anterior/próximo)
-   */
-  renderPaginationControls() {
-    const controls = document.createElement('div');
-    controls.className = 'tablejs-pagination-controls';
-
-    // Botão Primeira Página
-    const firstBtn = document.createElement('button');
-    firstBtn.textContent = '«';
-    firstBtn.className = 'tablejs-pagination-btn';
-    firstBtn.disabled = this.currentPage === 1;
-    firstBtn.onclick = () => this.goToPage(1);
-    controls.appendChild(firstBtn);
-
-    // Botão Anterior
-    const prevBtn = document.createElement('button');
-    prevBtn.textContent = '‹';
-    prevBtn.className = 'tablejs-pagination-btn';
-    prevBtn.disabled = this.currentPage === 1;
-    prevBtn.onclick = () => this.goToPage(this.currentPage - 1);
-    controls.appendChild(prevBtn);
-
-    // Números de página
-    const pageNumbers = this.getPageNumbers();
-    pageNumbers.forEach(pageNum => {
-      if (pageNum === '...') {
-        const ellipsis = document.createElement('span');
-        ellipsis.textContent = '...';
-        ellipsis.className = 'tablejs-pagination-ellipsis';
-        controls.appendChild(ellipsis);
-      } else {
-        const pageBtn = document.createElement('button');
-        pageBtn.textContent = pageNum;
-        pageBtn.className = 'tablejs-pagination-btn';
-        if (pageNum === this.currentPage) {
-          pageBtn.classList.add('active');
-        }
-        pageBtn.onclick = () => this.goToPage(pageNum);
-        controls.appendChild(pageBtn);
-      }
-    });
-
-    // Botão Próximo
-    const nextBtn = document.createElement('button');
-    nextBtn.textContent = '›';
-    nextBtn.className = 'tablejs-pagination-btn';
-    nextBtn.disabled = this.currentPage === this.totalPages;
-    nextBtn.onclick = () => this.goToPage(this.currentPage + 1);
-    controls.appendChild(nextBtn);
-
-    // Botão Última Página
-    const lastBtn = document.createElement('button');
-    lastBtn.textContent = '»';
-    lastBtn.className = 'tablejs-pagination-btn';
-    lastBtn.disabled = this.currentPage === this.totalPages;
-    lastBtn.onclick = () => this.goToPage(this.totalPages);
-    controls.appendChild(lastBtn);
-
-    return controls;
-  }
-
-  /**
-   * Calcula quais números de página devem ser exibidos
-   */
-  getPageNumbers() {
-    const pages = [];
-    const maxVisible = 5;
-
-    if (this.totalPages <= maxVisible + 2) {
-      // Mostra todas as páginas
-      for (let i = 1; i <= this.totalPages; i++) {
-        pages.push(i);
-      }
-    } else {
-      // Mostra primeira, última e páginas ao redor da atual
-      pages.push(1);
-
-      let start = Math.max(2, this.currentPage - 1);
-      let end = Math.min(this.totalPages - 1, this.currentPage + 1);
-
-      if (this.currentPage <= 3) {
-        end = 4;
-      } else if (this.currentPage >= this.totalPages - 2) {
-        start = this.totalPages - 3;
-      }
-
-      if (start > 2) pages.push('...');
-
-      for (let i = start; i <= end; i++) {
-        pages.push(i);
-      }
-
-      if (end < this.totalPages - 1) pages.push('...');
-
-      pages.push(this.totalPages);
-    }
-
-    return pages;
-  }
-
-  /**
-   * Renderiza seletor de itens por página
-   */
-  renderPageSizeSelector() {
-    const selector = document.createElement('div');
-    selector.className = 'tablejs-page-size';
-
-    const label = document.createElement('span');
-    label.textContent = 'Itens por página: ';
-    selector.appendChild(label);
-
-    const select = document.createElement('select');
-    select.className = 'tablejs-page-size-select';
-
-    this.options.pageSizeOptions.forEach(size => {
-      const option = document.createElement('option');
-      option.value = size;
-      option.textContent = size;
-      if (size === this.options.pageSize) {
-        option.selected = true;
-      }
-      select.appendChild(option);
-    });
-
-    select.onchange = (e) => {
-      this.changePageSize(parseInt(e.target.value));
-    };
-
-    selector.appendChild(select);
-
-    return selector;
+    return document.createElement('div');
   }
 
   /**
    * Navega para uma página específica
    */
   goToPage(pageNumber) {
-    if (pageNumber < 1 || pageNumber > this.totalPages) {
-      return;
+    if (typeof PaginationFeature !== 'undefined') {
+      PaginationFeature.goToPage(this, pageNumber);
     }
-
-    this.currentPage = pageNumber;
-    this.render(false); // Update rápido
   }
 
   /**
    * Muda o número de itens por página
    */
   changePageSize(newSize) {
-    this.options.pageSize = newSize;
-    this.currentPage = 1;
-    this.calculatePagination();
-    this.render(false); // Update rápido
+    if (typeof PaginationFeature !== 'undefined') {
+      PaginationFeature.changePageSize(this, newSize);
+    }
   }
 
   /**
@@ -1001,77 +811,36 @@ class ScarGrid {
    * Manipula a busca de texto
    */
   handleSearch(searchText) {
-    this.searchText = searchText.trim();
-    this.currentPage = 1;
-    
-    // Aplica filtros e renderiza de forma otimizada
-    this.applyFilters();
-    this.calculatePagination();
-    this.render(false); // false = update rápido, não recria tudo
-    this.updateClearFiltersButton();
+    if (typeof FilterFeature !== 'undefined') {
+      FilterFeature.handleSearch(this, searchText);
+    }
   }
 
   /**
    * Manipula filtro por coluna
    */
   handleColumnFilter(field, value) {
-    if (value) {
-      this.columnFilterValues[field] = value;
-    } else {
-      delete this.columnFilterValues[field];
+    if (typeof FilterFeature !== 'undefined') {
+      FilterFeature.handleColumnFilter(this, field, value);
     }
-    
-    this.currentPage = 1;
-    this.applyFilters();
-    this.calculatePagination();
-    this.render(false);
-    this.updateClearFiltersButton();
   }
 
   /**
    * Limpa todos os filtros de coluna
    */
   clearColumnFilters() {
-    this.columnFilterValues = {};
-    this.currentPage = 1;
-    this.applyFilters();
-    this.calculatePagination();
-    this.render(false);
+    if (typeof FilterFeature !== 'undefined') {
+      FilterFeature.clearColumnFilters(this);
+    }
   }
 
   /**
    * Limpa TODOS os filtros (busca + filtros de coluna)
    */
   clearAllFilters() {
-    // Limpa busca global
-    this.searchText = '';
-    const searchInput = this.container.querySelector('.tablejs-search-input');
-    if (searchInput) {
-      searchInput.value = '';
+    if (typeof FilterFeature !== 'undefined') {
+      FilterFeature.clearAllFilters(this);
     }
-    
-    // Limpa filtros de coluna
-    this.columnFilterValues = {};
-    this.columnFilterSelected = {};
-    
-    // Reseta valores padrão para select types
-    this.options.columns.forEach(column => {
-      if (column.filterable !== false && column.filterType === 'select') {
-        const uniqueValues = this.getUniqueColumnValues(column.field);
-        this.columnFilterSelected[column.field] = [...uniqueValues];
-      }
-    });
-    
-    // Fecha dropdown aberto
-    if (this.openFilterDropdown) {
-      this.openFilterDropdown.remove();
-      this.openFilterDropdown = null;
-    }
-    
-    this.currentPage = 1;
-    this.applyFilters();
-    this.calculatePagination();
-    this.render();
   }
 
   /**
@@ -1119,144 +888,36 @@ class ScarGrid {
    * Aplica filtros (busca + filtros de coluna) aos dados
    */
   applyFilters() {
-    let filtered = [...this.options.data];
-
-    // Aplica busca global se houver texto
-    if (this.searchText) {
-      const searchLower = this.searchText.toLowerCase();
-      
-      filtered = filtered.filter(row => {
-        // Busca em todas as colunas
-        return this.options.columns.some(column => {
-          const value = row[column.field];
-          if (value == null) return false;
-          
-          // Converte para string e compara
-          return String(value).toLowerCase().includes(searchLower);
-        });
-      });
+    if (typeof FilterFeature !== 'undefined') {
+      FilterFeature.applyFilters(this);
     }
-
-    // Aplica filtros por coluna
-    if (Object.keys(this.columnFilterValues).length > 0) {
-      filtered = filtered.filter(row => {
-        // Todas as condições de filtro devem ser atendidas (AND)
-        return Object.entries(this.columnFilterValues).every(([field, filterValue]) => {
-          const cellValue = row[field];
-          
-          const column = this.options.columns.find(col => col.field === field);
-          const filterType = column?.filterType || 'text';
-
-          // Filtro por tipo
-          if (filterType === 'select') {
-            // Array de valores selecionados (checkboxes)
-            if (Array.isArray(filterValue)) {
-              return filterValue.includes(cellValue);
-            }
-            return String(cellValue) === String(filterValue);
-          } else if (filterType === 'number') {
-            if (!filterValue) return true;
-            if (cellValue == null) return false;
-            return Number(cellValue) === Number(filterValue);
-          } else if (filterType === 'date') {
-            if (!filterValue) return true;
-            if (cellValue == null) return false;
-            return String(cellValue).startsWith(filterValue);
-          } else {
-            // text - busca parcial case-insensitive
-            if (!filterValue) return true;
-            if (cellValue == null) return false;
-            return String(cellValue).toLowerCase().includes(String(filterValue).toLowerCase());
-          }
-        });
-      });
-    }
-
-    this.filteredData = filtered;
   }
 
   /**
    * Limpa a busca
    */
   clearSearch() {
-    this.searchText = '';
-    this.currentPage = 1;
-    this.applyFilters();
-    this.calculatePagination();
-    this.render();
+    if (typeof FilterFeature !== 'undefined') {
+      FilterFeature.clearSearch(this);
+    }
   }
 
   /**
    * Manipula o clique em uma coluna para ordenação
    */
   handleSort(field) {
-    // Se já está ordenando por esta coluna, inverte a direção
-    if (this.sortColumn === field) {
-      if (this.sortDirection === 'asc') {
-        this.sortDirection = 'desc';
-      } else if (this.sortDirection === 'desc') {
-        // Terceiro clique remove a ordenação
-        this.sortColumn = null;
-        this.sortDirection = null;
-        this.options.data = [...this.originalData];
-      }
-    } else {
-      // Nova coluna, começa com ascendente
-      this.sortColumn = field;
-      this.sortDirection = 'asc';
+    if (typeof SortFeature !== 'undefined') {
+      SortFeature.handleSort(this, field);
     }
-
-    // Aplica a ordenação se houver coluna selecionada
-    if (this.sortColumn) {
-      this.sortData();
-    }
-
-    // Volta para a primeira página após ordenar
-    this.currentPage = 1;
-    this.calculatePagination();
-    this.render(false); // Update rápido
   }
 
   /**
    * Ordena os dados pela coluna e direção atuais
    */
   sortData() {
-    const column = this.options.columns.find(col => col.field === this.sortColumn);
-    
-    this.options.data.sort((a, b) => {
-      let valueA = a[this.sortColumn];
-      let valueB = b[this.sortColumn];
-
-      // Aplica função de comparação customizada se existir
-      if (column && column.sortCompare && typeof column.sortCompare === 'function') {
-        return this.sortDirection === 'asc' 
-          ? column.sortCompare(valueA, valueB, a, b)
-          : column.sortCompare(valueB, valueA, b, a);
-      }
-
-      // Tratamento de valores nulos/undefined
-      if (valueA == null) valueA = '';
-      if (valueB == null) valueB = '';
-
-      // Detecta o tipo de dado e ordena apropriadamente
-      if (typeof valueA === 'number' && typeof valueB === 'number') {
-        // Ordenação numérica
-        return this.sortDirection === 'asc' ? valueA - valueB : valueB - valueA;
-      } else {
-        // Ordenação de string (case-insensitive)
-        const strA = String(valueA).toLowerCase();
-        const strB = String(valueB).toLowerCase();
-        
-        if (this.sortDirection === 'asc') {
-          return strA.localeCompare(strB);
-        } else {
-          return strB.localeCompare(strA);
-        }
-      }
-    });
-
-    // Reaplica filtros após ordenar
-    this.applyFilters();
+    if (typeof SortFeature !== 'undefined') {
+      SortFeature.sortData(this);
+    }
   }
 
   /**
@@ -1283,82 +944,75 @@ class ScarGrid {
    * Alterna a seleção de uma linha específica
    */
   toggleSelectRow(index, selected) {
-    if (selected) {
-      this.selectedRows.add(index);
-    } else {
-      this.selectedRows.delete(index);
+    if (typeof SelectionFeature !== 'undefined') {
+      SelectionFeature.toggleSelectRow(this, index, selected);
     }
-    this.render(false); // Update rápido
   }
 
   /**
    * Seleciona ou desseleciona todas as linhas
    */
   toggleSelectAll(selected) {
-    if (selected) {
-      // Seleciona todas as linhas
-      this.options.data.forEach((_, index) => {
-        this.selectedRows.add(index);
-      });
-    } else {
-      // Desseleciona todas
-      this.selectedRows.clear();
+    if (typeof SelectionFeature !== 'undefined') {
+      SelectionFeature.toggleSelectAll(this, selected);
     }
-    this.render(false); // Update rápido
   }
 
   /**
    * Verifica se todas as linhas estão selecionadas
    */
   isAllSelected() {
-    if (this.options.data.length === 0) return false;
-    return this.selectedRows.size === this.options.data.length;
+    if (typeof SelectionFeature !== 'undefined') {
+      return SelectionFeature.isAllSelected(this);
+    }
+    return false;
   }
 
   /**
    * Seleciona linhas específicas por índices
    */
   selectRows(indices) {
-    indices.forEach(index => {
-      if (index >= 0 && index < this.options.data.length) {
-        this.selectedRows.add(index);
-      }
-    });
-    this.render();
+    if (typeof SelectionFeature !== 'undefined') {
+      SelectionFeature.selectRows(this, indices);
+    }
   }
 
   /**
    * Desseleciona linhas específicas por índices
    */
   deselectRows(indices) {
-    indices.forEach(index => {
-      this.selectedRows.delete(index);
-    });
-    this.render();
+    if (typeof SelectionFeature !== 'undefined') {
+      SelectionFeature.deselectRows(this, indices);
+    }
   }
 
   /**
    * Limpa todas as seleções
    */
   clearSelection() {
-    this.selectedRows.clear();
-    this.render();
+    if (typeof SelectionFeature !== 'undefined') {
+      SelectionFeature.clearSelection(this);
+    }
   }
 
   /**
    * Obtém os dados das linhas selecionadas
    */
   getSelectedRows() {
-    return Array.from(this.selectedRows)
-      .map(index => this.options.data[index])
-      .filter(row => row !== undefined);
+    if (typeof SelectionFeature !== 'undefined') {
+      return SelectionFeature.getSelectedRows(this);
+    }
+    return [];
   }
 
   /**
    * Obtém os índices das linhas selecionadas
    */
   getSelectedIndices() {
-    return Array.from(this.selectedRows).sort((a, b) => a - b);
+    if (typeof SelectionFeature !== 'undefined') {
+      return SelectionFeature.getSelectedIndices(this);
+    }
+    return [];
   }
 
   /**

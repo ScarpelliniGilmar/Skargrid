@@ -5,6 +5,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>ScarGrid - Exemplo com Paginação</title>
   <link rel="stylesheet" href="../src/css/scargrid.css">
+  <!-- Módulos -->
+  <script src="../src/features/pagination.js"></script>
+  <script src="../src/features/sort.js"></script>
+  <script src="../src/features/selection.js"></script>
+  <script src="../src/features/filter.js"></script>
+  <script src="../src/core/scargrid.js"></script>
   <style>
     body {
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
@@ -57,7 +63,6 @@
 
   <div id="myGrid"></div>
 
-  <script src="../src/core/scargrid.js"></script>
   <script>
     // Gera 50 registros de exemplo
     const data = Array.from({ length: 50 }, (_, i) => ({
