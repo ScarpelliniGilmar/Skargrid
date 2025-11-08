@@ -1,23 +1,42 @@
 {
-  "name": "tablejs",
-  "version": "0.6.0",
-  "description": "Biblioteca JavaScript moderna para criação de tabelas interativas com filtros, ordenação e seleção múltipla",
-  "main": "src/table.js",
+  "name": "scargrid",
+  "version": "0.8.0",
+  "description": "Biblioteca JavaScript moderna para criação de tabelas interativas com filtros cascata, busca normalizada, ordenação e seleção múltipla",
+  "main": "dist/scargrid.min.js",
+  "files": [
+    "dist/",
+    "src/",
+    "README.md",
+    "LICENSE"
+  ],
   "scripts": {
-    "dev": "echo 'Abra o arquivo example/index.html no navegador para testar'"
+    "build": "powershell -ExecutionPolicy Bypass -File build.ps1",
+    "dev": "echo 'Abra examples/single-file.html ou examples/large-dataset.html no navegador'"
   },
   "keywords": [
     "table",
     "datatable",
     "grid",
+    "scargrid",
     "javascript",
     "ui",
     "pagination",
     "sorting",
     "selection",
     "filters",
-    "column-filters"
+    "column-filters",
+    "cascading-filters",
+    "search",
+    "horizontal-scroll"
   ],
   "author": "GILMAR A S TRINDADE",
-  "license": "MIT"
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/seu-usuario/scargrid.git"
+  },
+  "bugs": {
+    "url": "https://github.com/seu-usuario/scargrid/issues"
+  },
+  "homepage": "https://github.com/seu-usuario/scargrid#readme"
 }

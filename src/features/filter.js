@@ -5,6 +5,17 @@
 
 const FilterFeature = {
   /**
+   * Normaliza string removendo acentos para busca
+   */
+  normalizeString(str) {
+    if (!str) return '';
+    return String(str)
+      .normalize('NFD') // Decompõe caracteres acentuados
+      .replace(/[\u0300-\u036f]/g, '') // Remove marcas diacríticas
+      .toLowerCase();
+  },
+
+  /**
    * Aplica todos os filtros (busca + filtros de coluna)
    */
   applyFilters(grid) {
@@ -12,7 +23,7 @@ const FilterFeature = {
 
     // Aplica busca global se houver texto
     if (grid.searchText) {
-      const searchLower = grid.searchText.toLowerCase();
+      const searchNormalized = this.normalizeString(grid.searchText);
       
       filtered = filtered.filter(row => {
         // Busca em todas as colunas
@@ -20,8 +31,9 @@ const FilterFeature = {
           const value = row[column.field];
           if (value == null) return false;
           
-          // Converte para string e compara
-          return String(value).toLowerCase().includes(searchLower);
+          // Normaliza valor e compara sem acentos
+          const valueNormalized = this.normalizeString(value);
+          return valueNormalized.includes(searchNormalized);
         });
       });
     }
@@ -52,10 +64,12 @@ const FilterFeature = {
             if (cellValue == null) return false;
             return String(cellValue).startsWith(filterValue);
           } else {
-            // text - busca parcial case-insensitive
+            // text - busca parcial case-insensitive com normalização
             if (!filterValue) return true;
             if (cellValue == null) return false;
-            return String(cellValue).toLowerCase().includes(String(filterValue).toLowerCase());
+            const cellNormalized = this.normalizeString(cellValue);
+            const filterNormalized = this.normalizeString(filterValue);
+            return cellNormalized.includes(filterNormalized);
           }
         });
       });
@@ -71,6 +85,15 @@ const FilterFeature = {
     grid.searchText = searchText.trim();
     grid.currentPage = 1;
     
+    // Fecha dropdown aberto (evita bug de posicionamento)
+    if (grid.openFilterDropdown) {
+      grid.openFilterDropdown.remove();
+      grid.openFilterDropdown = null;
+      if (grid.removeScrollListeners) {
+        grid.removeScrollListeners();
+      }
+    }
+    
     // Aplica filtros e renderiza de forma otimizada
     this.applyFilters(grid);
     grid.calculatePagination();
@@ -84,6 +107,16 @@ const FilterFeature = {
   clearSearch(grid) {
     grid.searchText = '';
     grid.currentPage = 1;
+    
+    // Fecha dropdown aberto
+    if (grid.openFilterDropdown) {
+      grid.openFilterDropdown.remove();
+      grid.openFilterDropdown = null;
+      if (grid.removeScrollListeners) {
+        grid.removeScrollListeners();
+      }
+    }
+    
     this.applyFilters(grid);
     grid.calculatePagination();
     grid.render();
@@ -167,6 +200,11 @@ const FilterFeature = {
       grid.openFilterDropdown = null;
     }
     
+    // Remove listeners de scroll
+    if (grid.removeScrollListeners) {
+      grid.removeScrollListeners();
+    }
+    
     grid.currentPage = 1;
     this.applyFilters(grid);
     grid.calculatePagination();
@@ -174,7 +212,7 @@ const FilterFeature = {
   },
 
   /**
-   * Obtém valores únicos de uma coluna
+   * Obtém valores únicos de uma coluna (dos dados originais)
    */
   getUniqueColumnValues(grid, field) {
     const values = grid.options.data
@@ -185,14 +223,91 @@ const FilterFeature = {
   },
 
   /**
-   * Conta filtros ativos para um campo
+   * Obtém valores disponíveis de uma coluna baseado nos dados filtrados
+   * (exclui o filtro da própria coluna para mostrar o que está disponível)
    */
-  getActiveFilterCount(grid, field) {
-    const allValues = this.getUniqueColumnValues(grid, field);
-    const selected = grid.columnFilterSelected[field] || [];
+  getAvailableColumnValues(grid, field) {
+    // Pega dados filtrados, mas IGNORANDO o filtro da coluna atual
+    let data = [...grid.options.data];
+
+    // Aplica busca global
+    if (grid.searchText) {
+      const searchNormalized = this.normalizeString(grid.searchText);
+      data = data.filter(row => {
+        return grid.options.columns.some(column => {
+          const value = row[column.field];
+          if (value == null) return false;
+          const valueNormalized = this.normalizeString(value);
+          return valueNormalized.includes(searchNormalized);
+        });
+      });
+    }
+
+    // Aplica filtros de OUTRAS colunas (não a atual)
+    if (Object.keys(grid.columnFilterValues).length > 0) {
+      data = data.filter(row => {
+        return Object.entries(grid.columnFilterValues).every(([filterField, filterValue]) => {
+          // Ignora o filtro da coluna atual
+          if (filterField === field) return true;
+          
+          const cellValue = row[filterField];
+          const column = grid.options.columns.find(col => col.field === filterField);
+          const filterType = column?.filterType || 'text';
+
+          if (filterType === 'select') {
+            if (Array.isArray(filterValue)) {
+              return filterValue.includes(cellValue);
+            }
+            return String(cellValue) === String(filterValue);
+          } else if (filterType === 'number') {
+            if (!filterValue) return true;
+            if (cellValue == null) return false;
+            return Number(cellValue) === Number(filterValue);
+          } else if (filterType === 'date') {
+            if (!filterValue) return true;
+            if (cellValue == null) return false;
+            return String(cellValue).startsWith(filterValue);
+          } else {
+            if (!filterValue) return true;
+            if (cellValue == null) return false;
+            const cellNormalized = this.normalizeString(cellValue);
+            const filterNormalized = this.normalizeString(filterValue);
+            return cellNormalized.includes(filterNormalized);
+          }
+        });
+      });
+    }
+
+    // Extrai valores únicos da coluna nos dados filtrados
+    const values = data
+      .map(row => row[field])
+      .filter(value => value != null);
     
-    // Retorna quantos estão desmarcados
-    return allValues.length - selected.length;
+    return [...new Set(values)].sort();
+  },
+
+  /**
+   * Verifica se uma coluna tem filtro ativo
+   * @returns {boolean} true se há filtro ativo (nem todos valores estão selecionados)
+   */
+  hasActiveFilter(grid, field) {
+    const column = grid.options.columns.find(col => col.field === field);
+    if (!column || column.filterable === false) return false;
+
+    if (column.filterType === 'select') {
+      const allValues = this.getUniqueColumnValues(grid, field);
+      const selected = grid.columnFilterSelected[field];
+      
+      // Se não foi inicializado ainda, considera sem filtro
+      if (!selected || selected.length === 0) return false;
+      
+      // Se todos estão selecionados, não há filtro
+      // Se algum foi desmarcado, há filtro ativo
+      return selected.length < allValues.length;
+    } else {
+      // Para text, number, date: há filtro se tem valor
+      return !!grid.columnFilterValues[field];
+    }
   }
 };
 

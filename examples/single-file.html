@@ -2,25 +2,22 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
-  <title>ScarGrid v0.7.0 - Nova Arquitetura Modular</title>
-  <link rel="stylesheet" href="../src/css/scargrid.css">
+  <title>ScarGrid v0.8.0 - Build Único</title>
   
-  <!-- NOVA ARQUITETURA: Carregamento inteligente -->
-  <!-- 1. Features (módulos independentes) -->
-  <script src="../src/features/pagination.js"></script>
-  <script src="../src/features/sort.js"></script>
-  <script src="../src/features/selection.js"></script>
-  <script src="../src/features/filter.js"></script>
-  
-  <!-- 2. Core (implementação de renderização) -->
-  <script src="../src/core/scargrid.js"></script>
+  <!-- 
+    ============================================
+    APENAS 2 ARQUIVOS NECESSÁRIOS!
+    ============================================
+  -->
+  <link rel="stylesheet" href="../dist/scargrid.css">
+  <script src="../dist/scargrid.min.js"></script>
   
   <style>
     body {
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
       max-width: 1200px;
-      margin: 50px auto;
-      padding: 20px;
+      margin: 0 auto;
+      padding: 40px 20px;
       background: #f8f9fa;
     }
     
@@ -44,47 +41,53 @@
       font-size: 1.1em;
     }
     
-    .features-grid {
+    .benefits {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 20px;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 15px;
       margin-bottom: 30px;
     }
     
-    .feature-card {
+    .benefit-card {
       background: white;
       padding: 20px;
       border-radius: 8px;
       box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      text-align: center;
     }
     
-    .feature-card h3 {
+    .benefit-card h3 {
       margin: 0 0 10px 0;
       color: #667eea;
+      font-size: 2em;
     }
     
-    .feature-card p {
+    .benefit-card p {
       margin: 0;
       color: #666;
       font-size: 0.9em;
     }
     
-    .status {
-      display: inline-block;
-      padding: 4px 8px;
-      border-radius: 4px;
-      font-size: 0.85em;
-      font-weight: bold;
+    .code-example {
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
     }
     
-    .status.loaded {
-      background: #d4edda;
-      color: #155724;
+    .code-example h3 {
+      margin: 0 0 15px 0;
+      color: #333;
     }
     
-    .status.missing {
-      background: #f8d7da;
-      color: #721c24;
+    .code-example pre {
+      background: #282c34;
+      color: #abb2bf;
+      padding: 20px;
+      border-radius: 6px;
+      overflow-x: auto;
+      margin: 0;
     }
     
     .controls {
@@ -123,51 +126,61 @@
 </head>
 <body>
   <div class="hero">
-    <h1>🚀 ScarGrid v0.7.0</h1>
-    <p>Nova arquitetura modular inteligente</p>
+    <h1>ScarGrid v0.8.0</h1>
+    <p>Build único - Apenas 2 arquivos! (JS + CSS)</p>
   </div>
 
-  <div class="features-grid">
-    <div class="feature-card">
-      <h3>📦 Modular</h3>
-      <p>Features independentes carregadas sob demanda</p>
-      <div style="margin-top: 10px;">
-        <span class="status loaded" id="status-pagination">Pagination</span>
-      </div>
+  <div class="benefits">
+    <div class="benefit-card">
+      <h3>📦</h3>
+      <p><strong>50 KB</strong><br>Bundle completo minificado</p>
     </div>
     
-    <div class="feature-card">
-      <h3>🎯 Inteligente</h3>
-      <p>Detecção automática de features disponíveis</p>
-      <div style="margin-top: 10px;">
-        <span class="status loaded" id="status-sort">Sort</span>
-      </div>
+    <div class="benefit-card">
+      <h3>⚡</h3>
+      <p><strong>Zero deps</strong><br>Nenhuma dependência externa</p>
     </div>
     
-    <div class="feature-card">
-      <h3>⚡ Performance</h3>
-      <p>Core de 935 linhas (-33% do original)</p>
-      <div style="margin-top: 10px;">
-        <span class="status loaded" id="status-selection">Selection</span>
-      </div>
+    <div class="benefit-card">
+      <h3>🚀</h3>
+      <p><strong>2 arquivos</strong><br>scargrid.min.js + scargrid.css</p>
     </div>
     
-    <div class="feature-card">
-      <h3>🔧 Flexível</h3>
-      <p>Use apenas as features que precisa</p>
-      <div style="margin-top: 10px;">
-        <span class="status loaded" id="status-filter">Filter</span>
-      </div>
+    <div class="benefit-card">
+      <h3>✨</h3>
+      <p><strong>Todas features</strong><br>Pagination, Sort, Filter, Selection</p>
     </div>
+  </div>
+
+  <div class="code-example">
+    <h3>💡 Como usar:</h3>
+    <pre>&lt;!-- 1. Carregue o CSS --&gt;
+&lt;link rel="stylesheet" href="scargrid.css"&gt;
+
+&lt;!-- 2. Carregue o JS --&gt;
+&lt;script src="scargrid.min.js"&gt;&lt;/script&gt;
+
+&lt;!-- 3. Use! --&gt;
+&lt;script&gt;
+  const table = new ScarGrid('container', {
+    data: myData,
+    columns: myColumns,
+    pagination: true,
+    sortable: true,
+    selectable: true,
+    searchable: true,
+    columnFilters: true
+  });
+&lt;/script&gt;</pre>
   </div>
 
   <div class="controls">
     <strong>Testar API:</strong>
-    <button onclick="testGetSelected()">📋 Ver Selecionados</button>
-    <button onclick="testClearSelection()">🔄 Limpar Seleção</button>
-    <button onclick="testSelectFirst3()">✅ Selecionar 3 Primeiros</button>
-    <button onclick="testClearFilters()">🧹 Limpar Filtros</button>
-    <button onclick="testUpdateData()">♻️ Atualizar Dados</button>
+    <button onclick="testGetSelected()">Ver Selecionados</button>
+    <button onclick="testClearSelection()">Limpar Seleção</button>
+    <button onclick="testSelectFirst3()">Selecionar 3 Primeiros</button>
+    <button onclick="testClearFilters()">Limpar Filtros</button>
+    <button onclick="testUpdateData()">Atualizar Dados</button>
   </div>
 
   <div class="table-wrapper">
@@ -175,30 +188,6 @@
   </div>
 
   <script>
-    // Verifica status das features
-    function checkFeatureStatus() {
-      const features = {
-        pagination: typeof PaginationFeature !== 'undefined',
-        sort: typeof SortFeature !== 'undefined',
-        selection: typeof SelectionFeature !== 'undefined',
-        filter: typeof FilterFeature !== 'undefined'
-      };
-
-      Object.entries(features).forEach(([name, loaded]) => {
-        const el = document.getElementById(`status-${name}`);
-        if (el) {
-          el.className = `status ${loaded ? 'loaded' : 'missing'}`;
-          el.textContent = loaded ? `✓ ${name}` : `✗ ${name}`;
-        }
-      });
-
-      console.log('🔍 Status das Features:', features);
-      console.log('🎯 ScarGrid disponível:', typeof ScarGrid !== 'undefined');
-      console.log('🎯 ScarGridCore disponível:', typeof ScarGridCore !== 'undefined');
-    }
-
-    checkFeatureStatus();
-
     // Dados de exemplo
     const sampleData = [
       { id: 1, nome: 'João Silva', idade: 28, cidade: 'São Paulo', status: 'Ativo' },
@@ -218,7 +207,7 @@
       { id: 15, nome: 'Gustavo Ribeiro', idade: 28, cidade: 'Natal', status: 'Ativo' },
     ];
 
-    // Configuração das colunas
+    // Configuração
     const columns = [
       { field: 'id', title: 'ID', width: '60px', sortable: true },
       { 
@@ -257,8 +246,7 @@
       }
     ];
 
-    // Inicializa a tabela
-    console.log('🚀 Inicializando ScarGrid...');
+    // Inicializa
     const table = new ScarGrid('myTable', {
       data: sampleData,
       columns: columns,
@@ -270,29 +258,24 @@
       columnFilters: true
     });
 
-    console.log('✅ ScarGrid inicializado com sucesso!');
-    console.log('📊 Instância:', table);
+    console.log('✅ ScarGrid carregado!', table);
 
     // Funções de teste
     function testGetSelected() {
       const selected = table.getSelectedRows();
       alert(`Selecionados: ${selected.length}\n\n${JSON.stringify(selected, null, 2)}`);
-      console.log('Linhas selecionadas:', selected);
     }
 
     function testClearSelection() {
       table.clearSelection();
-      console.log('✓ Seleção limpa');
     }
 
     function testSelectFirst3() {
       table.selectRows([0, 1, 2]);
-      console.log('✓ 3 primeiras linhas selecionadas');
     }
 
     function testClearFilters() {
       table.clearAllFilters();
-      console.log('✓ Filtros limpos');
     }
 
     function testUpdateData() {
@@ -301,18 +284,7 @@
         idade: row.idade + Math.floor(Math.random() * 5)
       }));
       table.updateData(newData);
-      console.log('✓ Dados atualizados');
     }
-
-    // Log de demonstração
-    console.log('📚 API Pública disponível:');
-    console.log('  - table.getSelectedRows()');
-    console.log('  - table.clearSelection()');
-    console.log('  - table.selectRows([indices])');
-    console.log('  - table.clearAllFilters()');
-    console.log('  - table.updateData(newData)');
-    console.log('  - table.goToPage(n)');
-    console.log('  - table.changePageSize(n)');
   </script>
 </body>
 </html>

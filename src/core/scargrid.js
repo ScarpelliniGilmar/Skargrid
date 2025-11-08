@@ -342,9 +342,9 @@ class ScarGridCore {
         filterIconBtn.className = 'th-filter-btn';
         filterIconBtn.type = 'button';
         
-        // Conta filtros ativos nesta coluna
-        const activeFilters = this.getActiveFilterCount(column.field);
-        if (activeFilters > 0) {
+        // Verifica se há filtro ativo nesta coluna
+        const hasFilter = this.hasActiveFilter(column.field);
+        if (hasFilter) {
           filterIconBtn.classList.add('has-filter');
         }
         
@@ -352,7 +352,6 @@ class ScarGridCore {
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
           </svg>
-          ${activeFilters > 0 ? `<span class="filter-count">${activeFilters}</span>` : ''}
         `;
         
         filterIconBtn.onclick = (e) => {
@@ -372,21 +371,46 @@ class ScarGridCore {
   }
 
   /**
-   * Conta quantos filtros estão ativos para uma coluna
+   * Verifica se uma coluna tem filtro ativo
    */
-  getActiveFilterCount(field) {
+  hasActiveFilter(field) {
     if (typeof FilterFeature !== 'undefined') {
-      return FilterFeature.getActiveFilterCount(this, field);
+      return FilterFeature.hasActiveFilter(this, field);
     }
-    return 0;
+    return false;
   }
 
   /**
-   * Obtém valores únicos de uma coluna
+   * Normaliza string para busca (remove acentos)
+   */
+  normalizeString(str) {
+    if (typeof FilterFeature !== 'undefined') {
+      return FilterFeature.normalizeString(str);
+    }
+    // Fallback se FilterFeature não disponível
+    if (!str) return '';
+    return String(str)
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .toLowerCase();
+  }
+
+  /**
+   * Obtém valores únicos de uma coluna (dados originais)
    */
   getUniqueColumnValues(field) {
     if (typeof FilterFeature !== 'undefined') {
       return FilterFeature.getUniqueColumnValues(this, field);
+    }
+    return [];
+  }
+
+  /**
+   * Obtém valores disponíveis de uma coluna (dados filtrados, exceto a própria coluna)
+   */
+  getAvailableColumnValues(field) {
+    if (typeof FilterFeature !== 'undefined') {
+      return FilterFeature.getAvailableColumnValues(this, field);
     }
     return [];
   }
@@ -398,6 +422,7 @@ class ScarGridCore {
     // Fecha dropdown aberto
     if (this.openFilterDropdown) {
       this.openFilterDropdown.remove();
+      this.removeScrollListeners();
       if (this.openFilterDropdown.dataset.field === column.field) {
         this.openFilterDropdown = null;
         return;
@@ -413,47 +438,72 @@ class ScarGridCore {
     dropdown.style.position = 'fixed';
     document.body.appendChild(dropdown);
     
-    // Calcula posicionamento
-    const rect = buttonElement.getBoundingClientRect();
-    const dropdownRect = dropdown.getBoundingClientRect();
-    const viewportWidth = window.innerWidth;
-    const viewportHeight = window.innerHeight;
+    // Função para posicionar o dropdown
+    const positionDropdown = () => {
+      const rect = buttonElement.getBoundingClientRect();
+      const dropdownRect = dropdown.getBoundingClientRect();
+      const viewportWidth = window.innerWidth;
+      const viewportHeight = window.innerHeight;
+      
+      // Posição inicial (logo abaixo do botão, alinhado à esquerda)
+      let top = rect.bottom + 2;
+      let left = rect.left;
+      
+      // Ajusta se sair pela direita
+      if (left + dropdownRect.width > viewportWidth - 20) {
+        left = rect.right - dropdownRect.width;
+      }
+      
+      // Ajusta se sair por baixo
+      if (top + dropdownRect.height > viewportHeight - 20) {
+        // Abre para cima
+        top = rect.top - dropdownRect.height - 2;
+      }
+      
+      // Garante que não saia pela esquerda
+      if (left < 10) {
+        left = 10;
+      }
+      
+      dropdown.style.top = `${top}px`;
+      dropdown.style.left = `${left}px`;
+    };
     
-    // Posição inicial (logo abaixo do botão, alinhado à esquerda)
-    let top = rect.bottom + 2;
-    let left = rect.left;
-    
-    // Ajusta se sair pela direita
-    if (left + dropdownRect.width > viewportWidth - 20) {
-      left = rect.right - dropdownRect.width;
-    }
-    
-    // Ajusta se sair por baixo
-    if (top + dropdownRect.height > viewportHeight - 20) {
-      // Abre para cima
-      top = rect.top - dropdownRect.height - 2;
-    }
-    
-    // Garante que não saia pela esquerda
-    if (left < 10) {
-      left = 10;
-    }
-    
-    dropdown.style.top = `${top}px`;
-    dropdown.style.left = `${left}px`;
+    // Posiciona inicialmente
+    positionDropdown();
     dropdown.style.visibility = 'visible';
     
     this.openFilterDropdown = dropdown;
+
+    // Handler para reposicionar no scroll
+    const scrollHandler = () => {
+      positionDropdown();
+    };
+    
+    // Adiciona listeners de scroll
+    window.addEventListener('scroll', scrollHandler, true); // true = capture phase para pegar todos scrolls
+    this.scrollHandler = scrollHandler;
 
     // Fecha ao clicar fora
     setTimeout(() => {
       document.addEventListener('click', (e) => {
         if (!dropdown.contains(e.target) && e.target !== buttonElement) {
           dropdown.remove();
+          this.removeScrollListeners();
           this.openFilterDropdown = null;
         }
       }, { once: true });
     }, 100);
+  }
+
+  /**
+   * Remove listeners de scroll
+   */
+  removeScrollListeners() {
+    if (this.scrollHandler) {
+      window.removeEventListener('scroll', this.scrollHandler, true);
+      this.scrollHandler = null;
+    }
   }
 
   /**
@@ -477,14 +527,18 @@ class ScarGridCore {
   }
 
   /**
-   * Cria filtro com checkboxes e busca interna
+   * Cria filtro com checkboxes e busca interna (valores disponíveis dinamicamente)
    */
   createCheckboxFilter(dropdown, column) {
-    const uniqueValues = this.getUniqueColumnValues(column.field);
+    // Pega TODOS os valores que existem nos dados originais
+    const allUniqueValues = this.getUniqueColumnValues(column.field);
     
-    // Inicializa selected se não existir
+    // Pega valores DISPONÍVEIS considerando outros filtros ativos
+    const availableValues = this.getAvailableColumnValues(column.field);
+    
+    // Inicializa selected se não existir (com todos os valores originais)
     if (!this.columnFilterSelected[column.field]) {
-      this.columnFilterSelected[column.field] = [...uniqueValues];
+      this.columnFilterSelected[column.field] = [...allUniqueValues];
     }
 
     // Header do dropdown
@@ -512,7 +566,7 @@ class ScarGridCore {
     const selectAllCheckbox = document.createElement('input');
     selectAllCheckbox.type = 'checkbox';
     selectAllCheckbox.id = `select-all-${column.field}`;
-    selectAllCheckbox.checked = this.columnFilterSelected[column.field].length === uniqueValues.length;
+    selectAllCheckbox.checked = this.columnFilterSelected[column.field].length === allUniqueValues.length;
     
     const selectAllLabel = document.createElement('label');
     selectAllLabel.htmlFor = `select-all-${column.field}`;
@@ -529,17 +583,25 @@ class ScarGridCore {
     const list = document.createElement('div');
     list.className = 'filter-list';
 
-    const renderList = (filteredValues = uniqueValues) => {
+    const renderList = (filteredValues = allUniqueValues) => {
       list.innerHTML = '';
       filteredValues.forEach(value => {
         const item = document.createElement('div');
         item.className = 'filter-list-item';
+        
+        // Verifica se o valor está disponível nos dados filtrados
+        const isAvailable = availableValues.includes(value);
+        if (!isAvailable) {
+          item.classList.add('filter-item-disabled');
+          item.title = 'Não disponível com os filtros atuais';
+        }
         
         const checkbox = document.createElement('input');
         checkbox.type = 'checkbox';
         checkbox.value = value;
         checkbox.id = `filter-${column.field}-${value}`;
         checkbox.checked = this.columnFilterSelected[column.field].includes(value);
+        checkbox.disabled = !isAvailable; // Desabilita se não disponível
         
         const label = document.createElement('label');
         label.htmlFor = `filter-${column.field}-${value}`;
@@ -560,7 +622,7 @@ class ScarGridCore {
               this.columnFilterSelected[column.field].filter(v => v !== value);
           }
           selectAllCheckbox.checked = 
-            this.columnFilterSelected[column.field].length === uniqueValues.length;
+            this.columnFilterSelected[column.field].length === allUniqueValues.length;
         };
       });
     };
@@ -569,11 +631,11 @@ class ScarGridCore {
     listWrapper.appendChild(list);
     dropdown.appendChild(listWrapper);
 
-    // Busca interna
+    // Busca interna (com normalização de acentos)
     searchInput.oninput = (e) => {
-      const searchTerm = e.target.value.toLowerCase();
-      const filtered = uniqueValues.filter(val => 
-        String(val).toLowerCase().includes(searchTerm)
+      const searchTerm = this.normalizeString(e.target.value);
+      const filtered = allUniqueValues.filter(val => 
+        this.normalizeString(val).includes(searchTerm)
       );
       renderList(filtered);
     };
@@ -581,7 +643,7 @@ class ScarGridCore {
     // Select/Deselect All
     selectAllCheckbox.onchange = () => {
       if (selectAllCheckbox.checked) {
-        this.columnFilterSelected[column.field] = [...uniqueValues];
+        this.columnFilterSelected[column.field] = [...allUniqueValues];
       } else {
         this.columnFilterSelected[column.field] = [];
       }
@@ -596,9 +658,10 @@ class ScarGridCore {
     clearBtn.textContent = 'Limpar';
     clearBtn.className = 'filter-btn-clear';
     clearBtn.onclick = () => {
-      this.columnFilterSelected[column.field] = [...uniqueValues];
+      this.columnFilterSelected[column.field] = [...allUniqueValues];
       this.handleColumnFilterCheckbox(column.field);
       dropdown.remove();
+      this.removeScrollListeners();
       this.openFilterDropdown = null;
     };
     
@@ -608,6 +671,7 @@ class ScarGridCore {
     applyBtn.onclick = () => {
       this.handleColumnFilterCheckbox(column.field);
       dropdown.remove();
+      this.removeScrollListeners();
       this.openFilterDropdown = null;
     };
     
@@ -845,7 +909,7 @@ class ScarGridCore {
   }
 
   /**
-   * Atualiza o botão de limpar filtros com contador
+   * Atualiza o botão de limpar filtros com contador de filtros ativos
    */
   updateClearFiltersButton(button = null) {
     if (!button) {
@@ -854,7 +918,7 @@ class ScarGridCore {
     
     if (!button) return;
     
-    // Conta filtros ativos
+    // Conta quantos filtros estão ativos
     let activeCount = 0;
     
     // Conta busca global
@@ -863,13 +927,8 @@ class ScarGridCore {
     // Conta filtros de coluna
     this.options.columns.forEach(column => {
       if (column.filterable !== false) {
-        if (column.filterType === 'select') {
-          // Para select, conta se tem algum item desmarcado
-          const count = this.getActiveFilterCount(column.field);
-          if (count > 0) activeCount++;
-        } else {
-          // Para text/number/date, conta se tem valor
-          if (this.columnFilterValues[column.field]) activeCount++;
+        if (this.hasActiveFilter(column.field)) {
+          activeCount++;
         }
       }
     });

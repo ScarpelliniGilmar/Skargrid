@@ -4,6 +4,7 @@
 
 .tablejs {
   width: 100%;
+  min-width: max-content; /* Garante que a tabela não encolha */
   border-collapse: collapse;
   background-color: #ffffff;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -251,12 +252,31 @@
   background-color: #f8f9fa;
 }
 
+/* Item desabilitado (não disponível com filtros atuais) */
+.filter-list-item.filter-item-disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.filter-list-item.filter-item-disabled:hover {
+  background-color: transparent;
+}
+
+.filter-list-item.filter-item-disabled label {
+  cursor: not-allowed;
+  color: #adb5bd;
+}
+
 .filter-list-item input[type="checkbox"] {
   width: 16px;
   height: 16px;
   cursor: pointer;
   accent-color: #007bff;
   flex-shrink: 0;
+}
+
+.filter-list-item input[type="checkbox"]:disabled {
+  cursor: not-allowed;
 }
 
 .filter-list-item label {
@@ -622,6 +642,27 @@
 .tablejs-table-container {
   position: relative;
   min-height: 200px;
+  overflow-x: auto;
+  overflow-y: visible;
+}
+
+/* Estilização do scroll horizontal */
+.tablejs-table-container::-webkit-scrollbar {
+  height: 12px;
+}
+
+.tablejs-table-container::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 6px;
+}
+
+.tablejs-table-container::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 6px;
+}
+
+.tablejs-table-container::-webkit-scrollbar-thumb:hover {
+  background: #555;
 }
 
 .tablejs-loading-overlay {
