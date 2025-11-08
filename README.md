@@ -3,14 +3,17 @@
 > Biblioteca JavaScript moderna para criação de tabelas interativas com filtros cascata, busca normalizada e recursos avançados
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-[![Version](https://img.shields.io/badge/version-0.8.1-green.svg)](package.json)
+[![Version](https://img.shields.io/badge/version-0.8.3-green.svg)](package.json)
 
-## ✨ Destaques v0.8.1
+## ✨ Destaques v0.8.3
 
-- 🔄 **Filtros Cascata** - Estilo Excel com valores indisponíveis desabilitados automaticamente
+- 🎨 **Configuração de Colunas** - Drag & drop para reordenar, mostrar/ocultar colunas
+- 💾 **Persistência** - Salva preferências do usuário no localStorage
+- 🌓 **Suporte a Temas** - Light/Dark theme com transições suaves
+- 🔄 **Filtros Cascata** - Estilo Excel com valores indisponíveis desabilitados
 - 🌍 **Busca Normalizada** - Remove acentos automaticamente (José = jose)
 - ↔️ **Scroll Horizontal** - Custom scrollbar para tabelas largas
-- 📦 **Bundle Único** - Apenas 2 arquivos (JS + CSS) - ~56KB
+- 📦 **Bundle Único** - Apenas 2 arquivos (JS + CSS) - ~83KB
 - 🎯 **Zero Dependências** - Vanilla JavaScript puro
 - ⚡ **Performance** - Otimizado para grandes datasets
 
@@ -29,7 +32,7 @@
 **Opção 2: Download**
 ```bash
 # Clone o repositório
-git clone https://github.com/seu-usuario/scargrid.git
+git clone https://github.com/ScarpelliniGilmar/scargrid.git
 
 # Copie os arquivos dist/ para seu projeto
 cp scargrid/dist/scargrid.min.js seu-projeto/
@@ -70,10 +73,13 @@ npm install scargrid
       data: data,
       columns: columns,
       pagination: true,
+      pageSize: 10,
       sortable: true,
       searchable: true,
       selectable: true,
-      columnFilters: true
+      columnFilters: true,
+      columnConfig: true,          // Habilita configuração de colunas
+      persistColumnConfig: true    // Salva preferências do usuário
     });
   </script>
 </body>
@@ -99,10 +105,14 @@ new ScarGrid(containerId, options)
 | `pagination` | Boolean | `false` | Habilita paginação |
 | `pageSize` | Number | `10` | Itens por página |
 | `pageSizeOptions` | Array | `[10,25,50,100]` | Opções de tamanho de página |
-| `sortable` | Boolean | `true` | Habilita ordenação global |
+| `sortable` | Boolean | `false` | Habilita ordenação global |
 | `selectable` | Boolean | `false` | Habilita seleção múltipla |
 | `searchable` | Boolean | `false` | Habilita busca global |
 | `columnFilters` | Boolean | `false` | Habilita filtros por coluna |
+| `columnConfig` | Boolean | `false` | Habilita botão de configuração de colunas |
+| `persistColumnConfig` | Boolean | `false` | Salva configuração de colunas no localStorage |
+| `storageKey` | String | `'scargrid-config-{id}'` | Chave do localStorage (se persistColumnConfig=true) |
+| `theme` | String | `'light'` | Tema visual: 'light' ou 'dark' |
 | `className` | String | `'scargrid'` | Classe CSS da tabela |
 
 #### Configuração de Colunas
@@ -112,8 +122,9 @@ new ScarGrid(containerId, options)
   field: 'nome',           // Campo do objeto de dados (obrigatório)
   title: 'Nome Completo',  // Título exibido no header
   width: '200px',          // Largura da coluna (opcional)
-  sortable: true,          // Permite ordenação (padrão: true se global habilitado)
-  filterable: true,        // Mostra ícone de filtro (padrão: true se columnFilters habilitado)
+  visible: true,           // Visibilidade inicial (padrão: true)
+  sortable: true,          // Permite ordenação (padrão: false)
+  filterable: true,        // Mostra ícone de filtro (padrão: false)
   filterType: 'text',      // Tipo: 'text', 'number', 'date', 'select'
   
   // Formatação customizada
@@ -184,8 +195,72 @@ table.clearSearch();                            // Limpa apenas busca global
 table.goToPage(3);                             // Vai para página específica
 table.changePageSize(25);                       // Muda itens por página
 
+// Temas
+table.setTheme('dark');                         // Alterna entre 'light' e 'dark'
+
+// Configuração de Colunas (se columnConfig=true)
+table.saveColumnConfig();                       // Salva manualmente no localStorage
+table.loadColumnConfig();                       // Carrega configuração salva
+table.clearSavedColumnConfig();                 // Remove configuração salva
+
 // Destruir instância
 table.destroy();
+```
+
+### Recursos Avançados
+
+#### 🎨 Suporte a Temas
+
+```javascript
+// Tema escuro
+const table = new ScarGrid('myTable', {
+  data: data,
+  columns: columns,
+  theme: 'dark'
+});
+
+// Alternar tema dinamicamente
+table.setTheme('dark');  // ou 'light'
+```
+
+#### 🎯 Configuração de Colunas
+
+```javascript
+const table = new ScarGrid('myTable', {
+  data: data,
+  columns: columns,
+  columnConfig: true,              // Habilita botão de configuração
+  persistColumnConfig: true,       // Salva preferências do usuário
+  storageKey: 'minha-tabela-key'  // Chave customizada (opcional)
+});
+
+// Usuário pode:
+// - Reordenar colunas (drag & drop)
+// - Mostrar/ocultar colunas (checkboxes)
+// - Usar setas para mover colunas
+// - Restaurar configuração padrão
+// - Configuração salva automaticamente no localStorage
+```
+
+#### 👁️ Colunas Ocultas por Padrão
+
+```javascript
+const columns = [
+  { field: 'id', title: 'ID' },
+  { field: 'nome', title: 'Nome' },
+  { 
+    field: 'telefone', 
+    title: 'Telefone',
+    visible: false  // Oculta por padrão
+  },
+  { 
+    field: 'email', 
+    title: 'E-mail',
+    visible: false  // Oculta por padrão
+  }
+];
+
+// Usuário pode mostrar via botão de configuração
 ```
 
 ### Eventos e Callbacks
@@ -224,7 +299,7 @@ scargrid/
 │           ├── light.css         # Tema claro
 │           └── dark.css          # Tema escuro
 ├── dist/                         # Build de produção
-│   ├── scargrid.min.js           # Bundle único (56KB)
+│   ├── scargrid.min.js           # Bundle único (~83KB)
 │   └── scargrid.css              # Estilos compilados
 ├── examples/
 │   ├── single-file.html          # Exemplo básico
@@ -397,7 +472,7 @@ Copyright (c) 2024-2025 GILMAR A S TRINDADE
 
 **GILMAR A S TRINDADE**
 
-- GitHub: [@seu-usuario](https://github.com/seu-usuario)
+- GitHub: [@ScarpelliniGilmar](https://github.com/ScarpelliniGilmar)
 - Email: seu-email@example.com
 
 ---
