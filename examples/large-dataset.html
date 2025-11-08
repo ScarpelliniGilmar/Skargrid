@@ -226,7 +226,8 @@
         title: 'Telefone', 
         width: '140px',
         filterable: true,
-        filterType: 'text'
+        filterType: 'text',
+        visible: false  // Oculta por padrão
       },
       { 
         field: 'idade', 
@@ -283,7 +284,8 @@
         width: '130px', 
         sortable: true,
         filterable: true,
-        filterType: 'date'
+        filterType: 'date',
+        visible: false  // Oculta por padrão
       },
       { 
         field: 'dataNascimento', 
@@ -291,7 +293,8 @@
         width: '140px', 
         sortable: true,
         filterable: true,
-        filterType: 'date'
+        filterType: 'date',
+        visible: false  // Oculta por padrão
       },
       { 
         field: 'status', 
@@ -332,21 +335,24 @@
         width: '100px', 
         sortable: true,
         filterable: true,
-        filterType: 'number'
+        filterType: 'number',
+        visible: false  // Oculta por padrão
       },
       { 
         field: 'vendas', 
         title: 'Vendas', 
         width: '120px', 
         sortable: true,
-        render: (value) => `R$ ${value.toLocaleString('pt-BR')}`
+        render: (value) => `R$ ${value.toLocaleString('pt-BR')}`,
+        visible: false  // Oculta por padrão
       },
       { 
         field: 'comissao', 
         title: 'Comissão', 
         width: '100px', 
         sortable: true,
-        render: (value) => `R$ ${parseFloat(value).toLocaleString('pt-BR', {minimumFractionDigits: 2})}`
+        render: (value) => `R$ ${parseFloat(value).toLocaleString('pt-BR', {minimumFractionDigits: 2})}`,
+        visible: false  // Oculta por padrão
       },
       { 
         field: 'score', 
@@ -422,11 +428,12 @@
       data: data,
       columns: columns,
       pagination: true,
-      pageSize: 10,
       sortable: true,
       selectable: true,
       searchable: true,
-      columnFilters: true
+      columnFilters: true,
+      columnConfig: true,
+      persistColumnConfig: true  // Salva configuração de colunas no localStorage
     });
 
     console.log('✅ Tabela carregada!', {

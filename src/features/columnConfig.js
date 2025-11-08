@@ -8,6 +8,75 @@ export function initColumnConfig(grid) {
   grid.tempVisibleColumns = null;
   grid.tempColumnOrder = null;
 
+  // Chave para localStorage (permite múltiplas tabelas na mesma página)
+  grid.storageKey = grid.options.storageKey || `scargrid-config-${grid.container.id || 'default'}`;
+
+  /**
+   * Salva configuração de colunas no localStorage
+   */
+  grid.saveColumnConfig = function() {
+    if (!grid.options.persistColumnConfig) return;
+    
+    try {
+      const config = {
+        visibleColumns: Array.from(this.visibleColumns),
+        columnOrder: this.columnOrder,
+        timestamp: Date.now()
+      };
+      localStorage.setItem(this.storageKey, JSON.stringify(config));
+    } catch (e) {
+      console.warn('Não foi possível salvar configuração de colunas:', e);
+    }
+  };
+
+  /**
+   * Carrega configuração de colunas do localStorage
+   */
+  grid.loadColumnConfig = function() {
+    if (!grid.options.persistColumnConfig) return false;
+    
+    try {
+      const saved = localStorage.getItem(this.storageKey);
+      if (!saved) return false;
+
+      const config = JSON.parse(saved);
+      
+      // Valida se todas as colunas ainda existem
+      const currentFields = this.options.columns.map(col => col.field);
+      const validVisible = config.visibleColumns.filter(field => currentFields.includes(field));
+      const validOrder = config.columnOrder.filter(field => currentFields.includes(field));
+      
+      // Adiciona novas colunas que não estavam na config salva
+      currentFields.forEach(field => {
+        if (!validOrder.includes(field)) {
+          validOrder.push(field);
+        }
+      });
+
+      this.visibleColumns = new Set(validVisible);
+      this.columnOrder = validOrder;
+      
+      return true;
+    } catch (e) {
+      console.warn('Não foi possível carregar configuração de colunas:', e);
+      return false;
+    }
+  };
+
+  /**
+   * Limpa configuração salva
+   */
+  grid.clearSavedColumnConfig = function() {
+    try {
+      localStorage.removeItem(this.storageKey);
+    } catch (e) {
+      console.warn('Não foi possível limpar configuração:', e);
+    }
+  };
+
+  // Carrega configuração salva (se existir)
+  grid.loadColumnConfig();
+
   /**
    * Renderiza botão de configuração de colunas
    */
@@ -19,9 +88,8 @@ export function initColumnConfig(grid) {
         <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/>
         <circle cx="12" cy="12" r="3"/>
       </svg>
-      <span>Configurar Colunas</span>
     `;
-    btn.title = 'Mostrar/ocultar e reordenar colunas';
+    btn.title = 'Configurar Colunas';
 
     btn.addEventListener('click', (e) => {
       e.stopPropagation();
@@ -391,6 +459,9 @@ export function initColumnConfig(grid) {
 
     const modal = this.container.querySelector('.scargrid-column-config-modal');
     if (modal) modal.remove();
+
+    // Salva configuração no localStorage
+    this.saveColumnConfig();
 
     this.render();
   };

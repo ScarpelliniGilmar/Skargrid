@@ -19,10 +19,11 @@ class ScarGridCore {
       pagination: options.pagination !== undefined ? options.pagination : false,
       pageSize: options.pageSize || 10,
       pageSizeOptions: options.pageSizeOptions || [10, 25, 50, 100],
-      sortable: options.sortable !== undefined ? options.sortable : true,
+      sortable: options.sortable !== undefined ? options.sortable : false, // Ordenação desabilitada por padrão
       selectable: options.selectable !== undefined ? options.selectable : false,
       searchable: options.searchable !== undefined ? options.searchable : false,
       columnFilters: options.columnFilters !== undefined ? options.columnFilters : false,
+      columnConfig: options.columnConfig !== undefined ? options.columnConfig : false, // Botão de configuração desabilitado por padrão
       ...options
     };
 
@@ -56,7 +57,12 @@ class ScarGridCore {
     this.openFilterDropdown = null;
 
     // Estado de visibilidade e ordem das colunas
-    this.visibleColumns = new Set(this.options.columns.map(col => col.field));
+    // Respeita a propriedade visible (padrão: true)
+    this.visibleColumns = new Set(
+      this.options.columns
+        .filter(col => col.visible !== false)
+        .map(col => col.field)
+    );
     this.columnOrder = this.options.columns.map(col => col.field);
 
     // Inicializa features modulares
@@ -132,10 +138,10 @@ class ScarGridCore {
       wrapper.classList.add('scargrid-dark');
     }
 
-    // Adiciona campo de busca se habilitado
-    if (this.options.searchable) {
-      const searchBox = this.renderSearchBox();
-      wrapper.appendChild(searchBox);
+    // Renderiza área superior (busca + botões de ação)
+    const topBar = this.renderTopBar();
+    if (topBar) {
+      wrapper.appendChild(topBar);
     }
 
     // Container da tabela com loading
@@ -219,10 +225,55 @@ class ScarGridCore {
   /**
    * Renderiza o campo de busca
    */
-  renderSearchBox() {
+  /**
+   * Renderiza barra superior com busca e botões de ação
+   */
+  renderTopBar() {
+    const hasSearch = this.options.searchable;
+    const hasColumnConfig = this.options.columnConfig && typeof this.renderColumnConfigButton === 'function';
+    const hasFilterClear = this.options.columnFilters;
+
+    // Se não tem nada para renderizar, retorna null
+    if (!hasSearch && !hasColumnConfig && !hasFilterClear) {
+      return null;
+    }
+
     const searchContainer = document.createElement('div');
     searchContainer.className = 'scargrid-search-container';
 
+    // Renderiza input de busca (se habilitado)
+    if (hasSearch) {
+      const searchWrapper = this.renderSearchInput();
+      searchContainer.appendChild(searchWrapper);
+    }
+
+    // Renderiza botões de ação (sempre que houver algum botão)
+    if (hasFilterClear || hasColumnConfig) {
+      const actionsContainer = document.createElement('div');
+      actionsContainer.className = 'scargrid-search-actions';
+
+      // Botão "Limpar Filtros" (apenas se columnFilters estiver ativo)
+      if (hasFilterClear) {
+        const clearFiltersButton = this.renderClearFiltersButton();
+        actionsContainer.appendChild(clearFiltersButton);
+      }
+
+      // Botão "Configurar Colunas" (se o módulo estiver carregado)
+      if (hasColumnConfig) {
+        const columnConfigBtn = this.renderColumnConfigButton();
+        actionsContainer.appendChild(columnConfigBtn);
+      }
+
+      searchContainer.appendChild(actionsContainer);
+    }
+
+    return searchContainer;
+  }
+
+  /**
+   * Renderiza apenas o input de busca
+   */
+  renderSearchInput() {
     const searchWrapper = document.createElement('div');
     searchWrapper.className = 'scargrid-search-wrapper';
 
@@ -271,7 +322,13 @@ class ScarGridCore {
     searchWrapper.appendChild(searchInput);
     searchWrapper.appendChild(clearButton);
 
-    // Botão "Limpar Todos os Filtros" à direita
+    return searchWrapper;
+  }
+
+  /**
+   * Renderiza botão "Limpar Filtros"
+   */
+  renderClearFiltersButton() {
     const clearFiltersButton = document.createElement('button');
     clearFiltersButton.className = 'scargrid-clear-filters-btn';
     clearFiltersButton.innerHTML = `
@@ -279,29 +336,21 @@ class ScarGridCore {
         <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
         <line x1="18" y1="6" x2="6" y2="18"></line>
       </svg>
-      <span>Limpar Filtros</span>
       <span class="filter-count-badge" style="display: none;">0</span>
     `;
+    clearFiltersButton.title = 'Limpar Filtros';
     clearFiltersButton.onclick = () => this.clearAllFilters();
     
     // Atualiza contador de filtros ativos
     this.updateClearFiltersButton(clearFiltersButton);
 
-    // Container para agrupar botões à direita
-    const actionsContainer = document.createElement('div');
-    actionsContainer.className = 'scargrid-search-actions';
-    actionsContainer.appendChild(clearFiltersButton);
+    return clearFiltersButton;
+  }
 
-    // Adiciona botão de configuração de colunas (se o módulo estiver carregado)
-    if (typeof this.renderColumnConfigButton === 'function') {
-      const columnConfigBtn = this.renderColumnConfigButton();
-      actionsContainer.appendChild(columnConfigBtn);
-    }
-
-    searchContainer.appendChild(searchWrapper);
-    searchContainer.appendChild(actionsContainer);
-
-    return searchContainer;
+  renderSearchBox() {
+    // DEPRECATED: Mantido para compatibilidade com código antigo
+    // Use renderTopBar() no lugar
+    return this.renderTopBar();
   }
 
   /**
