@@ -36,6 +36,7 @@ $sort = Get-Content "$src\features\sort.js" -Raw -Encoding UTF8
 $selection = Get-Content "$src\features\selection.js" -Raw -Encoding UTF8
 $filter = Get-Content "$src\features\filter.js" -Raw -Encoding UTF8
 $columnConfig = Get-Content "$src\features\columnConfig.js" -Raw -Encoding UTF8
+$export = Get-Content "$src\features\export.js" -Raw -Encoding UTF8
 $core = Get-Content "$src\core\scargrid.js" -Raw -Encoding UTF8
 
 # Remove exports dos features
@@ -45,6 +46,7 @@ $selection = $selection -replace "(?s)if \(typeof window.*?$", ""
 $filter = $filter -replace "(?s)if \(typeof window.*?$", ""
 $columnConfig = $columnConfig -replace "export function initColumnConfig.*?\{", "function initColumnConfig(grid) {"
 $columnConfig = $columnConfig -replace "(?s)if \(typeof window.*?$", ""
+$export = $export -replace "(?s)if \(typeof window.*?$", ""
 
 # Renomeia ScarGridCore para ScarGrid no core
 $core = $core -replace "class ScarGridCore", "class ScarGrid"
@@ -53,12 +55,13 @@ $core = $core -replace "(?s)if \(typeof window.*?$", ""
 # Monta o bundle
 $bundle = @"
 $header
+$core
 $pagination
 $sort
 $selection
 $filter
 $columnConfig
-$core
+$export
 
 return ScarGrid;
 }));

@@ -24,6 +24,7 @@ class ScarGridCore {
       searchable: options.searchable !== undefined ? options.searchable : false,
       columnFilters: options.columnFilters !== undefined ? options.columnFilters : false,
       columnConfig: options.columnConfig !== undefined ? options.columnConfig : false, // Botão de configuração desabilitado por padrão
+      exportCSV: options.exportCSV !== undefined ? options.exportCSV : false, // Exportar CSV desabilitado por padrão
       ...options
     };
 
@@ -232,9 +233,10 @@ class ScarGridCore {
     const hasSearch = this.options.searchable;
     const hasColumnConfig = this.options.columnConfig && typeof this.renderColumnConfigButton === 'function';
     const hasFilterClear = this.options.columnFilters;
+    const hasExportCSV = this.options.exportCSV && typeof this.renderExportCSVButton === 'function';
 
     // Se não tem nada para renderizar, retorna null
-    if (!hasSearch && !hasColumnConfig && !hasFilterClear) {
+    if (!hasSearch && !hasColumnConfig && !hasFilterClear && !hasExportCSV) {
       return null;
     }
 
@@ -248,7 +250,7 @@ class ScarGridCore {
     }
 
     // Renderiza botões de ação (sempre que houver algum botão)
-    if (hasFilterClear || hasColumnConfig) {
+    if (hasFilterClear || hasColumnConfig || hasExportCSV) {
       const actionsContainer = document.createElement('div');
       actionsContainer.className = 'scargrid-search-actions';
 
@@ -262,6 +264,12 @@ class ScarGridCore {
       if (hasColumnConfig) {
         const columnConfigBtn = this.renderColumnConfigButton();
         actionsContainer.appendChild(columnConfigBtn);
+      }
+
+      // Botão "Exportar CSV" (se o módulo estiver carregado)
+      if (hasExportCSV) {
+        const exportButton = this.renderExportCSVButton();
+        actionsContainer.appendChild(exportButton);
       }
 
       searchContainer.appendChild(actionsContainer);
@@ -345,6 +353,25 @@ class ScarGridCore {
     this.updateClearFiltersButton(clearFiltersButton);
 
     return clearFiltersButton;
+  }
+
+  /**
+   * Renderiza botão "Exportar CSV"
+   */
+  renderExportCSVButton() {
+    const exportButton = document.createElement('button');
+    exportButton.className = 'scargrid-clear-filters-btn';
+    exportButton.innerHTML = `
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+        <polyline points="7 10 12 15 17 10"></polyline>
+        <line x1="12" y1="15" x2="12" y2="3"></line>
+      </svg>
+    `;
+    exportButton.title = 'Exportar CSV';
+    exportButton.onclick = () => this.exportToCSV();
+    
+    return exportButton;
   }
 
   renderSearchBox() {
