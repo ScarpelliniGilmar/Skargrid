@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Teste ScarGrid</title>
+  <link rel="stylesheet" href="../src/css/scargrid.css">
+</head>
+<body>
+  <h1>Teste ScarGrid</h1>
+  <div id="test"></div>
+
+  <script src="../src/core/scargrid.js"></script>
+  <script>
+    console.log('ScarGrid disponível:', typeof ScarGrid);
+    
+    const data = [
+      { id: 1, nome: 'João', idade: 28 },
+      { id: 2, nome: 'Maria', idade: 34 }
+    ];
+
+    const columns = [
+      { field: 'id', title: 'ID' },
+      { field: 'nome', title: 'Nome' },
+      { field: 'idade', title: 'Idade' }
+    ];
+
+    try {
+      const grid = new ScarGrid('test', {
+        data: data,
+        columns: columns
+      });
+      console.log('Grid criada com sucesso!', grid);
+    } catch (error) {
+      console.error('Erro ao criar grid:', error);
+      document.body.innerHTML += `<p style="color: red;">Erro: ${error.message}</p>`;
+    }
+  </script>
+</body>
+</html>
