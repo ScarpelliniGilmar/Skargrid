@@ -55,7 +55,31 @@ class ScarGridCore {
     // Referência para dropdown aberto
     this.openFilterDropdown = null;
 
+    // Estado de visibilidade e ordem das colunas
+    this.visibleColumns = new Set(this.options.columns.map(col => col.field));
+    this.columnOrder = this.options.columns.map(col => col.field);
+
+    // Inicializa features modulares
+    if (typeof initColumnConfig === 'function') {
+      initColumnConfig(this);
+    }
+
     this.init();
+  }
+
+  /**
+   * Obtém as colunas ordenadas e visíveis (método base, pode ser sobrescrito por features)
+   */
+  getOrderedVisibleColumns() {
+    // Se não há controle de visibilidade, retorna todas as colunas
+    if (!this.visibleColumns || !this.columnOrder) {
+      return this.options.columns;
+    }
+    
+    return this.columnOrder
+      .filter(field => this.visibleColumns.has(field))
+      .map(field => this.options.columns.find(col => col.field === field))
+      .filter(col => col !== undefined);
   }
 
   /**
@@ -263,8 +287,19 @@ class ScarGridCore {
     // Atualiza contador de filtros ativos
     this.updateClearFiltersButton(clearFiltersButton);
 
+    // Container para agrupar botões à direita
+    const actionsContainer = document.createElement('div');
+    actionsContainer.className = 'scargrid-search-actions';
+    actionsContainer.appendChild(clearFiltersButton);
+
+    // Adiciona botão de configuração de colunas (se o módulo estiver carregado)
+    if (typeof this.renderColumnConfigButton === 'function') {
+      const columnConfigBtn = this.renderColumnConfigButton();
+      actionsContainer.appendChild(columnConfigBtn);
+    }
+
     searchContainer.appendChild(searchWrapper);
-    searchContainer.appendChild(clearFiltersButton);
+    searchContainer.appendChild(actionsContainer);
 
     return searchContainer;
   }
@@ -291,7 +326,7 @@ class ScarGridCore {
       tr.appendChild(th);
     }
 
-    this.options.columns.forEach(column => {
+    this.getOrderedVisibleColumns().forEach(column => {
       const th = document.createElement('th');
       th.dataset.field = column.field;
 
@@ -813,7 +848,7 @@ class ScarGridCore {
         };
       }
 
-      this.options.columns.forEach(column => {
+      this.getOrderedVisibleColumns().forEach(column => {
         const td = document.createElement('td');
         const value = row[column.field];
         

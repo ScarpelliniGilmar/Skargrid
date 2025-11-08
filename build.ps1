@@ -35,6 +35,7 @@ $pagination = Get-Content "$src\features\pagination.js" -Raw -Encoding UTF8
 $sort = Get-Content "$src\features\sort.js" -Raw -Encoding UTF8
 $selection = Get-Content "$src\features\selection.js" -Raw -Encoding UTF8
 $filter = Get-Content "$src\features\filter.js" -Raw -Encoding UTF8
+$columnConfig = Get-Content "$src\features\columnConfig.js" -Raw -Encoding UTF8
 $core = Get-Content "$src\core\scargrid.js" -Raw -Encoding UTF8
 
 # Remove exports dos features
@@ -42,6 +43,8 @@ $pagination = $pagination -replace "(?s)if \(typeof window.*?$", ""
 $sort = $sort -replace "(?s)if \(typeof window.*?$", ""
 $selection = $selection -replace "(?s)if \(typeof window.*?$", ""
 $filter = $filter -replace "(?s)if \(typeof window.*?$", ""
+$columnConfig = $columnConfig -replace "export function initColumnConfig.*?\{", "function initColumnConfig(grid) {"
+$columnConfig = $columnConfig -replace "(?s)if \(typeof window.*?$", ""
 
 # Renomeia ScarGridCore para ScarGrid no core
 $core = $core -replace "class ScarGridCore", "class ScarGrid"
@@ -54,6 +57,7 @@ $pagination
 $sort
 $selection
 $filter
+$columnConfig
 $core
 
 return ScarGrid;
