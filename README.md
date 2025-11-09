@@ -8,14 +8,16 @@ Se este projeto te ajudou ou você quer incentivar o desenvolvimento de novas fu
 - **Liberapay:** [liberapay.com/scargrid](https://liberapay.com/scargrid)
 
 Sua contribuição ajuda a manter o projeto ativo e evoluindo!
+
 # 📊 ScarGrid
 
 > Biblioteca JavaScript moderna para criação de tabelas interativas com filtros cascata, busca normalizada e recursos avançados
 
+[![npm version](https://img.shields.io/npm/v/scargrid.svg)](https://www.npmjs.com/package/scargrid)
+[![npm downloads](https://img.shields.io/npm/dm/scargrid.svg)](https://www.npmjs.com/package/scargrid)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-[![Version](https://img.shields.io/badge/version-1.0.0-green.svg)](package.json)
 
-## ✨ Destaques v1.0.0
+## ✨ Destaques v1.0.1
 
 - 🎨 **Configuração de Colunas** - Drag & drop para reordenar, mostrar/ocultar colunas
 - 💾 **Persistência** - Salva preferências do usuário no localStorage
