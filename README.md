@@ -44,6 +44,7 @@ cp scargrid/dist/scargrid.css seu-projeto/
 npm install scargrid
 ```
 
+
 ### Uso Básico
 
 ```html
@@ -55,20 +56,19 @@ npm install scargrid
 </head>
 <body>
   <div id="myTable"></div>
-
   <script>
+    // Exemplo real usando ScarGrid
     const data = [
       { id: 1, nome: 'João Silva', idade: 28, cidade: 'São Paulo' },
       { id: 2, nome: 'Maria Santos', idade: 34, cidade: 'Rio de Janeiro' }
     ];
-
     const columns = [
       { field: 'id', title: 'ID', sortable: true },
       { field: 'nome', title: 'Nome', sortable: true, filterable: true },
       { field: 'idade', title: 'Idade', sortable: true, filterable: true, filterType: 'number' },
       { field: 'cidade', title: 'Cidade', sortable: true, filterable: true, filterType: 'select' }
     ];
-
+    // Inicializa a tabela ScarGrid
     const table = new ScarGrid('myTable', {
       data: data,
       columns: columns,
@@ -84,6 +84,37 @@ npm install scargrid
   </script>
 </body>
 </html>
+```
+
+---
+
+### Exemplo Prático (ScarGrid em ação)
+
+Veja abaixo um exemplo real de uso da biblioteca ScarGrid:
+
+```html
+<div id="exemploScarGrid"></div>
+<script>
+  const dados = [
+    { id: 1, nome: 'Ana', idade: 22, cidade: 'Curitiba' },
+    { id: 2, nome: 'Bruno', idade: 31, cidade: 'Belo Horizonte' },
+    { id: 3, nome: 'Carla', idade: 27, cidade: 'Fortaleza' }
+  ];
+  const colunas = [
+    { field: 'id', title: 'ID', sortable: true },
+    { field: 'nome', title: 'Nome', filterable: true },
+    { field: 'idade', title: 'Idade', filterType: 'number' },
+    { field: 'cidade', title: 'Cidade', filterType: 'select' }
+  ];
+  new ScarGrid('exemploScarGrid', {
+    data: dados,
+    columns: colunas,
+    pagination: false,
+    sortable: true,
+    searchable: true,
+    columnFilters: true
+  });
+</script>
 ```
 
 ---
@@ -470,10 +501,11 @@ Copyright (c) 2024-2025 GILMAR A S TRINDADE
 
 ## 👨‍💻 Autor
 
+
 **GILMAR A S TRINDADE**
 
 - GitHub: [@ScarpelliniGilmar](https://github.com/ScarpelliniGilmar)
-- Email: seu-email@example.com
+- Email: gilmar.trindade@hotmail.com
 
 ---
 
