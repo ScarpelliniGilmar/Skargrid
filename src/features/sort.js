@@ -1,5 +1,5 @@
 /**
- * ScarGrid - Módulo de Ordenação
+ * Skargrid - Módulo de Ordenação
  * Gerencia ordenação de colunas (ASC/DESC/None)
  */
 

@@ -1,5 +1,5 @@
 /**
- * ScarGrid - Biblioteca completa (Build único)
+ * skargrid - Biblioteca completa (Build único)
  * @version 0.7.0
  * 
  * Este arquivo contém TODA a biblioteca em um único arquivo para facilitar o uso.
@@ -463,6 +463,6 @@
   global.SelectionFeature = SelectionFeature;
   global.FilterFeature = FilterFeature;
 
-  // Carrega o core (scargrid.js) que já está incluído neste build
+  // Carrega o core (skargrid.js) que já está incluído neste build
 
 })(typeof window !== 'undefined' ? window : global);

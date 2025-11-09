@@ -1,34 +1,34 @@
 /**
- * ScarGrid - Tema Light (padrão)
+ * Skargrid - Tema Light (padrão)
  */
 
 :root {
-  --scargrid-bg: #ffffff;
-  --scargrid-header-bg: #f8f9fa;
-  --scargrid-header-text: #495057;
-  --scargrid-border: #dee2e6;
-  --scargrid-hover-bg: #e9ecef;
-  --scargrid-selected-bg: #e7f1ff;
-  --scargrid-primary: #007bff;
-  --scargrid-primary-hover: #0069d9;
-  --scargrid-text: #212529;
-  --scargrid-text-muted: #6c757d;
-  --scargrid-shadow: rgba(0, 0, 0, 0.1);
-  --scargrid-input-bg: #ffffff;
-  --scargrid-search-bg: #f8f9fa;
+  --skargrid-bg: #ffffff;
+  --skargrid-header-bg: #f8f9fa;
+  --skargrid-header-text: #495057;
+  --skargrid-border: #dee2e6;
+  --skargrid-hover-bg: #e9ecef;
+  --skargrid-selected-bg: #e7f1ff;
+  --skargrid-primary: #007bff;
+  --skargrid-primary-hover: #0069d9;
+  --skargrid-text: #212529;
+  --skargrid-text-muted: #6c757d;
+  --skargrid-shadow: rgba(0, 0, 0, 0.1);
+  --skargrid-input-bg: #ffffff;
+  --skargrid-search-bg: #f8f9fa;
 }
 
 /* Aplicar variáveis CSS ao tema light */
-.scargrid-theme-light {
-  background-color: var(--scargrid-bg);
-  color: var(--scargrid-text);
+.skargrid-theme-light {
+  background-color: var(--skargrid-bg);
+  color: var(--skargrid-text);
 }
 
-.scargrid-theme-light .scargrid thead {
-  background-color: var(--scargrid-header-bg);
-  color: var(--scargrid-header-text);
+.skargrid-theme-light .skargrid thead {
+  background-color: var(--skargrid-header-bg);
+  color: var(--skargrid-header-text);
 }
 
-.scargrid-theme-light .scargrid thead th:hover {
-  background-color: var(--scargrid-hover-bg);
+.skargrid-theme-light .skargrid thead th:hover {
+  background-color: var(--skargrid-hover-bg);
 }

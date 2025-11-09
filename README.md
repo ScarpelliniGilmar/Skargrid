@@ -1,414 +1,405 @@
----
+# 📊 Skargrid
 
-## 💖 Apoie o Projeto
+> Modern JavaScript library for interactive tables with cascading filters, accent-insensitive search, and advanced features
 
-
-Se este projeto te ajudou ou você quer incentivar o desenvolvimento de novas funcionalidades, considere apoiar:
-
-- **Liberapay:** [liberapay.com/scargrid](https://liberapay.com/scargrid)
-
-Sua contribuição ajuda a manter o projeto ativo e evoluindo!
-
-# 📊 ScarGrid
-
-> Biblioteca JavaScript moderna para criação de tabelas interativas com filtros cascata, busca normalizada e recursos avançados
-
-[![npm version](https://img.shields.io/npm/v/scargrid.svg)](https://www.npmjs.com/package/scargrid)
-[![npm downloads](https://img.shields.io/npm/dm/scargrid.svg)](https://www.npmjs.com/package/scargrid)
+[![npm version](https://img.shields.io/npm/v/skargrid.svg)](https://www.npmjs.com/package/skargrid)
+[![npm downloads](https://img.shields.io/npm/dm/skargrid.svg)](https://www.npmjs.com/package/skargrid)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
-## ✨ Destaques v1.0.1
-
-- 🎨 **Configuração de Colunas** - Drag & drop para reordenar, mostrar/ocultar colunas
-- 💾 **Persistência** - Salva preferências do usuário no localStorage
-- 🌓 **Suporte a Temas** - Light/Dark theme com transições suaves
-- 🔄 **Filtros Cascata** - Estilo Excel com valores indisponíveis desabilitados
-- 🌍 **Busca Normalizada** - Remove acentos automaticamente (José = jose)
-- ↔️ **Scroll Horizontal** - Custom scrollbar para tabelas largas
-- 📦 **Bundle Único** - Apenas 2 arquivos (JS + CSS) - ~83KB
-- 🎯 **Zero Dependências** - Vanilla JavaScript puro
-- ⚡ **Performance** - Otimizado para grandes datasets
+🇧🇷 [Leia em Português](README.pt-br.md)
 
 ---
 
-## 🚀 Início Rápido
+## 📸 Skargrid in Action
 
-### Instalação
+### 🏆 Complete Example (All Features)
+![Complete Example](docs/img/complete.png)
+<div align="center"><sub>All features enabled: sorting, filters, selection, export, dark theme, column config, large dataset</sub></div>
+
+---
+
+# 📚 Visual Examples
+
+Below are visual examples of Skargrid features, in recommended order:
+
+#### Minimal Example
+![Minimal Example](docs/img/minimal.png)
+<div align="center"><sub>Minimal setup: 4 columns, no extra features</sub></div>
+
+#### Complete Example
+![Complete Example](docs/img/complete.png)
+<div align="center"><sub>All features enabled: sorting, filters, selection, export, dark theme, column config, large dataset</sub></div>
+
+#### Sorting
+![Sorting](docs/img/sort.png)
+<div align="center"><sub>Sortable columns</sub></div>
+
+#### Filters
+![Filters](docs/img/filters.png)
+<div align="center"><sub>Column filters (Excel-style)</sub></div>
+
+#### Pagination
+![Pagination](docs/img/pagination.png)
+<div align="center"><sub>Pagination enabled</sub></div>
+
+#### Selection
+![Selection](docs/img/selection.png)
+<div align="center"><sub>Row selection</sub></div>
+
+#### Column Config
+![Column Config](docs/img/columns.png)
+<div align="center"><sub>Column configuration (show/hide, reorder, persist)</sub></div>
+
+#### Export
+![Export](docs/img/export.png)
+<div align="center"><sub>Export to CSV</sub></div>
+
+#### Dark Theme
+![Dark Theme](docs/img/theme-dark.png)
+<div align="center"><sub>Dark mode enabled</sub></div>
+
+#### Large Dataset
+![Large Dataset](docs/img/complete.png)
+<div align="center"><sub>20+ columns, 50+ rows, horizontal scroll</sub></div>
+
+---
 
 
-**Opção 1: CDN (jsDelivr ou unpkg)**
-Use diretamente do npm via CDN (sempre confira a versão mais recente):
+## ✨ Highlights v1.0.0
+
+- 🎨 **Column Configuration** - Drag & drop to reorder, show/hide columns
+- 🗄️ **Persistence** - Saves user preferences in localStorage
+- 🌓 **Theme Support** - Light/Dark theme with smooth transitions
+- 🔄 **Cascading Filters** - Excel-style with unavailable values disabled
+- 🌍 **Accent-Insensitive Search** - Automatically removes accents (José = jose)
+- ↔️ **Horizontal Scroll** - Custom scrollbar for wide tables
+- 📦 **Single Bundle** - Only 2 files (JS + CSS) - ~83KB
+- 🎯 **Zero Dependencies** - Pure Vanilla JavaScript
+- ⚡ **Performance** - Optimized for large datasets
+
+---
+
+## 🚀 Quick Start
+
+### Installation
+
+**Option 1: CDN (jsDelivr or unpkg)**
+Use directly from npm via CDN (always check the latest version):
 
 **jsDelivr**
 ```html
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/scargrid@1.0.1/dist/scargrid.css">
-<script src="https://cdn.jsdelivr.net/npm/scargrid@1.0.1/dist/scargrid.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/skargrid@1.0.0/dist/skargrid.css">
+<script src="https://cdn.jsdelivr.net/npm/skargrid@1.0.0/dist/skargrid.min.js"></script>
 ```
 
 **unpkg**
 ```html
-<link rel="stylesheet" href="https://unpkg.com/scargrid@1.0.1/dist/scargrid.css">
-<script src="https://unpkg.com/scargrid@1.0.1/dist/scargrid.min.js"></script>
+<link rel="stylesheet" href="https://unpkg.com/skargrid@1.0.0/dist/skargrid.css">
+<script src="https://unpkg.com/skargrid@1.0.0/dist/skargrid.min.js"></script>
 ```
 
-**Opção 2: Download**
+**Option 2: Download**
 ```bash
-# Clone o repositório
-git clone https://github.com/ScarpelliniGilmar/scargrid.git
+# Clone the repository
+git clone https://github.com/ScarpelliniGilmar/skargrid.git
 
-# Copie os arquivos dist/ para seu projeto
-cp scargrid/dist/scargrid.min.js seu-projeto/
-cp scargrid/dist/scargrid.css seu-projeto/
+# Copy the dist/ files to your project
+cp skargrid/dist/skargrid.min.js your-project/
+cp skargrid/dist/skargrid.css your-project/
 ```
 
-
-**Opção 3: NPM**
-Instale diretamente do npm oficial:
+**Option 3: NPM**
+Install directly from npm:
 ```bash
-npm i scargrid
+npm i skargrid
 ```
-[https://www.npmjs.com/package/scargrid](https://www.npmjs.com/package/scargrid)
-
-
-### Uso Básico
-
-```html
-<!DOCTYPE html>
-<html>
-<head>
-  <link rel="stylesheet" href="dist/scargrid.css">
-  <script src="dist/scargrid.min.js"></script>
-</head>
-<body>
-  <div id="myTable"></div>
-  <script>
-    // Exemplo real usando ScarGrid
-    const data = [
-      { id: 1, nome: 'João Silva', idade: 28, cidade: 'São Paulo' },
-      { id: 2, nome: 'Maria Santos', idade: 34, cidade: 'Rio de Janeiro' }
-    ];
-    const columns = [
-      { field: 'id', title: 'ID', sortable: true },
-      { field: 'nome', title: 'Nome', sortable: true, filterable: true },
-      { field: 'idade', title: 'Idade', sortable: true, filterable: true, filterType: 'number' },
-      { field: 'cidade', title: 'Cidade', sortable: true, filterable: true, filterType: 'select' }
-    ];
-    // Inicializa a tabela ScarGrid
-    const table = new ScarGrid('myTable', {
-      data: data,
-      columns: columns,
-      pagination: true,
-      pageSize: 10,
-      sortable: true,
-      searchable: true,
-      selectable: true,
-      columnFilters: true,
-      columnConfig: true,          // Habilita configuração de colunas
-      persistColumnConfig: true    // Salva preferências do usuário
-    });
-  </script>
-</body>
-</html>
-```
+[https://www.npmjs.com/package/skargrid](https://www.npmjs.com/package/skargrid)
 
 ---
 
-### Exemplo Prático (ScarGrid em ação)
+## 💖 Support the Project
 
-Veja abaixo um exemplo real de uso da biblioteca ScarGrid:
+If this project helped you or you want to support new features, consider donating:
 
-```html
-<div id="exemploScarGrid"></div>
-<script>
-  const dados = [
-    { id: 1, nome: 'Ana', idade: 22, cidade: 'Curitiba' },
-    { id: 2, nome: 'Bruno', idade: 31, cidade: 'Belo Horizonte' },
-    { id: 3, nome: 'Carla', idade: 27, cidade: 'Fortaleza' }
-  ];
-  const colunas = [
-    { field: 'id', title: 'ID', sortable: true },
-    { field: 'nome', title: 'Nome', filterable: true },
-    { field: 'idade', title: 'Idade', filterType: 'number' },
-    { field: 'cidade', title: 'Cidade', filterType: 'select' }
-  ];
-  new ScarGrid('exemploScarGrid', {
-    data: dados,
-    columns: colunas,
-    pagination: false,
-    sortable: true,
-    searchable: true,
-    columnFilters: true
-  });
-</script>
-```
+- **Liberapay:** [liberapay.com/skargrid](https://liberapay.com/skargrid)
+
+Your contribution helps keep the project active and evolving!
 
 ---
 
-## 📚 Documentação Completa
 
-### Configuração
+# 📚 Complete Documentation
+
+### Configuration
 
 ```javascript
-new ScarGrid(containerId, options)
+new Skargrid(containerId, options)
 ```
 
-#### Opções Disponíveis
+#### Available Options
 
-| Opção | Tipo | Padrão | Descrição |
-|-------|------|--------|-----------|
-| `data` | Array | `[]` | Array de objetos com os dados |
-| `columns` | Array | `[]` | Configuração das colunas |
-| `pagination` | Boolean | `false` | Habilita paginação |
-| `pageSize` | Number | `10` | Itens por página |
-| `pageSizeOptions` | Array | `[10,25,50,100]` | Opções de tamanho de página |
-| `sortable` | Boolean | `false` | Habilita ordenação global |
-| `selectable` | Boolean | `false` | Habilita seleção múltipla |
-| `searchable` | Boolean | `false` | Habilita busca global |
-| `columnFilters` | Boolean | `false` | Habilita filtros por coluna |
-| `columnConfig` | Boolean | `false` | Habilita botão de configuração de colunas |
-| `persistColumnConfig` | Boolean | `false` | Salva configuração de colunas no localStorage |
-| `storageKey` | String | `'scargrid-config-{id}'` | Chave do localStorage (se persistColumnConfig=true) |
-| `theme` | String | `'light'` | Tema visual: 'light' ou 'dark' |
-| `className` | String | `'scargrid'` | Classe CSS da tabela |
+| Option | Type | Default | Description |
+|--------|------|---------|-------------|
+| `data` | Array | `[]` | Array of data objects |
+| `columns` | Array | `[]` | Column configuration |
+| `pagination` | Boolean | `false` | Enable pagination |
+| `pageSize` | Number | `10` | Items per page |
+| `pageSizeOptions` | Array | `[10,25,50,100]` | Page size options |
+| `sortable` | Boolean | `false` | Enable global sorting |
+| `selectable` | Boolean | `false` | Enable multi-row selection |
+| `searchable` | Boolean | `false` | Enable global search |
+| `columnFilters` | Boolean | `false` | Enable column filters |
+| `columnConfig` | Boolean | `false` | Enable column config button |
+| `persistColumnConfig` | Boolean | `false` | Save column config in localStorage |
+| `storageKey` | String | `'skargrid-config-{id}'` | localStorage key (if persistColumnConfig=true) |
+| `theme` | String | `'light'` | Visual theme: 'light' or 'dark' |
+| `className` | String | `'skargrid'` | Table CSS class |
 
-#### Configuração de Colunas
+#### Column Configuration
 
 ```javascript
 {
-  field: 'nome',           // Campo do objeto de dados (obrigatório)
-  title: 'Nome Completo',  // Título exibido no header
-  width: '200px',          // Largura da coluna (opcional)
-  visible: true,           // Visibilidade inicial (padrão: true)
-  sortable: true,          // Permite ordenação (padrão: false)
-  filterable: true,        // Mostra ícone de filtro (padrão: false)
-  filterType: 'text',      // Tipo: 'text', 'number', 'date', 'select'
-  
-  // Formatação customizada
+  field: 'name',           // Data object field (required)
+  title: 'Full Name',      // Header title
+  width: '200px',          // Column width (optional)
+  visible: true,           // Initial visibility (default: true)
+  sortable: true,          // Allow sorting (default: false)
+  filterable: true,        // Show filter icon (default: false)
+  filterType: 'text',      // Type: 'text', 'number', 'date', 'select'
+  // Custom formatting
   render: (value, row) => {
     return `<span style="color: blue;">${value}</span>`;
   }
 }
 ```
 
-### Tipos de Filtro
+### Filter Types
 
 #### 1. Text Filter (`filterType: 'text'`)
 ```javascript
-{ field: 'nome', title: 'Nome', filterType: 'text' }
+{ field: 'name', title: 'Name', filterType: 'text' }
 ```
-- Busca parcial case-insensitive
-- **Remove acentos automaticamente** (José = jose)
-- Input simples
+- Partial, case-insensitive search
+- **Automatically removes accents** (José = jose)
+- Simple input
 
 #### 2. Number Filter (`filterType: 'number'`)
 ```javascript
-{ field: 'idade', title: 'Idade', filterType: 'number' }
+{ field: 'age', title: 'Age', filterType: 'number' }
 ```
-- Comparação exata de números
-- Input numérico
+- Exact number comparison
+- Numeric input
 
 #### 3. Date Filter (`filterType: 'date'`)
 ```javascript
-{ field: 'dataNascimento', title: 'Nascimento', filterType: 'date' }
+{ field: 'birthDate', title: 'Birth Date', filterType: 'date' }
 ```
-- Busca por data (formato ISO: YYYY-MM-DD)
-- Input de data HTML5
+- Search by date (ISO format: YYYY-MM-DD)
+- HTML5 date input
 
 #### 4. Select Filter (`filterType: 'select'`)
 ```javascript
-{ field: 'cidade', title: 'Cidade', filterType: 'select' }
+{ field: 'city', title: 'City', filterType: 'select' }
 ```
-- **Filtro cascata estilo Excel**
-- Checkboxes com valores únicos
-- Valores indisponíveis ficam desabilitados
-- Busca interna no dropdown
-- "Selecionar Todos" / "Desmarcar Todos"
+- **Excel-style cascading filter**
+- Checkboxes with unique values
+- Unavailable values are disabled
+- Internal search in dropdown
+- "Select All" / "Deselect All"
 
 ---
 
-## 🎨 API Pública
+## 🎨 Public API
 
-### Métodos
+### Methods
 
 ```javascript
-// Atualizar dados
+// Update data
 table.updateData(newData);
 
-// Obter dados atuais
+// Get current data
 const data = table.getData();
 
-// Seleção
-const selected = table.getSelectedRows();      // Retorna objetos
-const indices = table.getSelectedIndices();     // Retorna índices
-table.selectRows([0, 1, 2]);                   // Seleciona por índice
-table.clearSelection();                         // Limpa seleção
+// Selection
+const selected = table.getSelectedRows();      // Returns objects
+const indices = table.getSelectedIndices();     // Returns indices
+table.selectRows([0, 1, 2]);                   // Select by index
+table.clearSelection();                         // Clear selection
 
-// Filtros
-table.clearAllFilters();                        // Limpa busca + filtros de coluna
-table.clearSearch();                            // Limpa apenas busca global
+// Filters
+table.clearAllFilters();                        // Clear search + column filters
+table.clearSearch();                            // Clear only global search
 
-// Navegação
-table.goToPage(3);                             // Vai para página específica
-table.changePageSize(25);                       // Muda itens por página
+// Navigation
+table.goToPage(3);                             // Go to specific page
+table.changePageSize(25);                       // Change items per page
 
-// Temas
-table.setTheme('dark');                         // Alterna entre 'light' e 'dark'
+// Themes
+table.setTheme('dark');                         // Switch between 'light' and 'dark'
 
-// Configuração de Colunas (se columnConfig=true)
-table.saveColumnConfig();                       // Salva manualmente no localStorage
-table.loadColumnConfig();                       // Carrega configuração salva
-table.clearSavedColumnConfig();                 // Remove configuração salva
+// Column Config (if columnConfig=true)
+table.saveColumnConfig();                       // Save manually to localStorage
+table.loadColumnConfig();                       // Load saved config
+table.clearSavedColumnConfig();                 // Remove saved config
 
-// Destruir instância
+// Destroy instance
 table.destroy();
 ```
 
-### Recursos Avançados
+### Advanced Features
 
-#### 🎨 Suporte a Temas
+#### 🎨 Theme Support
 
 ```javascript
-// Tema escuro
-const table = new ScarGrid('myTable', {
+// Dark theme
+const table = new Skargrid('myTable', {
   data: data,
   columns: columns,
   theme: 'dark'
 });
 
-// Alternar tema dinamicamente
-table.setTheme('dark');  // ou 'light'
+// Switch theme dynamically
+table.setTheme('dark');  // or 'light'
 ```
 
-#### 🎯 Configuração de Colunas
+#### 🎯 Column Configuration
 
 ```javascript
-const table = new ScarGrid('myTable', {
+const table = new Skargrid('myTable', {
   data: data,
   columns: columns,
-  columnConfig: true,              // Habilita botão de configuração
-  persistColumnConfig: true,       // Salva preferências do usuário
-  storageKey: 'minha-tabela-key'  // Chave customizada (opcional)
+  columnConfig: true,              // Enable config button
+  persistColumnConfig: true,       // Save user preferences
+  storageKey: 'my-table-key'       // Custom key (optional)
 });
 
-// Usuário pode:
-// - Reordenar colunas (drag & drop)
-// - Mostrar/ocultar colunas (checkboxes)
-// - Usar setas para mover colunas
-// - Restaurar configuração padrão
-// - Configuração salva automaticamente no localStorage
+// User can:
+// - Reorder columns (drag & drop)
+// - Show/hide columns (checkboxes)
+// - Use arrows to move columns
+// - Restore default config
+// - Config is saved automatically in localStorage
 ```
 
-#### 👁️ Colunas Ocultas por Padrão
+#### 👁️ Hidden Columns by Default
 
 ```javascript
 const columns = [
   { field: 'id', title: 'ID' },
-  { field: 'nome', title: 'Nome' },
+  { field: 'name', title: 'Name' },
   { 
-    field: 'telefone', 
-    title: 'Telefone',
-    visible: false  // Oculta por padrão
+    field: 'phone', 
+    title: 'Phone',
+    visible: false  // Hidden by default
   },
   { 
     field: 'email', 
     title: 'E-mail',
-    visible: false  // Oculta por padrão
+    visible: false  // Hidden by default
   }
 ];
 
-// Usuário pode mostrar via botão de configuração
+// User can show via config button
 ```
 
-### Eventos e Callbacks
+### Events and Callbacks
 
 ```javascript
-const table = new ScarGrid('myTable', {
+const table = new Skargrid('myTable', {
   data: data,
   columns: columns,
-  
-  // Callback após renderização (futuro)
+  // Callback after render (future)
   onRender: (grid) => {
-    console.log('Tabela renderizada!', grid);
+    console.log('Table rendered!', grid);
   }
 });
 ```
 
 ---
 
-## 🔧 Build e Desenvolvimento
+## 🔧 Build & Development
 
-### Estrutura do Projeto
-
+### Project Structure
 
 ```
-scargrid/
+skargrid/
+├── build.ps1
+├── dist/
+│   ├── skargrid-features.js
+│   ├── skargrid.css
+│   ├── skargrid.min.js
+│   └── themes/
+│       ├── dark.css
+│       └── light.css
+├── docs/
+│   ├── img/
+│   │   ├── columns.png
+│   │   ├── complete.png
+│   │   ├── export.png
+│   │   ├── filters.png
+│   │   ├── minimal.png
+│   │   ├── pagination.png
+│   │   ├── selection.png
+│   │   ├── sort.png
+│   │   └── theme-dark.png
+│   └── skargrid-examples.html
+├── lang/
+├── LICENSE
+├── package.json
+├── README.md
+├── README.pt-br.md
 ├── src/
 │   ├── core/
-│   │   └── scargrid.js              # Classe principal
-│   ├── features/
-│   │   ├── columnConfig.js          # Configuração de colunas (drag & drop)
-│   │   ├── export.js                # Exportação de dados (CSV)
-│   │   ├── filter.js                # Módulo de filtros
-│   │   ├── pagination.js            # Módulo de paginação
-│   │   ├── selection.js             # Módulo de seleção
-│   │   └── sort.js                  # Módulo de ordenação
-│   └── css/
-│       ├── scargrid.css             # Estilos principais
-│       └── themes/
-│           ├── light.css            # Tema claro
-│           └── dark.css             # Tema escuro
-├── dist/                            # Build de produção
-│   ├── scargrid.min.js              # Bundle único (JS)
-│   ├── scargrid-features.js         # Bundle de features
-│   ├── scargrid.css                 # Estilos compilados
-│   └── themes/
-│       ├── light.css                # Tema claro (build)
-│       └── dark.css                 # Tema escuro (build)
-├── examples/
-│   ├── single-file.html             # Exemplo básico
-│   ├── large-dataset.html           # Teste com 25 colunas
-│   ├── dark-theme.html              # Exemplo com tema escuro
-│   └── minimal.html                 # Exemplo minimalista
-├── build.ps1                        # Script de build (PowerShell)
-├── package.json
-├── LICENSE (MIT)
-└── README.md
+│   │   └── skargrid.js
+│   ├── css/
+│   │   ├── skargrid.css
+│   │   └── themes/
+│   │       ├── dark.css
+│   │       └── light.css
+│   └── features/
+│       ├── columnConfig.js
+│       ├── export.js
+│       ├── filter.js
+│       ├── pagination.js
+│       ├── selection.js
+│       └── sort.js
+└── .gitignore
 ```
 
-### Build Manual
+### Manual Build
 
 ```powershell
 # PowerShell (Windows)
 .\build.ps1
 
-# Ou com PowerShell Core (multiplataforma)
+# Or with PowerShell Core (cross-platform)
 pwsh -File build.ps1
 ```
 
-**Saída:**
-- `dist/scargrid.min.js` - Bundle completo (~56KB)
-- `dist/scargrid.css` - Estilos
-- `dist/themes/` - Temas opcionais
+**Output:**
+- `dist/skargrid.min.js` - Full bundle (~56KB)
+- `dist/skargrid.css` - Styles
+- `dist/themes/` - Optional themes
 
 ---
 
-## 🎯 Exemplos
+## 🎯 Examples
 
-### Exemplo 1: Tabela Simples com Busca
+### Example 1: Simple Table with Search
 ```javascript
-const table = new ScarGrid('container', {
+const table = new Skargrid('container', {
   data: myData,
   columns: [
     { field: 'id', title: 'ID' },
-    { field: 'nome', title: 'Nome' }
+    { field: 'name', title: 'Name' }
   ],
   searchable: true
 });
 ```
 
-### Exemplo 2: Tabela Completa
+### Example 2: Complete Table
 ```javascript
-const table = new ScarGrid('container', {
+const table = new Skargrid('container', {
   data: myData,
   columns: [
     { 
@@ -418,8 +409,8 @@ const table = new ScarGrid('container', {
       sortable: true 
     },
     { 
-      field: 'nome', 
-      title: 'Nome',
+      field: 'name', 
+      title: 'Name',
       sortable: true,
       filterable: true,
       filterType: 'text'
@@ -429,7 +420,7 @@ const table = new ScarGrid('container', {
       title: 'Status',
       filterType: 'select',
       render: (value) => {
-        const color = value === 'Ativo' ? 'green' : 'red';
+        const color = value === 'Active' ? 'green' : 'red';
         return `<span style="color: ${color}">● ${value}</span>`;
       }
     }
@@ -443,33 +434,33 @@ const table = new ScarGrid('container', {
 });
 ```
 
-### Exemplo 3: Dataset Grande (25 colunas)
-Veja `examples/large-dataset.html` para um exemplo completo com:
-- 25 colunas variadas
-- 100 registros
-- Todos os tipos de filtro
-- Formatação customizada
-- Scroll horizontal
+### Example 3: Large Dataset (25 columns)
+See `examples/large-dataset.html` for a full example with:
+- 25 varied columns
+- 100 records
+- All filter types
+- Custom formatting
+- Horizontal scroll
 
 ---
 
-## 🎨 Temas
+## 🎨 Themes
 
-### Tema Padrão (Light)
+### Default Theme (Light)
 ```html
-<link rel="stylesheet" href="dist/scargrid.css">
+<link rel="stylesheet" href="dist/skargrid.css">
 ```
 
-### Tema Escuro
+### Dark Theme
 ```html
-<link rel="stylesheet" href="dist/scargrid.css">
+<link rel="stylesheet" href="dist/skargrid.css">
 <link rel="stylesheet" href="dist/themes/dark.css">
 ```
 
-### Customização
+### Customization
 ```css
-/* Sobrescreva variáveis CSS */
-.scargrid {
+/* Override CSS variables */
+.skargrid {
   --sg-primary-color: #007bff;
   --sg-hover-bg: #f8f9fa;
   --sg-border-color: #dee2e6;
@@ -478,63 +469,27 @@ Veja `examples/large-dataset.html` para um exemplo completo com:
 
 ---
 
-## 📋 Changelog
+## 🤝 Contributing
 
-### v0.8.1 (2025-01-08) - Nomenclatura Profissional
-- ✅ Renomeado classes CSS de `.tablejs-*` para `.scargrid-*`
-- ✅ Atualizada className padrão de `'tablejs'` para `'scargrid'`
-- ✅ Rebuild completo do bundle
-- 📄 Adicionado LICENSE (MIT)
-- 📄 Adicionado .gitignore profissional
-- 📚 README.md completamente reescrito
+Contributions are welcome! Please:
 
-### v0.8.0 (2025-01-07) - Filtros Cascata
-- ✨ Filtros cascata estilo Excel (valores indisponíveis desabilitados)
-- ✨ Busca normalizada (remove acentos automaticamente)
-- ✨ Scroll horizontal com custom scrollbar
-- ✨ Dropdown reposiciona durante scroll
-- 🐛 Corrigida lógica de contagem de filtros ativos
-- 📦 Build system com PowerShell (55.96 KB)
-- 🧹 Removidos arquivos v0.6.0 e v0.7.0
-- 📝 Novos exemplos: single-file.html, large-dataset.html
-
-### v0.7.0 (2024) - Arquitetura Modular
-- 📦 Arquitetura modular com features independentes
-- ⚡ Performance otimizada (-33% linhas no core)
-- 🔧 Sistema de carregamento inteligente
-
-### v0.6.0 (2024) - Versão Inicial
-- 🎉 Primeira versão pública
-- 🔍 Busca global
-- 🎛️ Filtros por coluna
-- 📄 Paginação
-- ↕️ Ordenação
-- ☑️ Seleção múltipla
+1. Fork the project
+2. Create a branch (`git checkout -b feature/NewFeature`)
+3. Commit your changes (`git commit -m 'Add new feature'`)
+4. Push to the branch (`git push origin feature/NewFeature`)
+5. Open a Pull Request
 
 ---
 
-## 🤝 Contribuindo
+## 📜 License
 
-Contribuições são bem-vindas! Por favor:
-
-1. Fork o projeto
-2. Crie uma branch (`git checkout -b feature/NovaFeature`)
-3. Commit suas mudanças (`git commit -m 'Adiciona nova feature'`)
-4. Push para a branch (`git push origin feature/NovaFeature`)
-5. Abra um Pull Request
-
----
-
-## 📜 Licença
-
-MIT License - veja [LICENSE](LICENSE) para detalhes.
+MIT License - see [LICENSE](LICENSE) for details.
 
 Copyright (c) 2024-2025 GILMAR A S TRINDADE
 
 ---
 
-## 👨‍💻 Autor
-
+## 👨‍💻 Author
 
 **GILMAR A S TRINDADE**
 
@@ -543,21 +498,19 @@ Copyright (c) 2024-2025 GILMAR A S TRINDADE
 
 ---
 
-
-
 ## 🌟 Roadmap
 
-- [x] CDN público
-- [x] Pacote NPM
-- [x] Export para CSV
-- [ ] Filtros avançados (range, múltiplos valores)
-- [ ] Edição inline
-- [ ] Colunas fixas (frozen columns)
-- [ ] Agrupamento de linhas
-- [ ] Temas adicionais
+- [x] Public CDN
+- [x] NPM package
+- [x] Export to CSV
+- [ ] Advanced filters (range, multi-value)
+- [ ] Inline editing
+- [ ] Frozen columns
+- [ ] Row grouping
+- [ ] Additional themes
 - [ ] TypeScript definitions
 - [ ] React/Vue/Angular wrappers
 
 ---
 
-**⭐ Se este projeto foi útil, considere dar uma estrela no GitHub!**
+**⭐ If this project was useful, consider starring it on GitHub!**
