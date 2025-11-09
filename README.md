@@ -1,3 +1,13 @@
+---
+
+## 💖 Apoie o Projeto
+
+
+Se este projeto te ajudou ou você quer incentivar o desenvolvimento de novas funcionalidades, considere apoiar:
+
+- **Liberapay:** [liberapay.com/scargrid](https://liberapay.com/scargrid)
+
+Sua contribuição ajuda a manter o projeto ativo e evoluindo!
 # 📊 ScarGrid
 
 > Biblioteca JavaScript moderna para criação de tabelas interativas com filtros cascata, busca normalizada e recursos avançados
@@ -23,10 +33,20 @@
 
 ### Instalação
 
-**Opção 1: CDN (em breve)**
+
+**Opção 1: CDN (jsDelivr ou unpkg)**
+Use diretamente do npm via CDN (sempre confira a versão mais recente):
+
+**jsDelivr**
 ```html
-<link rel="stylesheet" href="https://cdn.../scargrid.css">
-<script src="https://cdn.../scargrid.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/scargrid@1.0.1/dist/scargrid.css">
+<script src="https://cdn.jsdelivr.net/npm/scargrid@1.0.1/dist/scargrid.min.js"></script>
+```
+
+**unpkg**
+```html
+<link rel="stylesheet" href="https://unpkg.com/scargrid@1.0.1/dist/scargrid.css">
+<script src="https://unpkg.com/scargrid@1.0.1/dist/scargrid.min.js"></script>
 ```
 
 **Opção 2: Download**
@@ -39,10 +59,13 @@ cp scargrid/dist/scargrid.min.js seu-projeto/
 cp scargrid/dist/scargrid.css seu-projeto/
 ```
 
-**Opção 3: NPM (em breve)**
+
+**Opção 3: NPM**
+Instale diretamente do npm oficial:
 ```bash
-npm install scargrid
+npm i scargrid
 ```
+[https://www.npmjs.com/package/scargrid](https://www.npmjs.com/package/scargrid)
 
 
 ### Uso Básico
@@ -314,28 +337,37 @@ const table = new ScarGrid('myTable', {
 
 ### Estrutura do Projeto
 
+
 ```
 scargrid/
 ├── src/
 │   ├── core/
-│   │   └── scargrid.js          # Classe principal
+│   │   └── scargrid.js              # Classe principal
 │   ├── features/
-│   │   ├── pagination.js         # Módulo de paginação
-│   │   ├── sort.js               # Módulo de ordenação
-│   │   ├── selection.js          # Módulo de seleção
-│   │   └── filter.js             # Módulo de filtros
+│   │   ├── columnConfig.js          # Configuração de colunas (drag & drop)
+│   │   ├── export.js                # Exportação de dados (CSV)
+│   │   ├── filter.js                # Módulo de filtros
+│   │   ├── pagination.js            # Módulo de paginação
+│   │   ├── selection.js             # Módulo de seleção
+│   │   └── sort.js                  # Módulo de ordenação
 │   └── css/
-│       ├── scargrid.css          # Estilos principais
+│       ├── scargrid.css             # Estilos principais
 │       └── themes/
-│           ├── light.css         # Tema claro
-│           └── dark.css          # Tema escuro
-├── dist/                         # Build de produção
-│   ├── scargrid.min.js           # Bundle único (~83KB)
-│   └── scargrid.css              # Estilos compilados
+│           ├── light.css            # Tema claro
+│           └── dark.css             # Tema escuro
+├── dist/                            # Build de produção
+│   ├── scargrid.min.js              # Bundle único (JS)
+│   ├── scargrid-features.js         # Bundle de features
+│   ├── scargrid.css                 # Estilos compilados
+│   └── themes/
+│       ├── light.css                # Tema claro (build)
+│       └── dark.css                 # Tema escuro (build)
 ├── examples/
-│   ├── single-file.html          # Exemplo básico
-│   └── large-dataset.html        # Teste com 25 colunas
-├── build.ps1                     # Script de build (PowerShell)
+│   ├── single-file.html             # Exemplo básico
+│   ├── large-dataset.html           # Teste com 25 colunas
+│   ├── dark-theme.html              # Exemplo com tema escuro
+│   └── minimal.html                 # Exemplo minimalista
+├── build.ps1                        # Script de build (PowerShell)
 ├── package.json
 ├── LICENSE (MIT)
 └── README.md
@@ -509,11 +541,13 @@ Copyright (c) 2024-2025 GILMAR A S TRINDADE
 
 ---
 
+
+
 ## 🌟 Roadmap
 
-- [ ] CDN público
-- [ ] Pacote NPM
-- [ ] Export para CSV/Excel
+- [x] CDN público
+- [x] Pacote NPM
+- [x] Export para CSV
 - [ ] Filtros avançados (range, múltiplos valores)
 - [ ] Edição inline
 - [ ] Colunas fixas (frozen columns)
