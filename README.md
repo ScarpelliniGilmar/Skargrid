@@ -3,9 +3,9 @@
 > Biblioteca JavaScript moderna para criação de tabelas interativas com filtros cascata, busca normalizada e recursos avançados
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-[![Version](https://img.shields.io/badge/version-0.8.3-green.svg)](package.json)
+[![Version](https://img.shields.io/badge/version-1.0.0-green.svg)](package.json)
 
-## ✨ Destaques v0.8.3
+## ✨ Destaques v1.0.0
 
 - 🎨 **Configuração de Colunas** - Drag & drop para reordenar, mostrar/ocultar colunas
 - 💾 **Persistência** - Salva preferências do usuário no localStorage
