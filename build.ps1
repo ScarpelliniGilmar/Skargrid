@@ -1,4 +1,4 @@
-# ScarGrid Build Script
+# Skargrid Build Script
 $ErrorActionPreference = "Stop"
 
 Write-Host "Iniciando build..." -ForegroundColor Cyan
@@ -15,14 +15,14 @@ if (!(Test-Path $dist)) {
 # Header
 $header = @"
 /**
- * ScarGrid v0.8.0
+ * Skargrid v1.0.0
  * Build completo - Arquivo unico para uso em producao
  */
 (function(global, factory) {
   if (typeof module === 'object' && module.exports) {
     module.exports = factory();
   } else {
-    global.ScarGrid = factory();
+    global.Skargrid = factory();
   }
 }(typeof self !== 'undefined' ? self : this, function() {
 
@@ -37,7 +37,7 @@ $selection = Get-Content "$src\features\selection.js" -Raw -Encoding UTF8
 $filter = Get-Content "$src\features\filter.js" -Raw -Encoding UTF8
 $columnConfig = Get-Content "$src\features\columnConfig.js" -Raw -Encoding UTF8
 $export = Get-Content "$src\features\export.js" -Raw -Encoding UTF8
-$core = Get-Content "$src\core\scargrid.js" -Raw -Encoding UTF8
+$core = Get-Content "$src\core\skargrid.js" -Raw -Encoding UTF8
 
 # Remove exports dos features
 $pagination = $pagination -replace "(?s)if \(typeof window.*?$", ""
@@ -48,11 +48,12 @@ $columnConfig = $columnConfig -replace "export function initColumnConfig.*?\{", 
 $columnConfig = $columnConfig -replace "(?s)if \(typeof window.*?$", ""
 $export = $export -replace "(?s)if \(typeof window.*?$", ""
 
-# Renomeia ScarGridCore para ScarGrid no core
-$core = $core -replace "class ScarGridCore", "class ScarGrid"
+ # Renomeia ScarGridCore para Skargrid no core
+$core = $core -replace "class ScarGridCore", "class Skargrid"
 $core = $core -replace "(?s)if \(typeof window.*?$", ""
 
 # Monta o bundle
+
 $bundle = @"
 $header
 $core
@@ -63,12 +64,12 @@ $filter
 $columnConfig
 $export
 
-return ScarGrid;
+return Skargrid;
 }));
 "@
 
 # Salva com UTF-8 sem BOM
-$bundlePath = "$dist\scargrid.min.js"
+$bundlePath = "$dist\skargrid.min.js"
 $utf8NoBom = New-Object System.Text.UTF8Encoding $false
 [System.IO.File]::WriteAllText($bundlePath, $bundle, $utf8NoBom)
 
@@ -77,7 +78,7 @@ Write-Host "Bundle criado: $bundlePath ($size KB)" -ForegroundColor Green
 
 # Copia CSS
 Write-Host "Copiando CSS..." -ForegroundColor Yellow
-Copy-Item "$src\css\scargrid.css" "$dist\scargrid.css"
+Copy-Item "$src\css\skargrid.css" "$dist\skargrid.css"
 
 # Copia temas
 if (!(Test-Path "$dist\themes")) {

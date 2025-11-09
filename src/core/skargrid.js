@@ -1,10 +1,10 @@
 /**
- * ScarGrid Core - Implementação de renderização e UI
+ * Skargrid Core - Implementação de renderização e UI
  * @version 0.7.0
  * Este é o core de renderização, o ponto de entrada é index.js
  */
 
-class ScarGridCore {
+class Skargrid {
   constructor(containerId, options = {}) {
     this.container = document.getElementById(containerId);
     if (!this.container) {
@@ -14,7 +14,7 @@ class ScarGridCore {
     this.options = {
       data: options.data || [],
       columns: options.columns || [],
-      className: options.className || 'scargrid',
+      className: options.className || 'skargrid',
       theme: options.theme || 'light', // 'light' ou 'dark'
       pagination: options.pagination !== undefined ? options.pagination : false,
       pageSize: options.pageSize || 10,
@@ -122,7 +122,7 @@ class ScarGridCore {
    */
   render(fullRender = true) {
     // Se já existe uma tabela e não precisa de render completo, faz update rápido
-    if (!fullRender && this.container.querySelector('.scargrid-wrapper')) {
+    if (!fullRender && this.container.querySelector('.skargrid-wrapper')) {
       this.updateTableContent();
       return;
     }
@@ -132,11 +132,11 @@ class ScarGridCore {
 
     // Cria wrapper principal
     const wrapper = document.createElement('div');
-    wrapper.className = 'scargrid-wrapper';
+    wrapper.className = 'skargrid-wrapper';
     
     // Aplica tema
     if (this.options.theme === 'dark') {
-      wrapper.classList.add('scargrid-dark');
+      wrapper.classList.add('skargrid-dark');
     }
 
     // Renderiza área superior (busca + botões de ação)
@@ -147,14 +147,14 @@ class ScarGridCore {
 
     // Container da tabela com loading
     const tableContainer = document.createElement('div');
-    tableContainer.className = 'scargrid-table-container';
+    tableContainer.className = 'skargrid-table-container';
     
     // Adiciona indicador de loading APENAS na área da tabela
     if (this.isLoading) {
       const loadingOverlay = document.createElement('div');
-      loadingOverlay.className = 'scargrid-loading-overlay';
+      loadingOverlay.className = 'skargrid-loading-overlay';
       loadingOverlay.innerHTML = `
-        <div class="scargrid-spinner">
+        <div class="skargrid-spinner">
           <svg width="40" height="40" viewBox="0 0 50 50">
             <circle cx="25" cy="25" r="20" fill="none" stroke="currentColor" stroke-width="4" stroke-dasharray="80, 200" stroke-linecap="round">
               <animateTransform attributeName="transform" type="rotate" from="0 25 25" to="360 25 25" dur="1s" repeatCount="indefinite"/>
@@ -196,7 +196,7 @@ class ScarGridCore {
    * Atualiza apenas o conteúdo da tabela (tbody e paginação) - mais rápido
    */
   updateTableContent() {
-    const table = this.container.querySelector('.scargrid');
+    const table = this.container.querySelector('.skargrid');
     if (!table) return;
 
     // Atualiza tbody
@@ -215,7 +215,7 @@ class ScarGridCore {
 
     // Atualiza paginação
     if (this.options.pagination) {
-      const oldPagination = this.container.querySelector('.scargrid-pagination');
+      const oldPagination = this.container.querySelector('.skargrid-pagination');
       const newPagination = this.renderPagination();
       if (oldPagination && oldPagination.parentNode) {
         oldPagination.parentNode.replaceChild(newPagination, oldPagination);
@@ -241,7 +241,7 @@ class ScarGridCore {
     }
 
     const searchContainer = document.createElement('div');
-    searchContainer.className = 'scargrid-search-container';
+    searchContainer.className = 'skargrid-search-container';
 
     // Renderiza input de busca (se habilitado)
     if (hasSearch) {
@@ -252,7 +252,7 @@ class ScarGridCore {
     // Renderiza botões de ação (sempre que houver algum botão)
     if (hasFilterClear || hasColumnConfig || hasExportCSV) {
       const actionsContainer = document.createElement('div');
-      actionsContainer.className = 'scargrid-search-actions';
+      actionsContainer.className = 'skargrid-search-actions';
 
       // Botão "Limpar Filtros" (apenas se columnFilters estiver ativo)
       if (hasFilterClear) {
@@ -283,11 +283,11 @@ class ScarGridCore {
    */
   renderSearchInput() {
     const searchWrapper = document.createElement('div');
-    searchWrapper.className = 'scargrid-search-wrapper';
+    searchWrapper.className = 'skargrid-search-wrapper';
 
     // Ícone de busca (SVG profissional)
     const searchIcon = document.createElement('span');
-    searchIcon.className = 'scargrid-search-icon';
+    searchIcon.className = 'skargrid-search-icon';
     searchIcon.innerHTML = `
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
         <circle cx="11" cy="11" r="8"></circle>
@@ -298,7 +298,7 @@ class ScarGridCore {
     // Input de busca
     const searchInput = document.createElement('input');
     searchInput.type = 'text';
-    searchInput.className = 'scargrid-search-input';
+    searchInput.className = 'skargrid-search-input';
     searchInput.placeholder = 'Buscar em todas as colunas...';
     searchInput.value = this.searchText;
     
@@ -312,7 +312,7 @@ class ScarGridCore {
 
     // Botão limpar (SVG profissional)
     const clearButton = document.createElement('button');
-    clearButton.className = 'scargrid-search-clear';
+    clearButton.className = 'skargrid-search-clear';
     clearButton.innerHTML = `
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
         <line x1="18" y1="6" x2="6" y2="18"></line>
@@ -338,7 +338,7 @@ class ScarGridCore {
    */
   renderClearFiltersButton() {
     const clearFiltersButton = document.createElement('button');
-    clearFiltersButton.className = 'scargrid-clear-filters-btn';
+    clearFiltersButton.className = 'skargrid-clear-filters-btn';
     clearFiltersButton.innerHTML = `
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
         <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
@@ -360,7 +360,7 @@ class ScarGridCore {
    */
   renderExportCSVButton() {
     const exportButton = document.createElement('button');
-    exportButton.className = 'scargrid-clear-filters-btn';
+    exportButton.className = 'skargrid-clear-filters-btn';
     exportButton.innerHTML = `
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
         <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
@@ -390,11 +390,11 @@ class ScarGridCore {
     // Adiciona coluna de checkbox se seleção está habilitada
     if (this.options.selectable) {
       const th = document.createElement('th');
-      th.className = 'scargrid-select-header';
+      th.className = 'skargrid-select-header';
       
       const checkbox = document.createElement('input');
       checkbox.type = 'checkbox';
-      checkbox.className = 'scargrid-checkbox';
+      checkbox.className = 'skargrid-checkbox';
       checkbox.checked = this.isAllSelected();
       checkbox.onchange = (e) => this.toggleSelectAll(e.target.checked);
       
@@ -628,7 +628,7 @@ class ScarGridCore {
    */
   createFilterDropdown(column) {
     const dropdown = document.createElement('div');
-    dropdown.className = 'scargrid-filter-dropdown';
+    dropdown.className = 'skargrid-filter-dropdown';
 
     const filterType = column.filterType || 'text';
 
@@ -899,11 +899,11 @@ class ScarGridCore {
       // Adiciona coluna de checkbox se seleção está habilitada
       if (this.options.selectable) {
         const td = document.createElement('td');
-        td.className = 'scargrid-select-cell';
+        td.className = 'skargrid-select-cell';
         
         const checkbox = document.createElement('input');
         checkbox.type = 'checkbox';
-        checkbox.className = 'scargrid-checkbox';
+        checkbox.className = 'skargrid-checkbox';
         checkbox.checked = this.selectedRows.has(globalIndex);
         checkbox.onchange = (e) => {
           e.stopPropagation();
@@ -1030,7 +1030,7 @@ class ScarGridCore {
    */
   updateClearFiltersButton(button = null) {
     if (!button) {
-      button = this.container.querySelector('.scargrid-clear-filters-btn');
+      button = this.container.querySelector('.skargrid-clear-filters-btn');
     }
     
     if (!button) return;
@@ -1225,28 +1225,29 @@ class ScarGridCore {
 
     this.options.theme = theme;
     
-    const wrapper = this.container.querySelector('.scargrid-wrapper');
+    const wrapper = this.container.querySelector('.skargrid-wrapper');
     if (!wrapper) {
       console.warn('Wrapper não encontrado. A tabela foi renderizada?');
       return;
     }
 
     if (theme === 'dark') {
-      wrapper.classList.add('scargrid-dark');
+      wrapper.classList.add('skargrid-dark');
     } else {
-      wrapper.classList.remove('scargrid-dark');
+      wrapper.classList.remove('skargrid-dark');
     }
   }
 }
 
-// Exporta para uso global como ScarGridCore (implementação)
+// Exporta para uso global como Skargrid (implementação)
+
+
+// UMD/Global export para browser
 if (typeof window !== 'undefined') {
-  window.ScarGridCore = ScarGridCore;
-  // Mantém ScarGrid como alias para compatibilidade retroativa
-  window.ScarGrid = ScarGridCore;
+  window.Skargrid = Skargrid;
 }
 
 // Suporte para módulos ES6
 if (typeof module !== 'undefined' && module.exports) {
-  module.exports = ScarGridCore;
+  module.exports = Skargrid;
 }

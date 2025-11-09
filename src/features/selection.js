@@ -1,5 +1,5 @@
 /**
- * ScarGrid - Módulo de Seleção
+ * Skargrid - Módulo de Seleção
  * Gerencia checkbox e seleção múltipla de linhas
  */
 
@@ -92,7 +92,7 @@ const SelectionFeature = {
   renderSelectAllCheckbox(grid) {
     const checkbox = document.createElement('input');
     checkbox.type = 'checkbox';
-    checkbox.className = 'scargrid-checkbox';
+    checkbox.className = 'skargrid-checkbox';
     checkbox.checked = this.isAllSelected(grid);
     checkbox.onchange = (e) => this.toggleSelectAll(grid, e.target.checked);
     return checkbox;
@@ -104,7 +104,7 @@ const SelectionFeature = {
   renderRowCheckbox(grid, globalIndex) {
     const checkbox = document.createElement('input');
     checkbox.type = 'checkbox';
-    checkbox.className = 'scargrid-checkbox';
+    checkbox.className = 'skargrid-checkbox';
     checkbox.checked = grid.selectedRows.has(globalIndex);
     checkbox.onchange = (e) => {
       e.stopPropagation();

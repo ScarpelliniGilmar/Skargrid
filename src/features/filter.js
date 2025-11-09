@@ -1,5 +1,5 @@
 /**
- * ScarGrid - Módulo de Filtros
+ * Skargrid - Módulo de Filtros
  * Gerencia busca global e filtros por coluna
  */
 
@@ -177,7 +177,7 @@ const FilterFeature = {
   clearAllFilters(grid) {
     // Limpa busca global
     grid.searchText = '';
-    const searchInput = grid.container.querySelector('.scargrid-search-input');
+    const searchInput = grid.container.querySelector('.skargrid-search-input');
     if (searchInput) {
       searchInput.value = '';
     }

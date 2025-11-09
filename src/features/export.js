@@ -1,5 +1,5 @@
 /**
- * ScarGrid - Export Module
+ * Skargrid - Export Module
  * Módulo de exportação de dados (CSV)
  */
 
@@ -9,9 +9,9 @@
   /**
    * Renderiza botão "Exportar CSV"
    */
-  ScarGrid.prototype.renderExportCSVButton = function() {
+  Skargrid.prototype.renderExportCSVButton = function() {
     const exportButton = document.createElement('button');
-    exportButton.className = 'scargrid-clear-filters-btn';
+    exportButton.className = 'skargrid-clear-filters-btn';
     exportButton.innerHTML = `
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
         <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
@@ -28,8 +28,8 @@
   /**
    * Exporta dados visíveis para CSV
    */
-  ScarGrid.prototype.exportToCSV = function(filename) {
-    filename = filename || 'scargrid-export.csv';
+  Skargrid.prototype.exportToCSV = function(filename) {
+    filename = filename || 'skargrid-export.csv';
 
     // Obtém colunas visíveis na ordem atual
     const visibleColumns = this.columnOrder
@@ -108,7 +108,7 @@
   /**
    * Escapa valores para CSV (adiciona aspas e escapa aspas internas)
    */
-  ScarGrid.prototype.escapeCSV = function(value) {
+  Skargrid.prototype.escapeCSV = function(value) {
     if (typeof value !== 'string') {
       value = String(value);
     }
@@ -126,7 +126,7 @@
   /**
    * Remove tags HTML de uma string
    */
-  ScarGrid.prototype.stripHTML = function(html) {
+  Skargrid.prototype.stripHTML = function(html) {
     const tmp = document.createElement('div');
     tmp.innerHTML = html;
     return tmp.textContent || tmp.innerText || '';
@@ -135,8 +135,8 @@
   /**
    * Exporta dados selecionados para CSV
    */
-  ScarGrid.prototype.exportSelectedToCSV = function(filename) {
-    filename = filename || 'scargrid-selected.csv';
+  Skargrid.prototype.exportSelectedToCSV = function(filename) {
+    filename = filename || 'skargrid-selected.csv';
     
     const selectedRows = this.getSelectedRows();
     if (selectedRows.length === 0) {

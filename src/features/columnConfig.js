@@ -1,5 +1,5 @@
 /**
- * ScarGrid - Column Configuration Feature
+ * Skargrid - Column Configuration Feature
  * Funcionalidade para mostrar/ocultar e reordenar colunas
  */
 
@@ -9,7 +9,7 @@ export function initColumnConfig(grid) {
   grid.tempColumnOrder = null;
 
   // Chave para localStorage (permite múltiplas tabelas na mesma página)
-  grid.storageKey = grid.options.storageKey || `scargrid-config-${grid.container.id || 'default'}`;
+  grid.storageKey = grid.options.storageKey || `skargrid-config-${grid.container.id || 'default'}`;
 
   /**
    * Salva configuração de colunas no localStorage
@@ -82,7 +82,7 @@ export function initColumnConfig(grid) {
    */
   grid.renderColumnConfigButton = function() {
     const btn = document.createElement('button');
-    btn.className = 'scargrid-clear-filters-btn';
+    btn.className = 'skargrid-clear-filters-btn';
     btn.innerHTML = `
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
         <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/>
@@ -103,7 +103,7 @@ export function initColumnConfig(grid) {
    * Abre/fecha modal de configuração de colunas
    */
   grid.toggleColumnConfigModal = function() {
-    let modal = this.container.querySelector('.scargrid-column-config-modal');
+    let modal = this.container.querySelector('.skargrid-column-config-modal');
     
     if (modal) {
       modal.remove();
@@ -115,7 +115,7 @@ export function initColumnConfig(grid) {
     this.tempColumnOrder = [...this.columnOrder];
 
     modal = this.renderColumnConfigModal();
-    const wrapper = this.container.querySelector('.scargrid-wrapper');
+    const wrapper = this.container.querySelector('.skargrid-wrapper');
     wrapper.appendChild(modal);
 
     // Previne propagação de cliques dentro do modal
@@ -143,10 +143,10 @@ export function initColumnConfig(grid) {
    */
   grid.renderColumnConfigModal = function() {
     const modal = document.createElement('div');
-    modal.className = 'scargrid-column-config-modal';
+    modal.className = 'skargrid-column-config-modal';
 
     const header = document.createElement('div');
-    header.className = 'scargrid-config-header';
+    header.className = 'skargrid-config-header';
     header.innerHTML = `
       <h3>
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle; margin-right: 6px;">
@@ -160,16 +160,16 @@ export function initColumnConfig(grid) {
 
     // Botões de ação NO TOPO (dentro do header)
     const headerActions = document.createElement('div');
-    headerActions.className = 'scargrid-config-header-actions';
+    headerActions.className = 'skargrid-config-header-actions';
 
     const btnRestore = document.createElement('button');
-    btnRestore.className = 'scargrid-config-action-btn';
+    btnRestore.className = 'skargrid-config-action-btn';
     btnRestore.innerHTML = '↺ Restaurar';
     btnRestore.title = 'Restaurar configuração padrão';
     btnRestore.addEventListener('click', () => this.restoreDefaultColumns());
 
     const btnCancel = document.createElement('button');
-    btnCancel.className = 'scargrid-config-action-btn';
+    btnCancel.className = 'skargrid-config-action-btn';
     btnCancel.textContent = 'Cancelar';
     btnCancel.addEventListener('click', () => {
       this.tempVisibleColumns = null;
@@ -178,7 +178,7 @@ export function initColumnConfig(grid) {
     });
 
     const btnApply = document.createElement('button');
-    btnApply.className = 'scargrid-config-action-btn scargrid-config-action-btn-primary';
+    btnApply.className = 'skargrid-config-action-btn skargrid-config-action-btn-primary';
     btnApply.textContent = '✓ Aplicar';
     btnApply.addEventListener('click', () => this.applyColumnConfig());
 
@@ -188,7 +188,7 @@ export function initColumnConfig(grid) {
     header.appendChild(headerActions);
 
     const list = document.createElement('div');
-    list.className = 'scargrid-config-list';
+    list.className = 'skargrid-config-list';
 
     // Renderiza cada coluna na ordem temporária
     this.tempColumnOrder.forEach((field, index) => {
@@ -196,7 +196,7 @@ export function initColumnConfig(grid) {
       if (!column) return;
 
       const item = document.createElement('div');
-      item.className = 'scargrid-config-item';
+      item.className = 'skargrid-config-item';
       item.dataset.field = field;
       item.draggable = true;
 
@@ -212,10 +212,10 @@ export function initColumnConfig(grid) {
         
         // Atualiza estado dos botões ↑↓ após o drag
         setTimeout(() => {
-          const items = Array.from(list.querySelectorAll('.scargrid-config-item'));
+          const items = Array.from(list.querySelectorAll('.skargrid-config-item'));
           items.forEach((item, idx) => {
-            const btnUp = item.querySelector('.scargrid-config-move-btn:first-of-type');
-            const btnDown = item.querySelector('.scargrid-config-move-btn:last-of-type');
+            const btnUp = item.querySelector('.skargrid-config-move-btn:first-of-type');
+            const btnDown = item.querySelector('.skargrid-config-move-btn:last-of-type');
             if (btnUp) btnUp.disabled = idx === 0;
             if (btnDown) btnDown.disabled = idx === items.length - 1;
           });
@@ -242,13 +242,13 @@ export function initColumnConfig(grid) {
       item.addEventListener('drop', (e) => {
         e.preventDefault();
         // Atualiza a ordem baseada na posição dos elementos no DOM
-        const items = Array.from(list.querySelectorAll('.scargrid-config-item'));
+        const items = Array.from(list.querySelectorAll('.skargrid-config-item'));
         this.tempColumnOrder = items.map(el => el.dataset.field);
         
         // Atualiza estado dos botões ↑↓
         items.forEach((item, idx) => {
-          const btnUp = item.querySelector('.scargrid-config-move-btn:first-of-type');
-          const btnDown = item.querySelector('.scargrid-config-move-btn:last-of-type');
+          const btnUp = item.querySelector('.skargrid-config-move-btn:first-of-type');
+          const btnDown = item.querySelector('.skargrid-config-move-btn:last-of-type');
           if (btnUp) btnUp.disabled = idx === 0;
           if (btnDown) btnDown.disabled = idx === items.length - 1;
         });
@@ -275,19 +275,19 @@ export function initColumnConfig(grid) {
 
       // Ícone de arrastar
       const dragHandle = document.createElement('span');
-      dragHandle.className = 'scargrid-drag-handle';
+      dragHandle.className = 'skargrid-drag-handle';
       dragHandle.innerHTML = '⋮⋮';
       dragHandle.title = 'Arrastar para reordenar';
 
       // Botões de ordenação (mantidos como alternativa)
       const btnUp = document.createElement('button');
-      btnUp.className = 'scargrid-config-move-btn';
+      btnUp.className = 'skargrid-config-move-btn';
       btnUp.innerHTML = '↑';
       btnUp.disabled = index === 0;
       btnUp.addEventListener('click', () => this.moveColumnTemp(field, 'up'));
 
       const btnDown = document.createElement('button');
-      btnDown.className = 'scargrid-config-move-btn';
+      btnDown.className = 'skargrid-config-move-btn';
       btnDown.innerHTML = '↓';
       btnDown.disabled = index === this.tempColumnOrder.length - 1;
       btnDown.addEventListener('click', () => this.moveColumnTemp(field, 'down'));
@@ -326,9 +326,9 @@ export function initColumnConfig(grid) {
     this.tempColumnOrder = newOrder;
     
     // Atualiza apenas a lista dentro do modal (não recria tudo)
-    const modal = this.container.querySelector('.scargrid-column-config-modal');
+    const modal = this.container.querySelector('.skargrid-column-config-modal');
     if (modal) {
-      const list = modal.querySelector('.scargrid-config-list');
+      const list = modal.querySelector('.skargrid-config-list');
       if (list) {
         // Re-renderiza a lista
         list.innerHTML = '';
@@ -337,7 +337,7 @@ export function initColumnConfig(grid) {
           if (!column) return;
 
           const item = document.createElement('div');
-          item.className = 'scargrid-config-item';
+          item.className = 'skargrid-config-item';
           item.dataset.field = field;
           item.draggable = true;
 
@@ -353,10 +353,10 @@ export function initColumnConfig(grid) {
             
             // Atualiza estado dos botões ↑↓ após o drag
             setTimeout(() => {
-              const items = Array.from(list.querySelectorAll('.scargrid-config-item'));
+              const items = Array.from(list.querySelectorAll('.skargrid-config-item'));
               items.forEach((item, idx) => {
-                const btnUp = item.querySelector('.scargrid-config-move-btn:first-of-type');
-                const btnDown = item.querySelector('.scargrid-config-move-btn:last-of-type');
+                const btnUp = item.querySelector('.skargrid-config-move-btn:first-of-type');
+                const btnDown = item.querySelector('.skargrid-config-move-btn:last-of-type');
                 if (btnUp) btnUp.disabled = idx === 0;
                 if (btnDown) btnDown.disabled = idx === items.length - 1;
               });
@@ -382,13 +382,13 @@ export function initColumnConfig(grid) {
 
           item.addEventListener('drop', (e) => {
             e.preventDefault();
-            const items = Array.from(list.querySelectorAll('.scargrid-config-item'));
+            const items = Array.from(list.querySelectorAll('.skargrid-config-item'));
             this.tempColumnOrder = items.map(el => el.dataset.field);
             
             // Atualiza estado dos botões ↑↓
             items.forEach((item, idx) => {
-              const btnUp = item.querySelector('.scargrid-config-move-btn:first-of-type');
-              const btnDown = item.querySelector('.scargrid-config-move-btn:last-of-type');
+              const btnUp = item.querySelector('.skargrid-config-move-btn:first-of-type');
+              const btnDown = item.querySelector('.skargrid-config-move-btn:last-of-type');
               if (btnUp) btnUp.disabled = idx === 0;
               if (btnDown) btnDown.disabled = idx === items.length - 1;
             });
@@ -415,19 +415,19 @@ export function initColumnConfig(grid) {
 
           // Ícone de arrastar
           const dragHandle = document.createElement('span');
-          dragHandle.className = 'scargrid-drag-handle';
+          dragHandle.className = 'skargrid-drag-handle';
           dragHandle.innerHTML = '⋮⋮';
           dragHandle.title = 'Arrastar para reordenar';
 
           // Botões de ordenação
           const btnUp = document.createElement('button');
-          btnUp.className = 'scargrid-config-move-btn';
+          btnUp.className = 'skargrid-config-move-btn';
           btnUp.innerHTML = '↑';
           btnUp.disabled = index === 0;
           btnUp.addEventListener('click', () => this.moveColumnTemp(field, 'up'));
 
           const btnDown = document.createElement('button');
-          btnDown.className = 'scargrid-config-move-btn';
+          btnDown.className = 'skargrid-config-move-btn';
           btnDown.innerHTML = '↓';
           btnDown.disabled = index === this.tempColumnOrder.length - 1;
           btnDown.addEventListener('click', () => this.moveColumnTemp(field, 'down'));
@@ -457,7 +457,7 @@ export function initColumnConfig(grid) {
     this.tempVisibleColumns = null;
     this.tempColumnOrder = null;
 
-    const modal = this.container.querySelector('.scargrid-column-config-modal');
+    const modal = this.container.querySelector('.skargrid-column-config-modal');
     if (modal) modal.remove();
 
     // Salva configuração no localStorage
@@ -475,9 +475,9 @@ export function initColumnConfig(grid) {
     this.tempColumnOrder = this.options.columns.map(col => col.field);
 
     // Atualiza a lista no modal
-    const modal = this.container.querySelector('.scargrid-column-config-modal');
+    const modal = this.container.querySelector('.skargrid-column-config-modal');
     if (modal) {
-      const list = modal.querySelector('.scargrid-config-list');
+      const list = modal.querySelector('.skargrid-config-list');
       if (list) {
         list.innerHTML = '';
         this.tempColumnOrder.forEach((field, index) => {
@@ -485,7 +485,7 @@ export function initColumnConfig(grid) {
           if (!column) return;
 
           const item = document.createElement('div');
-          item.className = 'scargrid-config-item';
+          item.className = 'skargrid-config-item';
           item.dataset.field = field;
           item.draggable = true;
 
@@ -501,10 +501,10 @@ export function initColumnConfig(grid) {
             
             // Atualiza estado dos botões ↑↓ após o drag
             setTimeout(() => {
-              const items = Array.from(list.querySelectorAll('.scargrid-config-item'));
+              const items = Array.from(list.querySelectorAll('.skargrid-config-item'));
               items.forEach((item, idx) => {
-                const btnUp = item.querySelector('.scargrid-config-move-btn:first-of-type');
-                const btnDown = item.querySelector('.scargrid-config-move-btn:last-of-type');
+                const btnUp = item.querySelector('.skargrid-config-move-btn:first-of-type');
+                const btnDown = item.querySelector('.skargrid-config-move-btn:last-of-type');
                 if (btnUp) btnUp.disabled = idx === 0;
                 if (btnDown) btnDown.disabled = idx === items.length - 1;
               });
@@ -530,13 +530,13 @@ export function initColumnConfig(grid) {
 
           item.addEventListener('drop', (e) => {
             e.preventDefault();
-            const items = Array.from(list.querySelectorAll('.scargrid-config-item'));
+            const items = Array.from(list.querySelectorAll('.skargrid-config-item'));
             this.tempColumnOrder = items.map(el => el.dataset.field);
             
             // Atualiza estado dos botões ↑↓
             items.forEach((item, idx) => {
-              const btnUp = item.querySelector('.scargrid-config-move-btn:first-of-type');
-              const btnDown = item.querySelector('.scargrid-config-move-btn:last-of-type');
+              const btnUp = item.querySelector('.skargrid-config-move-btn:first-of-type');
+              const btnDown = item.querySelector('.skargrid-config-move-btn:last-of-type');
               if (btnUp) btnUp.disabled = idx === 0;
               if (btnDown) btnDown.disabled = idx === items.length - 1;
             });
@@ -562,18 +562,18 @@ export function initColumnConfig(grid) {
 
           // Ícone de arrastar
           const dragHandle = document.createElement('span');
-          dragHandle.className = 'scargrid-drag-handle';
+          dragHandle.className = 'skargrid-drag-handle';
           dragHandle.innerHTML = '⋮⋮';
           dragHandle.title = 'Arrastar para reordenar';
 
           const btnUp = document.createElement('button');
-          btnUp.className = 'scargrid-config-move-btn';
+          btnUp.className = 'skargrid-config-move-btn';
           btnUp.innerHTML = '↑';
           btnUp.disabled = index === 0;
           btnUp.addEventListener('click', () => this.moveColumnTemp(field, 'up'));
 
           const btnDown = document.createElement('button');
-          btnDown.className = 'scargrid-config-move-btn';
+          btnDown.className = 'skargrid-config-move-btn';
           btnDown.innerHTML = '↓';
           btnDown.disabled = index === this.tempColumnOrder.length - 1;
           btnDown.addEventListener('click', () => this.moveColumnTemp(field, 'down'));

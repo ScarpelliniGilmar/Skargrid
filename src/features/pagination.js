@@ -1,5 +1,5 @@
 /**
- * ScarGrid - Módulo de Paginação
+ * Skargrid - Módulo de Paginação
  * Gerencia navegação entre páginas e tamanho de página
  */
 
@@ -9,7 +9,7 @@ const PaginationFeature = {
    */
   renderPagination(grid) {
     const paginationDiv = document.createElement('div');
-    paginationDiv.className = 'scargrid-pagination';
+    paginationDiv.className = 'skargrid-pagination';
 
     // Info de registros
     const info = this.renderPaginationInfo(grid);
@@ -31,7 +31,7 @@ const PaginationFeature = {
    */
   renderPaginationInfo(grid) {
     const info = document.createElement('div');
-    info.className = 'scargrid-pagination-info';
+    info.className = 'skargrid-pagination-info';
 
     const totalRecords = grid.filteredData.length;
     const totalOriginal = grid.options.data.length;
@@ -54,12 +54,12 @@ const PaginationFeature = {
    */
   renderPaginationControls(grid) {
     const controls = document.createElement('div');
-    controls.className = 'scargrid-pagination-controls';
+    controls.className = 'skargrid-pagination-controls';
 
     // Botão Primeira Página
     const firstBtn = document.createElement('button');
     firstBtn.textContent = '«';
-    firstBtn.className = 'scargrid-pagination-btn';
+    firstBtn.className = 'skargrid-pagination-btn';
     firstBtn.disabled = grid.currentPage === 1;
     firstBtn.onclick = () => this.goToPage(grid, 1);
     controls.appendChild(firstBtn);
@@ -67,7 +67,7 @@ const PaginationFeature = {
     // Botão Anterior
     const prevBtn = document.createElement('button');
     prevBtn.textContent = '‹';
-    prevBtn.className = 'scargrid-pagination-btn';
+    prevBtn.className = 'skargrid-pagination-btn';
     prevBtn.disabled = grid.currentPage === 1;
     prevBtn.onclick = () => this.goToPage(grid, grid.currentPage - 1);
     controls.appendChild(prevBtn);
@@ -78,12 +78,12 @@ const PaginationFeature = {
       if (pageNum === '...') {
         const ellipsis = document.createElement('span');
         ellipsis.textContent = '...';
-        ellipsis.className = 'scargrid-pagination-ellipsis';
+        ellipsis.className = 'skargrid-pagination-ellipsis';
         controls.appendChild(ellipsis);
       } else {
         const pageBtn = document.createElement('button');
         pageBtn.textContent = pageNum;
-        pageBtn.className = 'scargrid-pagination-btn';
+        pageBtn.className = 'skargrid-pagination-btn';
         if (pageNum === grid.currentPage) {
           pageBtn.classList.add('active');
         }
@@ -95,7 +95,7 @@ const PaginationFeature = {
     // Botão Próximo
     const nextBtn = document.createElement('button');
     nextBtn.textContent = '›';
-    nextBtn.className = 'scargrid-pagination-btn';
+    nextBtn.className = 'skargrid-pagination-btn';
     nextBtn.disabled = grid.currentPage === grid.totalPages;
     nextBtn.onclick = () => this.goToPage(grid, grid.currentPage + 1);
     controls.appendChild(nextBtn);
@@ -103,7 +103,7 @@ const PaginationFeature = {
     // Botão Última Página
     const lastBtn = document.createElement('button');
     lastBtn.textContent = '»';
-    lastBtn.className = 'scargrid-pagination-btn';
+    lastBtn.className = 'skargrid-pagination-btn';
     lastBtn.disabled = grid.currentPage === grid.totalPages;
     lastBtn.onclick = () => this.goToPage(grid, grid.totalPages);
     controls.appendChild(lastBtn);
@@ -155,14 +155,14 @@ const PaginationFeature = {
    */
   renderPageSizeSelector(grid) {
     const selector = document.createElement('div');
-    selector.className = 'scargrid-page-size';
+    selector.className = 'skargrid-page-size';
 
     const label = document.createElement('span');
     label.textContent = 'Itens por página: ';
     selector.appendChild(label);
 
     const select = document.createElement('select');
-    select.className = 'scargrid-page-size-select';
+    select.className = 'skargrid-page-size-select';
 
     grid.options.pageSizeOptions.forEach(size => {
       const option = document.createElement('option');

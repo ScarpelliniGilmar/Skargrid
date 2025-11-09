@@ -1,121 +1,121 @@
 /**
- * ScarGrid - Tema Dark
+ * skargrid - Tema Dark
  */
 
 :root[data-theme="dark"] {
-  --scargrid-bg: #1a1d23;
-  --scargrid-header-bg: #2c3038;
-  --scargrid-header-text: #e9ecef;
-  --scargrid-border: #3a3f47;
-  --scargrid-hover-bg: #363b45;
-  --scargrid-selected-bg: #1e3a5f;
-  --scargrid-primary: #4a9eff;
-  --scargrid-primary-hover: #6bb0ff;
-  --scargrid-text: #f8f9fa;
-  --scargrid-text-muted: #adb5bd;
-  --scargrid-shadow: rgba(0, 0, 0, 0.3);
-  --scargrid-input-bg: #2c3038;
-  --scargrid-search-bg: #2c3038;
+  --skargrid-bg: #1a1d23;
+  --skargrid-header-bg: #2c3038;
+  --skargrid-header-text: #e9ecef;
+  --skargrid-border: #3a3f47;
+  --skargrid-hover-bg: #363b45;
+  --skargrid-selected-bg: #1e3a5f;
+  --skargrid-primary: #4a9eff;
+  --skargrid-primary-hover: #6bb0ff;
+  --skargrid-text: #f8f9fa;
+  --skargrid-text-muted: #adb5bd;
+  --skargrid-shadow: rgba(0, 0, 0, 0.3);
+  --skargrid-input-bg: #2c3038;
+  --skargrid-search-bg: #2c3038;
 }
 
 /* Aplicar variáveis CSS ao tema dark */
-.scargrid-theme-dark {
-  background-color: var(--scargrid-bg);
-  color: var(--scargrid-text);
+.skargrid-theme-dark {
+  background-color: var(--skargrid-bg);
+  color: var(--skargrid-text);
 }
 
-.scargrid-theme-dark .scargrid {
-  background-color: var(--scargrid-bg);
-  color: var(--scargrid-text);
+.skargrid-theme-dark .skargrid {
+  background-color: var(--skargrid-bg);
+  color: var(--skargrid-text);
 }
 
-.scargrid-theme-dark .scargrid thead {
-  background-color: var(--scargrid-header-bg);
-  color: var(--scargrid-header-text);
-  border-bottom-color: var(--scargrid-border);
+.skargrid-theme-dark .skargrid thead {
+  background-color: var(--skargrid-header-bg);
+  color: var(--skargrid-header-text);
+  border-bottom-color: var(--skargrid-border);
 }
 
-.scargrid-theme-dark .scargrid thead th {
-  color: var(--scargrid-header-text);
-  border-color: var(--scargrid-border);
+.skargrid-theme-dark .skargrid thead th {
+  color: var(--skargrid-header-text);
+  border-color: var(--skargrid-border);
 }
 
-.scargrid-theme-dark .scargrid thead th.sortable:hover {
-  background-color: var(--scargrid-hover-bg);
+.skargrid-theme-dark .skargrid thead th.sortable:hover {
+  background-color: var(--skargrid-hover-bg);
 }
 
-.scargrid-theme-dark .scargrid tbody tr {
-  border-bottom-color: var(--scargrid-border);
+.skargrid-theme-dark .skargrid tbody tr {
+  border-bottom-color: var(--skargrid-border);
 }
 
-.scargrid-theme-dark .scargrid tbody tr:hover {
-  background-color: var(--scargrid-hover-bg);
+.skargrid-theme-dark .skargrid tbody tr:hover {
+  background-color: var(--skargrid-hover-bg);
 }
 
-.scargrid-theme-dark .scargrid tbody tr.selected {
-  background-color: var(--scargrid-selected-bg);
+.skargrid-theme-dark .skargrid tbody tr.selected {
+  background-color: var(--skargrid-selected-bg);
 }
 
-.scargrid-theme-dark .scargrid-search-container {
-  background-color: var(--scargrid-search-bg);
-  border-bottom-color: var(--scargrid-border);
+.skargrid-theme-dark .skargrid-search-container {
+  background-color: var(--skargrid-search-bg);
+  border-bottom-color: var(--skargrid-border);
 }
 
-.scargrid-theme-dark .scargrid-search-input {
-  background-color: var(--scargrid-input-bg);
-  border-color: var(--scargrid-border);
-  color: var(--scargrid-text);
+.skargrid-theme-dark .skargrid-search-input {
+  background-color: var(--skargrid-input-bg);
+  border-color: var(--skargrid-border);
+  color: var(--skargrid-text);
 }
 
-.scargrid-theme-dark .scargrid-clear-filters-btn {
-  background-color: var(--scargrid-input-bg);
-  border-color: var(--scargrid-border);
-  color: var(--scargrid-text-muted);
+.skargrid-theme-dark .skargrid-clear-filters-btn {
+  background-color: var(--skargrid-input-bg);
+  border-color: var(--skargrid-border);
+  color: var(--skargrid-text-muted);
 }
 
-.scargrid-theme-dark .scargrid-clear-filters-btn:hover {
-  background-color: var(--scargrid-hover-bg);
+.skargrid-theme-dark .skargrid-clear-filters-btn:hover {
+  background-color: var(--skargrid-hover-bg);
 }
 
-.scargrid-theme-dark .scargrid-clear-filters-btn.has-filters {
-  background-color: var(--scargrid-primary);
-  border-color: var(--scargrid-primary);
+.skargrid-theme-dark .skargrid-clear-filters-btn.has-filters {
+  background-color: var(--skargrid-primary);
+  border-color: var(--skargrid-primary);
   color: white;
 }
 
-.scargrid-theme-dark .scargrid-filter-dropdown {
-  background-color: var(--scargrid-input-bg);
-  border-color: var(--scargrid-border);
+.skargrid-theme-dark .skargrid-filter-dropdown {
+  background-color: var(--skargrid-input-bg);
+  border-color: var(--skargrid-border);
 }
 
-.scargrid-theme-dark .filter-dropdown-header {
-  border-bottom-color: var(--scargrid-border);
-  color: var(--scargrid-text);
+.skargrid-theme-dark .filter-dropdown-header {
+  border-bottom-color: var(--skargrid-border);
+  color: var(--skargrid-text);
 }
 
-.scargrid-theme-dark .filter-search-input,
-.scargrid-theme-dark .filter-dropdown-input {
-  background-color: var(--scargrid-bg);
-  border-color: var(--scargrid-border);
-  color: var(--scargrid-text);
+.skargrid-theme-dark .filter-search-input,
+.skargrid-theme-dark .filter-dropdown-input {
+  background-color: var(--skargrid-bg);
+  border-color: var(--skargrid-border);
+  color: var(--skargrid-text);
 }
 
-.scargrid-theme-dark .scargrid-pagination {
-  border-top-color: var(--scargrid-border);
+.skargrid-theme-dark .skargrid-pagination {
+  border-top-color: var(--skargrid-border);
 }
 
-.scargrid-theme-dark .pagination-button {
-  background-color: var(--scargrid-input-bg);
-  border-color: var(--scargrid-border);
-  color: var(--scargrid-text);
+.skargrid-theme-dark .pagination-button {
+  background-color: var(--skargrid-input-bg);
+  border-color: var(--skargrid-border);
+  color: var(--skargrid-text);
 }
 
-.scargrid-theme-dark .pagination-button:hover:not(:disabled) {
-  background-color: var(--scargrid-hover-bg);
+.skargrid-theme-dark .pagination-button:hover:not(:disabled) {
+  background-color: var(--skargrid-hover-bg);
 }
 
-.scargrid-theme-dark .pagination-button.active {
-  background-color: var(--scargrid-primary);
-  border-color: var(--scargrid-primary);
+.skargrid-theme-dark .pagination-button.active {
+  background-color: var(--skargrid-primary);
+  border-color: var(--skargrid-primary);
   color: white;
 }
