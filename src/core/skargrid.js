@@ -28,6 +28,29 @@ class Skargrid {
       ...options
     };
 
+    // Ensure current pageSize is present in pageSizeOptions. If the user set
+    // `options.pageSize` but didn't include it in `options.pageSizeOptions`,
+    // add it (at the front) so the selector and current value stay consistent.
+    try {
+      const explicitSize = Number(this.options.pageSize) || 0;
+      if (explicitSize > 0) {
+        let opts = Array.isArray(this.options.pageSizeOptions) ? this.options.pageSizeOptions.slice() : [];
+        // normalize to numbers where possible
+        opts = opts.map(v => Number(v)).filter(n => Number.isFinite(n) && n > 0);
+        if (!opts.includes(explicitSize)) {
+          // ensure the explicit size is included
+          opts.push(explicitSize);
+        }
+        // remove duplicates then sort numerically ascending so dropdown is ordered
+        const uniq = Array.from(new Set(opts));
+        uniq.sort((a, b) => a - b);
+        this.options.pageSizeOptions = uniq;
+      }
+    } catch (e) {
+      // if anything weird happens, leave the provided options as-is
+      // but avoid throwing during construction
+      if (console && console.warn) console.warn('Skargrid: error normalizing pageSizeOptions', e);
+    }
     // Estado da paginação
     this.currentPage = 1;
     this.totalPages = 1;
@@ -700,7 +723,12 @@ class Skargrid {
     const list = document.createElement('div');
     list.className = 'filter-list';
 
+    // Valores atualmente exibidos no dropdown (após busca interna)
+    let displayedValues = [...allUniqueValues];
+
     const renderList = (filteredValues = allUniqueValues) => {
+      // Atualiza quais valores estão sendo exibidos (mantém estado para Select All)
+      displayedValues = Array.isArray(filteredValues) ? filteredValues.slice() : [...allUniqueValues];
       list.innerHTML = '';
       filteredValues.forEach(value => {
         const item = document.createElement('div');
@@ -716,13 +744,20 @@ class Skargrid {
         const checkbox = document.createElement('input');
         checkbox.type = 'checkbox';
         checkbox.value = value;
-        checkbox.id = `filter-${column.field}-${value}`;
+        // sanitize id (remove spaces/specials)
+        const safeVal = String(value).replace(/[^a-z0-9-_]/gi, '_');
+        checkbox.id = `filter-${column.field}-${safeVal}`;
         checkbox.checked = this.columnFilterSelected[column.field].includes(value);
         checkbox.disabled = !isAvailable; // Desabilita se não disponível
         
         const label = document.createElement('label');
-        label.htmlFor = `filter-${column.field}-${value}`;
-        label.textContent = value;
+        label.htmlFor = `filter-${column.field}-${safeVal}`;
+        // Mostra texto amigável para o token de vazio
+        if (value === FilterFeature?.EMPTY_TOKEN || value === '__SG_EMPTY__') {
+          label.textContent = '(Em branco)';
+        } else {
+          label.textContent = value;
+        }
         
         item.appendChild(checkbox);
         item.appendChild(label);
@@ -738,8 +773,9 @@ class Skargrid {
             this.columnFilterSelected[column.field] = 
               this.columnFilterSelected[column.field].filter(v => v !== value);
           }
-          selectAllCheckbox.checked = 
-            this.columnFilterSelected[column.field].length === allUniqueValues.length;
+          // Atualiza o estado do Select All com base nos valores visíveis e disponíveis
+          const visibleAvailable = displayedValues.filter(v => availableValues.includes(v));
+          selectAllCheckbox.checked = visibleAvailable.length > 0 && visibleAvailable.every(v => this.columnFilterSelected[column.field].includes(v));
         };
       });
     };
@@ -751,20 +787,32 @@ class Skargrid {
     // Busca interna (com normalização de acentos)
     searchInput.oninput = (e) => {
       const searchTerm = this.normalizeString(e.target.value);
-      const filtered = allUniqueValues.filter(val => 
-        this.normalizeString(val).includes(searchTerm)
-      );
+      const filtered = allUniqueValues.filter(val => {
+        const display = (val === FilterFeature?.EMPTY_TOKEN || val === '__SG_EMPTY__') ? '(Em branco)' : String(val);
+        return this.normalizeString(display).includes(searchTerm);
+      });
       renderList(filtered);
     };
 
-    // Select/Deselect All
+    // Select/Deselect All - agora atua apenas sobre os valores atualmente exibidos (após busca)
     selectAllCheckbox.onchange = () => {
+      // Apenas os valores exibidos devem ser afetados
+      const toChange = displayedValues.slice();
+
       if (selectAllCheckbox.checked) {
-        this.columnFilterSelected[column.field] = [...allUniqueValues];
+        // Adiciona os valores exibidos (somente os disponíveis) sem remover os já selecionados
+        const current = new Set(this.columnFilterSelected[column.field] || []);
+        toChange.forEach(v => {
+          if (availableValues.includes(v)) current.add(v);
+        });
+        this.columnFilterSelected[column.field] = [...current];
       } else {
-        this.columnFilterSelected[column.field] = [];
+        // Remove apenas os valores exibidos da seleção
+        this.columnFilterSelected[column.field] = (this.columnFilterSelected[column.field] || []).filter(v => !toChange.includes(v));
       }
-      renderList();
+
+      // Re-renderiza mantendo a lista filtrada atual
+      renderList(displayedValues);
     };
 
     // Footer com botões
@@ -929,8 +977,23 @@ class Skargrid {
         const value = row[column.field];
         
         // Permite formatação customizada
-        if (column.formatter && typeof column.formatter === 'function') {
-          td.innerHTML = column.formatter(value, row, globalIndex);
+        // Suporta ambas as propriedades `formatter` (antiga) e `render` (exemplo/docs)
+        const cellRenderer = (column.formatter && typeof column.formatter === 'function')
+          ? column.formatter
+          : (column.render && typeof column.render === 'function')
+            ? column.render
+            : null;
+
+        if (cellRenderer) {
+          // renderer pode retornar HTML ou texto
+          try {
+            td.innerHTML = cellRenderer(value, row, globalIndex);
+          } catch (e) {
+            // Falha ao executar renderer — fallback para texto simples
+            td.textContent = value !== undefined && value !== null ? String(value) : '';
+            // Log para debug em consoles do dev
+            if (console && console.warn) console.warn('Skargrid: erro ao executar renderer para coluna', column.field, e);
+          }
         } else {
           td.textContent = value !== undefined && value !== null ? value : '';
         }

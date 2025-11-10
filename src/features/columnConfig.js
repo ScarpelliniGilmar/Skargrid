@@ -164,7 +164,7 @@ export function initColumnConfig(grid) {
 
     const btnRestore = document.createElement('button');
     btnRestore.className = 'skargrid-config-action-btn';
-    btnRestore.innerHTML = '↺ Restaurar';
+    btnRestore.innerHTML = 'Restaurar';
     btnRestore.title = 'Restaurar configuração padrão';
     btnRestore.addEventListener('click', () => this.restoreDefaultColumns());
 
@@ -179,7 +179,7 @@ export function initColumnConfig(grid) {
 
     const btnApply = document.createElement('button');
     btnApply.className = 'skargrid-config-action-btn skargrid-config-action-btn-primary';
-    btnApply.textContent = '✓ Aplicar';
+    btnApply.textContent = 'Aplicar';
     btnApply.addEventListener('click', () => this.applyColumnConfig());
 
     headerActions.appendChild(btnRestore);

@@ -1,7 +1,7 @@
 {
   "name": "skargrid",
-  "version": "1.0.0",
-  "description": "Biblioteca JavaScript moderna para criação de tabelas interativas com filtros cascata, busca normalizada, ordenação e seleção múltipla",
+  "version": "1.0.1",
+  "description": "Modern JavaScript library for interactive data tables with cascading filters, accent-insensitive search, sorting and multi-row selection",
   "main": "dist/skargrid.min.js",
   "files": [
     "dist/",
