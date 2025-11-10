@@ -1,4 +1,4 @@
-# 📊 Skargrid
+# <img src="docs/img/logos/skargrid-logo-full.svg" alt="Skargrid logo" style="height:120px;">
 
 > Modern JavaScript library for interactive tables with cascading filters, accent-insensitive search, and advanced features
 
