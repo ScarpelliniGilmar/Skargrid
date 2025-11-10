@@ -55,10 +55,22 @@
         let value = row[col.field];
         
         // Se a coluna tem render customizado, extrai o texto puro
-        if (col.render && typeof col.render === 'function') {
+        // Suporta tanto `render` (docs/exemplos) quanto `formatter` (core antigo)
+        const exportRenderer = (col.render && typeof col.render === 'function')
+          ? col.render
+          : (col.formatter && typeof col.formatter === 'function')
+            ? col.formatter
+            : null;
+
+        if (exportRenderer) {
           // Renderiza e remove HTML tags
-          const rendered = col.render(value, row);
-          value = this.stripHTML(rendered);
+          try {
+            const rendered = exportRenderer(value, row);
+            value = this.stripHTML(rendered);
+          } catch (e) {
+            if (console && console.warn) console.warn('Skargrid export: erro ao executar renderer para coluna', col.field, e);
+            // Mantém o valor original como fallback
+          }
         }
         
         // Formata valores

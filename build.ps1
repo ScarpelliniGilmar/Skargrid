@@ -15,7 +15,7 @@ if (!(Test-Path $dist)) {
 # Header
 $header = @"
 /**
- * Skargrid v1.0.0
+ * Skargrid
  * Build completo - Arquivo unico para uso em producao
  */
 (function(global, factory) {
@@ -27,7 +27,6 @@ $header = @"
 }(typeof self !== 'undefined' ? self : this, function() {
 
 "@
-
 Write-Host "Concatenando arquivos..." -ForegroundColor Yellow
 
 # Lê os arquivos com UTF-8

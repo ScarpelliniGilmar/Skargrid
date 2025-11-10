@@ -4,6 +4,8 @@
  */
 
 const FilterFeature = {
+  // Token interno para representar valores vazios (null/undefined/'')
+  EMPTY_TOKEN: '__SG_EMPTY__',
   /**
    * Normaliza string removendo acentos para busca
    */
@@ -50,9 +52,27 @@ const FilterFeature = {
 
           // Filtro por tipo
           if (filterType === 'select') {
-            // Array de valores selecionados (checkboxes)
+            // Valores selecionados (checkboxes) podem conter o token EMPTY_TOKEN
+            // cellValue pode ser primitivo, nulo, ou array (ex: grupo múltiplo)
             if (Array.isArray(filterValue)) {
+              // Caso cellValue seja array -> verifica interseção
+              if (Array.isArray(cellValue)) {
+                // Se houver pelo menos um elemento do cellValue presente em filterValue -> aceita
+                return cellValue.some(cv => filterValue.includes(cv));
+              }
+
+              // Se cellValue é vazio/nulo -> aceita se EMPTY_TOKEN foi selecionado
+              if (cellValue === null || cellValue === undefined || cellValue === '' ) {
+                return filterValue.includes(this.EMPTY_TOKEN);
+              }
+
+              // Comparação direta para valores primitivos
               return filterValue.includes(cellValue);
+            }
+
+            // filterValue é um valor único
+            if (cellValue === null || cellValue === undefined || cellValue === '') {
+              return String(filterValue) === String(this.EMPTY_TOKEN);
             }
             return String(cellValue) === String(filterValue);
           } else if (filterType === 'number') {
@@ -215,11 +235,29 @@ const FilterFeature = {
    * Obtém valores únicos de uma coluna (dos dados originais)
    */
   getUniqueColumnValues(grid, field) {
-    const values = grid.options.data
-      .map(row => row[field])
-      .filter(value => value != null);
-    
-    return [...new Set(values)].sort();
+    const values = grid.options.data.map(row => row[field]);
+
+    const unique = new Set();
+    let hasEmpty = false;
+
+    values.forEach(v => {
+      if (v === null || v === undefined || v === '') {
+        hasEmpty = true;
+      } else if (Array.isArray(v)) {
+        v.forEach(elem => {
+          if (elem !== null && elem !== undefined && elem !== '') unique.add(elem);
+        });
+      } else {
+        unique.add(v);
+      }
+    });
+
+    const result = [...unique].sort();
+    // Se houver valores vazios, adiciona token especial no início
+    if (hasEmpty) {
+      result.unshift(this.EMPTY_TOKEN);
+    }
+    return result;
   },
 
   /**
@@ -256,7 +294,23 @@ const FilterFeature = {
 
           if (filterType === 'select') {
             if (Array.isArray(filterValue)) {
+              // Caso cellValue seja array -> verifica interseção
+              if (Array.isArray(cellValue)) {
+                return cellValue.some(cv => filterValue.includes(cv));
+              }
+
+              // Se cellValue é vazio/nulo -> aceita se EMPTY_TOKEN foi selecionado
+              if (cellValue === null || cellValue === undefined || cellValue === '' ) {
+                return filterValue.includes(this.EMPTY_TOKEN);
+              }
+
+              // Comparação direta para valores primitivos
               return filterValue.includes(cellValue);
+            }
+
+            // filterValue é um valor único
+            if (cellValue === null || cellValue === undefined || cellValue === '') {
+              return String(filterValue) === String(this.EMPTY_TOKEN);
             }
             return String(cellValue) === String(filterValue);
           } else if (filterType === 'number') {
@@ -279,11 +333,28 @@ const FilterFeature = {
     }
 
     // Extrai valores únicos da coluna nos dados filtrados
-    const values = data
-      .map(row => row[field])
-      .filter(value => value != null);
-    
-    return [...new Set(values)].sort();
+    const values = data.map(row => row[field]);
+
+    const unique = new Set();
+    let hasEmpty = false;
+
+    values.forEach(v => {
+      if (v === null || v === undefined || v === '') {
+        hasEmpty = true;
+      } else if (Array.isArray(v)) {
+        v.forEach(elem => {
+          if (elem !== null && elem !== undefined && elem !== '') unique.add(elem);
+        });
+      } else {
+        unique.add(v);
+      }
+    });
+
+    const result = [...unique].sort();
+    if (hasEmpty) {
+      result.unshift(this.EMPTY_TOKEN);
+    }
+    return result;
   },
 
   /**

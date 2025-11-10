@@ -58,3 +58,6 @@ Desktop.ini
 # Debug files
 debug/
 *.debug.js
+
+# Test output
+docs/teste.html
