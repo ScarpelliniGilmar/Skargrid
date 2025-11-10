@@ -3,7 +3,7 @@
 > Biblioteca JavaScript moderna para criação de tabelas interativas com filtros cascata, busca normalizada e recursos avançados
 
 [![npm version](https://img.shields.io/npm/v/skargrid.svg)](https://www.npmjs.com/package/skargrid)
-[![npm downloads](https://img.shields.io/npm/dm/skargrid.svg)](https://www.npmjs.com/package/skargrid)
+[![npm downloads](https://img.shields.io/npm/dw/skargrid.svg)](https://www.npmjs.com/package/skargrid)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
 🇺🇸 [Read in English](README.md)
