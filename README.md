@@ -3,7 +3,7 @@
 > Modern JavaScript library for interactive tables with cascading filters, accent-insensitive search, and advanced features
 
 [![npm version](https://img.shields.io/npm/v/skargrid.svg)](https://www.npmjs.com/package/skargrid)
-[![npm downloads](https://img.shields.io/npm/dm/skargrid.svg)](https://www.npmjs.com/package/skargrid)
+[![npm downloads](https://img.shields.io/npm/dw/skargrid.svg)](https://www.npmjs.com/package/skargrid)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
 🇧🇷 [Leia em Português](README.pt-br.md)
