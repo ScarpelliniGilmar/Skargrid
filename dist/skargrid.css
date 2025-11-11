@@ -2,10 +2,19 @@
  * skargrid - Estilos básicos
  */
 
+:root {
+  --sg-primary: #003E6F; /* marca */
+  --sg-accent: #007ACC; /* marca */
+  --sg-accent-rgb: 0,122,204; /* para rgba() */
+  --sg-gray: #444444;
+  --sg-white: #FFFFFF;
+}
+
 .skargrid {
   width: 100%;
   min-width: max-content; /* Garante que a tabela não encolha */
   border-collapse: collapse;
+  table-layout: fixed;
   background-color: #ffffff;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
@@ -41,7 +50,7 @@
 
 .skargrid thead th.sortable.sorted {
   background-color: #e7f1ff;
-  color: #007bff;
+  color: var(--sg-accent);
 }
 
 /* Container do conteúdo do cabeçalho */
@@ -82,7 +91,7 @@
 
 .skargrid thead th.sortable.sorted .sort-icon {
   opacity: 1;
-  color: #007bff;
+  color: var(--sg-accent);
   font-size: 11px;
 }
 
@@ -103,13 +112,13 @@
 }
 
 .th-filter-btn:hover {
-  background-color: rgba(0, 123, 255, 0.1);
-  color: #007bff;
+  background-color: rgba(var(--sg-accent-rgb), 0.08);
+  color: var(--sg-accent);
 }
 
 .th-filter-btn.has-filter {
-  color: #007bff;
-  background-color: rgba(0, 123, 255, 0.1);
+  color: var(--sg-accent);
+  background-color: rgba(var(--sg-accent-rgb), 0.08);
 }
 
 .th-filter-btn svg {
@@ -120,7 +129,7 @@
   position: absolute;
   top: 0;
   right: 0;
-  background-color: #007bff;
+  background-color: var(--sg-accent);
   color: white;
   font-size: 9px;
   font-weight: 600;
@@ -187,8 +196,8 @@
 }
 
 .filter-search-input:focus {
-  border-color: #007bff;
-  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.1);
+  border-color: var(--sg-accent);
+  box-shadow: 0 0 0 2px rgba(var(--sg-accent-rgb), 0.08);
 }
 
 /* Select All */
@@ -207,7 +216,7 @@
   width: 16px;
   height: 16px;
   cursor: pointer;
-  accent-color: #007bff;
+  accent-color: var(--sg-accent);
 }
 
 .filter-select-all label {
@@ -271,7 +280,7 @@
   width: 16px;
   height: 16px;
   cursor: pointer;
-  accent-color: #007bff;
+  accent-color: var(--sg-accent);
   flex-shrink: 0;
 }
 
@@ -305,8 +314,8 @@
 }
 
 .filter-dropdown-input:focus {
-  border-color: #007bff;
-  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.1);
+  border-color: var(--sg-accent);
+  box-shadow: 0 0 0 2px rgba(var(--sg-accent-rgb), 0.08);
 }
 
 /* Footer com botões */
@@ -341,12 +350,12 @@
 }
 
 .filter-btn-apply {
-  background-color: #007bff;
+  background-color: var(--sg-accent);
   color: white;
 }
 
 .filter-btn-apply:hover {
-  background-color: #0056b3;
+  background-color: rgba(var(--sg-accent-rgb), .9);
 }
 
 /* Coluna de seleção */
@@ -362,7 +371,7 @@
   width: 18px;
   height: 18px;
   cursor: pointer;
-  accent-color: #007bff;
+  accent-color: var(--sg-accent);
 }
 
 .skargrid tbody tr {
@@ -376,7 +385,7 @@
 
 .skargrid tbody tr.selected {
   background-color: #e7f1ff;
-  box-shadow: inset 3px 0 0 #007bff;
+  box-shadow: inset 3px 0 0 var(--sg-accent);
 }
 
 .skargrid tbody tr.selected:hover {
@@ -460,8 +469,8 @@
 }
 
 .skargrid-search-input:focus {
-  border-color: #007bff;
-  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+  border-color: var(--sg-accent);
+  box-shadow: 0 0 0 3px rgba(var(--sg-accent-rgb), 0.08);
 }
 
 .skargrid-search-input::placeholder {
@@ -518,14 +527,17 @@
 }
 
 .skargrid-clear-filters-btn.has-filters {
-  background-color: #007bff;
-  border-color: #007bff;
+  background-color: var(--sg-accent);
+  border-color: var(--sg-accent);
   color: white;
 }
 
-.skargrid-clear-filters-btn.has-filters:hover {
-  background-color: #0069d9;
-  border-color: #0069d9;
+/* ensure has-filters hover keeps contrast and isn't overridden by general hover */
+.skargrid-clear-filters-btn.has-filters:hover,
+.skargrid-clear-filters-btn.has-filters:focus {
+  background-color: rgba(var(--sg-accent-rgb), 0.85);
+  border-color: rgba(var(--sg-accent-rgb), 0.85);
+  color: white;
 }
 
 .skargrid-clear-filters-btn svg {
@@ -535,7 +547,7 @@
 
 .skargrid-clear-filters-btn .filter-count-badge {
   background-color: white;
-  color: #007bff;
+  color: var(--sg-accent);
   font-size: 11px;
   font-weight: 600;
   border-radius: 50%;
@@ -548,7 +560,7 @@
 }
 
 .skargrid-clear-filters-btn:not(.has-filters) .filter-count-badge {
-  background-color: #007bff;
+  background-color: var(--sg-accent);
   color: white;
 }
 
@@ -601,14 +613,15 @@
 }
 
 .skargrid-pagination-btn.active {
-  background-color: #007bff;
+  background-color: var(--sg-accent);
   color: #ffffff;
-  border-color: #007bff;
+  border-color: var(--sg-accent);
 }
 
 .skargrid-pagination-btn.active:hover {
-  background-color: #0056b3;
-  border-color: #0056b3;
+  background-color: rgba(var(--sg-accent-rgb), 0.75);
+  border-color: rgba(var(--sg-accent-rgb), 0.75);
+  color: #ffffff;
 }
 
 .skargrid-pagination-ellipsis {
@@ -641,8 +654,8 @@
 }
 .skargrid-page-size-select:focus {
   outline: none;
-  border-color: #007bff;
-  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+  border-color: var(--sg-accent);
+  box-shadow: 0 0 0 3px rgba(var(--sg-accent-rgb), 0.08);
 }
 /* === Loading Overlay === */
 .skargrid-table-container {
@@ -675,7 +688,7 @@
   position: absolute;
   top: 0;
   left: 0;
-  right: 0;
+  background-color: var(--sg-accent);
   bottom: 0;
   background-color: rgba(255, 255, 255, 0.95);
   display: flex;
@@ -690,11 +703,11 @@
   flex-direction: column;
   align-items: center;
   gap: 12px;
-  color: #007bff;
+  color: var(--sg-accent);
 }
 
 .skargrid-spinner svg {
-  color: #007bff;
+  color: var(--sg-accent);
 }
 
 .skargrid-spinner span {
@@ -769,7 +782,7 @@
 
 .skargrid-wrapper.skargrid-dark .skargrid thead th.sortable.sorted {
   background-color: #1a3a52;
-  color: #4d9ff0;
+  color: var(--sg-accent);
 }
 
 /* Linhas dark */
@@ -806,7 +819,7 @@
 }
 
 .skargrid-wrapper.skargrid-dark .skargrid-search-input:focus {
-  border-color: #4d9ff0;
+  border-color: var(--sg-accent);
 }
 
 .skargrid-wrapper.skargrid-dark .skargrid-search-icon {
@@ -863,7 +876,7 @@
 
 .skargrid-wrapper.skargrid-dark .skargrid-clear-filters-btn:hover {
   background-color: #353535;
-  border-color: #4d9ff0;
+  border-color: var(--sg-accent);
 }
 
 /* Paginação dark */
@@ -884,7 +897,7 @@
 
 .skargrid-wrapper.skargrid-dark .skargrid-pagination-btn:hover:not(:disabled) {
   background-color: #353535;
-  border-color: #4d9ff0;
+  border-color: var(--sg-accent);
 }
 
 .skargrid-wrapper.skargrid-dark .skargrid-pagination-btn:disabled {
@@ -895,8 +908,8 @@
 
 .skargrid-wrapper.skargrid-dark .skargrid-pagination-btn.active {
   background-color: #1a3a52;
-  color: #4d9ff0;
-  border-color: #4d9ff0;
+  color: var(--sg-accent);
+  border-color: var(--sg-accent);
 }
 
 .skargrid-wrapper.skargrid-dark .skargrid-page-size select {
@@ -906,7 +919,7 @@
 }
 
 .skargrid-wrapper.skargrid-dark .skargrid-page-size select:hover {
-  border-color: #4d9ff0;
+  border-color: var(--sg-accent);
 }
 
 /* Checkbox dark */
@@ -915,8 +928,8 @@
 }
 
 .skargrid-wrapper.skargrid-dark .skargrid-checkbox:checked {
-  background-color: #4d9ff0;
-  border-color: #4d9ff0;
+  background-color: var(--sg-accent);
+  border-color: var(--sg-accent);
 }
 
 /* Loading dark */
@@ -926,7 +939,7 @@
 
 .skargrid-wrapper.skargrid-dark .skargrid-spinner {
   border-color: #404040;
-  border-top-color: #4d9ff0;
+  border-top-color: var(--sg-accent);
 }
 
 /* Scrollbar dark */
@@ -1015,18 +1028,24 @@
 
 .skargrid-config-action-btn:hover {
   background: #f8f9fa;
-  border-color: #adb5bd;
+}
+/* corrected selector name below */
+.skargrid-config-move-btn:hover:not(:disabled) {
+  background: var(--sg-accent);
+  color: white;
+  border-color: var(--sg-accent);
+  transform: scale(1.1);
 }
 
 .skargrid-config-action-btn-primary {
-  background: #0d6efd;
+  background: var(--sg-accent);
   color: white;
-  border-color: #0d6efd;
+  border-color: var(--sg-accent);
 }
 
 .skargrid-config-action-btn-primary:hover {
-  background: #0b5ed7;
-  border-color: #0a58ca;
+  background: rgba(var(--sg-accent-rgb), 0.9);
+  border-color: rgba(var(--sg-accent-rgb), 0.9);
 }
 
 .skargrid-config-list {
@@ -1076,7 +1095,21 @@
   width: 18px;
   height: 18px;
   cursor: pointer;
-  accent-color: #667eea;
+  accent-color: var(--sg-accent);
+}
+
+/* ensure checkboxes inside column config modal use the skargrid-checkbox styles */
+.skargrid-config-item .skargrid-checkbox {
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+  accent-color: var(--sg-accent);
+  flex-shrink: 0;
+}
+
+.skargrid-wrapper.skargrid-dark .skargrid-config-item .skargrid-checkbox:checked {
+  background-color: var(--sg-accent);
+  border-color: var(--sg-accent);
 }
 
 .skargrid-config-item label {
@@ -1102,10 +1135,10 @@
   justify-content: center;
 }
 
-.skargrid-config-move-btn:hover:not(:disabled) {
-  background: #667eea;
+.skargid-config-move-btn:hover:not(:disabled) {
+  background: var(--sg-accent);
   color: white;
-  border-color: #667eea;
+  border-color: var(--sg-accent);
   transform: scale(1.1);
 }
 
@@ -1147,14 +1180,14 @@
 }
 
 .skargrid-config-btn-primary {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: var(--sg-accent);
   color: white;
-  box-shadow: 0 2px 4px rgba(102, 126, 234, 0.3);
+  box-shadow: 0 2px 4px rgba(var(--sg-accent-rgb), 0.25);
 }
 
 .skargrid-config-btn-primary:hover {
   transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(102, 126, 234, 0.4);
+  box-shadow: 0 4px 8px rgba(var(--sg-accent-rgb), 0.32);
 }
 
 .skargrid-config-btn-secondary {
@@ -1205,14 +1238,14 @@
 }
 
 .skargrid-wrapper.skargrid-dark .skargrid-config-action-btn-primary {
-  background: #4d9ff0;
+  background: var(--sg-accent);
   color: white;
-  border-color: #4d9ff0;
+  border-color: var(--sg-accent);
 }
 
 .skargrid-wrapper.skargrid-dark .skargrid-config-action-btn-primary:hover {
-  background: #3d8fe0;
-  border-color: #3d8fe0;
+  background: rgba(var(--sg-accent-rgb), 0.85);
+  border-color: rgba(var(--sg-accent-rgb), 0.85);
 }
 
 .skargrid-wrapper.skargrid-dark .skargrid-config-item {
@@ -1242,6 +1275,6 @@
 }
 
 .skargrid-wrapper.skargrid-dark .skargrid-config-move-btn:hover:not(:disabled) {
-  background: #4d9ff0;
-  border-color: #4d9ff0;
+  background: var(--sg-accent);
+  border-color: var(--sg-accent);
 }

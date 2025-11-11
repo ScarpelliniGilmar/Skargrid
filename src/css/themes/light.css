@@ -9,8 +9,8 @@
   --skargrid-border: #dee2e6;
   --skargrid-hover-bg: #e9ecef;
   --skargrid-selected-bg: #e7f1ff;
-  --skargrid-primary: #007bff;
-  --skargrid-primary-hover: #0069d9;
+  --skargrid-primary: var(--sg-accent);
+  --skargrid-primary-hover: rgba(var(--sg-accent-rgb), 0.85);
   --skargrid-text: #212529;
   --skargrid-text-muted: #6c757d;
   --skargrid-shadow: rgba(0, 0, 0, 0.1);
