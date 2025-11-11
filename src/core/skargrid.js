@@ -703,8 +703,9 @@ class Skargrid {
     const selectAllWrapper = document.createElement('div');
     selectAllWrapper.className = 'filter-select-all';
     
-    const selectAllCheckbox = document.createElement('input');
-    selectAllCheckbox.type = 'checkbox';
+  const selectAllCheckbox = document.createElement('input');
+  selectAllCheckbox.type = 'checkbox';
+  selectAllCheckbox.className = 'skargrid-checkbox';
     selectAllCheckbox.id = `select-all-${column.field}`;
     selectAllCheckbox.checked = this.columnFilterSelected[column.field].length === allUniqueValues.length;
     
@@ -741,8 +742,9 @@ class Skargrid {
           item.title = 'Não disponível com os filtros atuais';
         }
         
-        const checkbox = document.createElement('input');
-        checkbox.type = 'checkbox';
+  const checkbox = document.createElement('input');
+  checkbox.type = 'checkbox';
+  checkbox.className = 'skargrid-checkbox';
         checkbox.value = value;
         // sanitize id (remove spaces/specials)
         const safeVal = String(value).replace(/[^a-z0-9-_]/gi, '_');

@@ -478,7 +478,7 @@ Veja `examples/large-dataset.html` para um exemplo completo com:
 ```css
 /* Sobrescreva variáveis CSS */
 .skargrid {
-	--sg-primary-color: #007bff;
+	--sg-primary-color: #007ACC;
 	--sg-hover-bg: #f8f9fa;
 	--sg-border-color: #dee2e6;
 }

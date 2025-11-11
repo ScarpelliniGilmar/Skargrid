@@ -255,8 +255,9 @@ export function initColumnConfig(grid) {
       });
 
       // Checkbox para visibilidade (usa estado temporário)
-      const checkbox = document.createElement('input');
+  const checkbox = document.createElement('input');
       checkbox.type = 'checkbox';
+  checkbox.className = 'skargrid-checkbox';
       checkbox.checked = this.tempVisibleColumns.has(field);
       checkbox.addEventListener('change', (e) => {
         if (e.target.checked) {
@@ -397,6 +398,7 @@ export function initColumnConfig(grid) {
           // Checkbox para visibilidade
           const checkbox = document.createElement('input');
           checkbox.type = 'checkbox';
+          checkbox.className = 'skargrid-checkbox';
           checkbox.checked = this.tempVisibleColumns.has(field);
           checkbox.addEventListener('change', (e) => {
             if (e.target.checked) {
@@ -544,6 +546,7 @@ export function initColumnConfig(grid) {
 
           const checkbox = document.createElement('input');
           checkbox.type = 'checkbox';
+          checkbox.className = 'skargrid-checkbox';
           checkbox.checked = this.tempVisibleColumns.has(field);
           checkbox.addEventListener('change', (e) => {
             if (e.target.checked) {

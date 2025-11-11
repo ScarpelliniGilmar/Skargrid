@@ -480,7 +480,7 @@ See `examples/large-dataset.html` for a full example with:
 ```css
 /* Override CSS variables */
 .skargrid {
-  --sg-primary-color: #007bff;
+  --sg-primary-color: #007ACC;
   --sg-hover-bg: #f8f9fa;
   --sg-border-color: #dee2e6;
 }
