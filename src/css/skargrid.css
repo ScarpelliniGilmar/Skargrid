@@ -14,7 +14,10 @@
   width: 100%;
   min-width: max-content; /* Garante que a tabela não encolha */
   border-collapse: collapse;
-  table-layout: fixed;
+  /* Use automatic table layout so column widths follow content and allow
+    horizontal scrolling when needed. Fixed layout caused clipping/overlap
+    in some responsive scenarios. */
+  table-layout: auto;
   background-color: #ffffff;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
@@ -31,11 +34,23 @@
   text-align: left;
   font-weight: 600;
   color: #495057;
-  text-transform: uppercase;
   font-size: 12px;
   letter-spacing: 0.5px;
   position: relative;
   user-select: none;
+}
+
+/* Ensure only the header text label is uppercased; avoid inheriting uppercase
+   into other elements or into the body. */
+.skargrid thead th .th-text {
+  /* Keep header titles in their provided case by default. If you prefer
+     uppercase, set this to 'uppercase' in your custom theme. */
+  text-transform: none;
+}
+
+/* Force normal case for body cells in case other global styles apply */
+.skargrid tbody td {
+  text-transform: none;
 }
 
 /* Colunas ordenáveis */
@@ -73,6 +88,16 @@
 .skargrid thead th .th-text {
   flex: 1;
   min-width: 0;
+}
+
+/* Prevent cells from overflowing into adjacent columns. Clip long text
+   with ellipsis and keep a single line per cell. Horizontal scrollbar
+   will appear on the container when table exceeds available width. */
+.skargrid thead th .th-text,
+.skargrid tbody td {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 /* Ícone de ordenação */
@@ -232,22 +257,7 @@
   padding: 8px 0;
 }
 
-.filter-list-wrapper::-webkit-scrollbar {
-  width: 8px;
-}
-
-.filter-list-wrapper::-webkit-scrollbar-track {
-  background: #f1f3f5;
-}
-
-.filter-list-wrapper::-webkit-scrollbar-thumb {
-  background: #adb5bd;
-  border-radius: 4px;
-}
-
-.filter-list-wrapper::-webkit-scrollbar-thumb:hover {
-  background: #6c757d;
-}
+/* Default browser scrollbar retained for .filter-list-wrapper */
 
 .filter-list-item {
   padding: 8px 16px;
@@ -666,23 +676,7 @@
 }
 
 /* Estilização do scroll horizontal */
-.skargrid-table-container::-webkit-scrollbar {
-  height: 12px;
-}
-
-.skargrid-table-container::-webkit-scrollbar-track {
-  background: #f1f1f1;
-  border-radius: 6px;
-}
-
-.skargrid-table-container::-webkit-scrollbar-thumb {
-  background: #888;
-  border-radius: 6px;
-}
-
-.skargrid-table-container::-webkit-scrollbar-thumb:hover {
-  background: #555;
-}
+/* Default browser scrollbar retained for .skargrid-table-container */
 
 .skargrid-loading-overlay {
   position: absolute;
@@ -942,19 +936,7 @@
   border-top-color: var(--sg-accent);
 }
 
-/* Scrollbar dark */
-.skargrid-wrapper.skargrid-dark .skargrid-container::-webkit-scrollbar {
-  background-color: #252525;
-}
-
-.skargrid-wrapper.skargrid-dark .skargrid-container::-webkit-scrollbar-thumb {
-  background-color: #505050;
-  border: 2px solid #252525;
-}
-
-.skargrid-wrapper.skargrid-dark .skargrid-container::-webkit-scrollbar-thumb:hover {
-  background-color: #606060;
-}
+/* Default browser scrollbar in dark theme (no custom styling) */
 
 /* ============================================
    CONFIGURAÇÃO DE COLUNAS
