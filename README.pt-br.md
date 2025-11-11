@@ -96,6 +96,16 @@ Esta versão introduz um conjunto de correções de bugs e melhorias comportamen
 
 ---
 
+## Notas da versão (v1.0.2)
+
+O que há de novo em v1.0.2
+- Cabeçalho com fundo explícito + variáveis para tema escuro: fundo do `thead` explícito e overrides de tema para que o cabeçalho fique sólido no modo escuro.
+- Comportamento do dropdown de filtro: os dropdowns agora sempre abrem abaixo do controle; quando o espaço abaixo é limitado, o dropdown recebe rolagem interna ao invés de abrir para cima.
+- Ajustes visuais: checkboxes/botões usam a cor de destaque da marca e hover com contraste melhor.
+- Alteração de capitalização do cabeçalho: títulos de coluna são exibidos como você os fornece (sem uppercase forçado) — se quiser uppercase, adicione uma regra CSS na sua tema.
+
+---
+
 ## �🚀 Início Rápido
 
 ### Instalação
@@ -105,14 +115,14 @@ Use diretamente do npm via CDN (sempre confira a versão mais recente):
 
 **jsDelivr**
 ```html
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/skargrid@1.0.1/dist/skargrid.css">
-<script src="https://cdn.jsdelivr.net/npm/skargrid@1.0.1/dist/skargrid.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/skargrid/dist/skargrid.css">
+<script src="https://cdn.jsdelivr.net/npm/skargrid/dist/skargrid.min.js"></script>
 ```
 
 **unpkg**
 ```html
-<link rel="stylesheet" href="https://unpkg.com/skargrid@1.0.1/dist/skargrid.css">
-<script src="https://unpkg.com/skargrid@1.0.1/dist/skargrid.min.js"></script>
+<link rel="stylesheet" href="https://unpkg.com/skargrid/dist/skargrid.css">
+<script src="https://unpkg.com/skargrid/dist/skargrid.min.js"></script>
 ```
 
 **Opção 2: Download**

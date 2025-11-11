@@ -1,6 +1,6 @@
 {
   "name": "skargrid",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Modern JavaScript library for interactive data tables with cascading filters, accent-insensitive search, sorting and multi-row selection",
   "main": "dist/skargrid.min.js",
   "files": [
@@ -43,5 +43,5 @@
   "bugs": {
     "url": "https://github.com/ScarpelliniGilmar/skargrid/issues"
   },
-  "homepage": "https://github.com/ScarpelliniGilmar/skargrid#readme"
+  "homepage": "https://skargrid.com"
 }

@@ -86,15 +86,22 @@ Below are visual examples of Skargrid features, in recommended order:
 This release prepares a small, focused set of bugfixes and behavioral improvements completed locally and ready to be published.
 
 Key fixes
-- Renderer and export
   - Columns now accept both `render` and legacy `formatter` properties for cell formatting.
   - CSV export uses the column renderer when present and strips HTML to export textual values.
 
-- Filters
   - `select` filters now flatten array-valued cells (e.g. multi-group columns) into individual options.
   - Introduced a special empty-value token `(Em branco)` to let users filter null/empty cells.
   - "Select All" in the filter dropdown now acts only on the currently visible (searched) options and respects disabled (unavailable) options.
   - Fixed available-values calculation so cascading filters reflect select-type filters and array cells correctly.
+
+
+## Release notes (v1.0.2)
+
+What's new in v1.0.2
+- Sticky header background + dark theme header vars: explicit thead background and theme overrides so the header is solid in dark mode.
+- Filter dropdown behavior improved: dropdowns now always open below the control; when space below is limited they get an internal scrollbar instead of flipping above.
+- Checkbox/button accent and hover contrast fixes: UI controls use the brand accent variables for consistency.
+- Header text capitalization change: column titles are shown as provided (no forced uppercase) — you can enable uppercase in your CSS/theme if desired.
 
 ---
 
@@ -107,14 +114,14 @@ Use directly from npm via CDN (always check the latest version):
 
 **jsDelivr**
 ```html
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/skargrid@1.0.1/dist/skargrid.css">
-<script src="https://cdn.jsdelivr.net/npm/skargrid@1.0.1/dist/skargrid.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/skargrid/dist/skargrid.css">
+<script src="https://cdn.jsdelivr.net/npm/skargrid/dist/skargrid.min.js"></script>
 ```
 
 **unpkg**
 ```html
-<link rel="stylesheet" href="https://unpkg.com/skargrid@1.0.1/dist/skargrid.css">
-<script src="https://unpkg.com/skargrid@1.0.1/dist/skargrid.min.js"></script>
+<link rel="stylesheet" href="https://unpkg.com/skargrid/dist/skargrid.css">
+<script src="https://unpkg.com/skargrid/dist/skargrid.min.js"></script>
 ```
 
 **Option 2: Download**
