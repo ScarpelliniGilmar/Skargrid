@@ -110,6 +110,23 @@ What's new in v1.0.2
 What's new in v1.0.3
 - Scrolling & layout fix: addressed an issue where changing pagination or filters could change the table height and push the page scroll; the demo now constrains example panels with an internal max-height and enables internal vertical scrolling so the header remains sticky and the page layout stays stable.
 
+## Release v1.0.4 — Export & XLSX (no deps)
+
+What's new in v1.0.4
+- Pure-JS XLSX export (no external dependencies): added a built-in exporter that generates a real .xlsx (OpenXML) file and packs it into a ZIP in the browser. Use `exportXLSX: true` in your options to enable the XLSX button next to the existing CSV export.
+- CSV export remains unchanged and available via `exportCSV: true`.
+
+Quick example (enable both CSV and XLSX):
+```javascript
+new Skargrid('myTable', {
+  data, columns,
+  searchable: true,
+  pagination: true,
+  exportCSV: true,
+  exportXLSX: true // enables real .xlsx download without adding dependencies
+});
+```
+
 ## �🚀 Quick Start
 
 ### Installation
@@ -119,14 +136,14 @@ Use directly from npm via CDN (always check the latest version):
 
 **jsDelivr**
 ```html
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/skargrid/dist/skargrid.css">
-<script src="https://cdn.jsdelivr.net/npm/skargrid/dist/skargrid.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/skargrid@latest/dist/skargrid.css">
+<script src="https://cdn.jsdelivr.net/npm/skargrid@latest/dist/skargrid.min.js"></script>
 ```
 
 **unpkg**
 ```html
-<link rel="stylesheet" href="https://unpkg.com/skargrid/dist/skargrid.css">
-<script src="https://unpkg.com/skargrid/dist/skargrid.min.js"></script>
+<link rel="stylesheet" href="https://unpkg.com/skargrid@latest/dist/skargrid.css">
+<script src="https://unpkg.com/skargrid@latest/dist/skargrid.min.js"></script>
 ```
 
 **Option 2: Download**
@@ -185,6 +202,8 @@ new Skargrid(containerId, options)
 | `storageKey` | String | `'skargrid-config-{id}'` | localStorage key (if persistColumnConfig=true) |
 | `theme` | String | `'light'` | Visual theme: 'light' or 'dark' |
 | `className` | String | `'skargrid'` | Table CSS class |
+| `exportCSV` | Boolean | `false` | Enable CSV export button (shows "Export CSV" in top actions). Uses column renderers when present and strips HTML for export. |
+| `exportXLSX` | Boolean | `false` | Enable built-in pure-JS XLSX export (generates a real .xlsx file in the browser). Adds an "XLSX" button beside CSV. |
 
 #### Column Configuration
 
@@ -275,7 +294,21 @@ table.clearSavedColumnConfig();                 // Remove saved config
 
 // Destroy instance
 table.destroy();
+
+// Export helpers
+// Export visible data or selected rows. These methods are available when the
+// corresponding export options are enabled (exportCSV / exportXLSX).
+table.exportToCSV('file.csv');
+table.exportSelectedToCSV('selected.csv');
+table.exportToExcel('file.xls');          // lightweight .xls (HTML wrapper)
+table.exportSelectedToExcel('sel.xls');
+table.exportToXLSX('file.xlsx');         // real .xlsx generated in-browser (no deps)
+table.exportSelectedToXLSX('sel.xlsx');
 ```
+
+### Export security note
+
+Be careful when exporting untrusted data: spreadsheet applications may interpret cell values that start with "=", "+", "-" or "@" as formulas. This can lead to CSV/Excel formula injection. By default values are exported as-is. Consider sanitizing values before export (for example prefixing with a single apostrophe) or enable a sanitization option if you add one.
 
 ### Advanced Features
 
@@ -464,17 +497,6 @@ const table = new Skargrid('container', {
   columnFilters: true
 });
 ```
-
-### Example 3: Large Dataset (25 columns)
-See `examples/large-dataset.html` for a full example with:
-- 25 varied columns
-- 100 records
-- All filter types
-- Custom formatting
-- Horizontal scroll
-
----
-
 ## 🎨 Themes
 
 ### Default Theme (Light)
@@ -534,6 +556,7 @@ Copyright (c) 2024-2025 GILMAR A S TRINDADE
 - [x] Public CDN
 - [x] NPM package
 - [x] Export to CSV
+- [x] Export to XLSX
 - [ ] Advanced filters (range, multi-value)
 - [ ] Inline editing
 - [ ] Frozen columns

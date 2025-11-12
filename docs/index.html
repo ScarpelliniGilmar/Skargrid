@@ -481,7 +481,8 @@ new Skargrid('myTable', { data, columns: cols, searchable:true, pagination:true,
                     columnFilters: true,
                     columnConfig: true,
                     persistColumnConfig: true,
-                    exportCSV: true
+                    exportCSV: true,
+                    exportXLSX: true
                 };
                 // apply theme option to fixed demo when requested
                 if (fixedDemoTheme === 'dark') {
@@ -644,7 +645,7 @@ new Skargrid('myTable', { data, columns: cols, searchable:true, pagination:true,
                     // Combined demo: many features enabled to show integration
                     data: Array.from({ length: 30 }, (_, i) => ({ id: i + 1, nome: `Pessoa ${i + 1}`, cidade: ['SP','RJ','MG'][i % 3], idade: 20 + (i % 30), salario: 3000 + i * 100 })),
                     cols: fullCols,
-                    options: { searchable: true, sortable: true, pagination: true, pageSize: 10, columnFilters: true, selectable: true, exportCSV: true }
+                    options: { searchable: true, sortable: true, pagination: true, pageSize: 10, columnFilters: true, selectable: true, exportCSV: true, exportXLSX: true }
                 },
                 themeGreen: {
                     // Full demo using the library's feature set but with a green brand override
