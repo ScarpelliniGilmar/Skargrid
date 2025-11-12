@@ -111,6 +111,23 @@ O que há de novo em v1.0.2
 O que há de novo em v1.0.3
 - Correção de rolagem e layout: corrigimos um problema em que mudanças de paginação ou filtros podiam alterar a altura da tabela e deslocar a página; o playground agora limita os painéis de exemplo com um max-height e ativa rolagem vertical interna para que o cabeçalho permaneça sticky e o layout da página fique estável.
 
+## Release v1.0.4 — Exportação XLSX (sem dependências)
+
+O que há de novo em v1.0.4
+- Exportador XLSX puro em JS (sem dependências): adicionamos um exportador incorporado que gera um arquivo .xlsx (OpenXML) real e empacota em ZIP no navegador. Use `exportXLSX: true` nas opções para ativar o botão XLSX ao lado do botão CSV existente.
+- A exportação CSV continua inalterada e disponível via `exportCSV: true`.
+
+Exemplo rápido (habilitar CSV e XLSX):
+```javascript
+new Skargrid('myTable', {
+	data, columns,
+	searchable: true,
+	pagination: true,
+	exportCSV: true,
+	exportXLSX: true // ativa download .xlsx real sem dependências
+});
+```
+
 ## �🚀 Início Rápido
 
 ### Instalação
@@ -120,14 +137,14 @@ Use diretamente do npm via CDN (sempre confira a versão mais recente):
 
 **jsDelivr**
 ```html
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/skargrid/dist/skargrid.css">
-<script src="https://cdn.jsdelivr.net/npm/skargrid/dist/skargrid.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/skargrid@latest/dist/skargrid.css">
+<script src="https://cdn.jsdelivr.net/npm/skargrid@latest/dist/skargrid.min.js"></script>
 ```
 
 **unpkg**
 ```html
-<link rel="stylesheet" href="https://unpkg.com/skargrid/dist/skargrid.css">
-<script src="https://unpkg.com/skargrid/dist/skargrid.min.js"></script>
+<link rel="stylesheet" href="https://unpkg.com/skargrid@latest/dist/skargrid.css">
+<script src="https://unpkg.com/skargrid@latest/dist/skargrid.min.js"></script>
 ```
 
 **Opção 2: Download**
@@ -186,6 +203,8 @@ new Skargrid(containerId, options)
 | `storageKey` | String | `'skargrid-config-{id}'` | Chave do localStorage (se persistColumnConfig=true) |
 | `theme` | String | `'light'` | Tema visual: 'light' ou 'dark' |
 | `className` | String | `'skargrid'` | Classe CSS da tabela |
+| `exportCSV` | Boolean | `false` | Habilita botão de exportação CSV (mostra "Exportar CSV" nas ações). Usa renderers de coluna quando presentes e remove HTML para exportação. |
+| `exportXLSX` | Boolean | `false` | Habilita exportador XLSX puro em JS (gera um arquivo .xlsx real no navegador). Adiciona um botão "XLSX" ao lado do CSV. |
 
 #### Configuração de Colunas
 
@@ -276,7 +295,21 @@ table.clearSavedColumnConfig();                 // Remove configuração salva
 
 // Destruir instância
 table.destroy();
+
+// Exportação
+// Exporta dados visíveis ou selecionados. Métodos disponíveis quando as
+// opções de exportação correspondentes estão habilitadas (exportCSV / exportXLSX).
+table.exportToCSV('arquivo.csv');
+table.exportSelectedToCSV('selecionado.csv');
+table.exportToExcel('arquivo.xls');          // .xls simples (HTML wrapper)
+table.exportSelectedToExcel('sel.xls');
+table.exportToXLSX('arquivo.xlsx');         // .xlsx real gerado no navegador (sem dependências)
+table.exportSelectedToXLSX('sel.xlsx');
 ```
+
+### Nota de segurança sobre exportação
+
+Ao exportar dados, tenha cuidado com valores não confiáveis: planilhas podem interpretar células que comecem com "=", "+", "-" ou "@" como fórmulas, o que pode levar a injeção de fórmulas (CSV/Excel formula injection). Por padrão os valores são exportados como estão. Considere sanitizar valores antes da exportação (por exemplo prefixando com apóstrofo) ou habilitar uma opção de sanitização se você adicioná‑la.
 
 ### Recursos Avançados
 
@@ -465,17 +498,6 @@ const table = new Skargrid('container', {
 	columnFilters: true
 });
 ```
-
-### Exemplo 3: Dataset Grande (25 colunas)
-Veja `examples/large-dataset.html` para um exemplo completo com:
-- 25 colunas variadas
-- 100 registros
-- Todos os tipos de filtro
-- Formatação customizada
-- Scroll horizontal
-
----
-
 ## 🎨 Temas
 
 ### Tema Padrão (Light)
@@ -535,6 +557,7 @@ Copyright (c) 2024-2025 GILMAR A S TRINDADE
 - [x] CDN público
 - [x] Pacote NPM
 - [x] Export para CSV
+- [x] Export para XLSX
 - [ ] Filtros avançados (range, múltiplos valores)
 - [ ] Edição inline
 - [ ] Colunas fixas (frozen columns)
