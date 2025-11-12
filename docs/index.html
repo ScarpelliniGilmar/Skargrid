@@ -186,18 +186,19 @@
             <h3>Instalação rápida</h3>
             <hr>
             <p class="text-muted">Usando CDN — HTML + JS mínimo:</p>
-            <pre class="code">&lt;div id="myTable"&gt;&lt;/div&gt;
+                        <pre class="code">&lt;div id="myTable"&gt;&lt;/div&gt;
 
+&lt;link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/skargrid/dist/skargrid.css"&gt;
 &lt;script src="https://cdn.jsdelivr.net/npm/skargrid/dist/skargrid.min.js"&gt;&lt;/script&gt;
 &lt;script&gt;
 const data = [
-  {id:1,nome:'Carlos',cidade:'SP'},
-  {id:2,nome:'Fernanda',cidade:'RJ'}
+    {id:1,nome:'Carlos',cidade:'SP'},
+    {id:2,nome:'Fernanda',cidade:'RJ'}
 ];
 const cols = [
-  {field:'id',title:'ID'},
-  {field:'nome',title:'Nome'},
-  {field:'cidade',title:'Cidade'}
+    {field:'id',title:'ID'},
+    {field:'nome',title:'Nome'},
+    {field:'cidade',title:'Cidade'}
 ];
 new Skargrid('myTable', { data, columns: cols, searchable:true, pagination:true, pageSize:5 });
 &lt;/script&gt;</pre>
