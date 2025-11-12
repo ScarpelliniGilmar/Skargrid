@@ -106,6 +106,11 @@ O que há de novo em v1.0.2
 
 ---
 
+## Release v1.0.3 — Documentação & Exemplos
+
+O que há de novo em v1.0.3
+- Correção de rolagem e layout: corrigimos um problema em que mudanças de paginação ou filtros podiam alterar a altura da tabela e deslocar a página; o playground agora limita os painéis de exemplo com um max-height e ativa rolagem vertical interna para que o cabeçalho permaneça sticky e o layout da página fique estável.
+
 ## �🚀 Início Rápido
 
 ### Instalação
