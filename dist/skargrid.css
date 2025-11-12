@@ -419,9 +419,14 @@
 
 /* Wrapper da tabela com paginação */
 .skargrid-wrapper {
-  background-color: #ffffff;
+  background-color: var(--sg-white);
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  /* Fill the host container when it has an explicit height so the inner
+     table container can scroll internally instead of expanding the page. */
+  height: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
 /* === Busca Global === */
@@ -672,7 +677,9 @@
   position: relative;
   min-height: 200px;
   overflow-x: auto;
-  overflow-y: visible;
+  /* enable internal vertical scrolling so the table respects host height */
+  overflow-y: auto;
+  max-height: 100%;
 }
 
 /* Estilização do scroll horizontal */
