@@ -257,9 +257,10 @@ class Skargrid {
     const hasColumnConfig = this.options.columnConfig && typeof this.renderColumnConfigButton === 'function';
     const hasFilterClear = this.options.columnFilters;
     const hasExportCSV = this.options.exportCSV && typeof this.renderExportCSVButton === 'function';
+    const hasExportXLSX = this.options.exportXLSX && typeof this.exportToXLSX === 'function' && typeof this.renderExportCSVButton === 'function';
 
     // Se não tem nada para renderizar, retorna null
-    if (!hasSearch && !hasColumnConfig && !hasFilterClear && !hasExportCSV) {
+    if (!hasSearch && !hasColumnConfig && !hasFilterClear && !hasExportCSV && !hasExportXLSX) {
       return null;
     }
 
@@ -273,7 +274,7 @@ class Skargrid {
     }
 
     // Renderiza botões de ação (sempre que houver algum botão)
-    if (hasFilterClear || hasColumnConfig || hasExportCSV) {
+  if (hasFilterClear || hasColumnConfig || hasExportCSV || hasExportXLSX) {
       const actionsContainer = document.createElement('div');
       actionsContainer.className = 'skargrid-search-actions';
 
@@ -293,6 +294,24 @@ class Skargrid {
       if (hasExportCSV) {
         const exportButton = this.renderExportCSVButton();
         actionsContainer.appendChild(exportButton);
+      }
+
+      // Botão "Exportar Excel" (simples, sem dependências)
+      if (hasExportXLSX) {
+        // Button for real XLSX export (pure JS implementation)
+        const xlsxBtn = document.createElement('button');
+        xlsxBtn.className = 'skargrid-clear-filters-btn';
+        xlsxBtn.title = 'Exportar XLSX';
+        xlsxBtn.innerHTML = `
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+            <polyline points="7 10 12 15 17 10"></polyline>
+            <line x1="12" y1="15" x2="12" y2="3"></line>
+          </svg>
+          <span style="margin-left:.35rem;font-size:12px">XLSX</span>
+        `;
+        xlsxBtn.onclick = () => this.exportToXLSX();
+        actionsContainer.appendChild(xlsxBtn);
       }
 
       searchContainer.appendChild(actionsContainer);
