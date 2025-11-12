@@ -5,6 +5,17 @@
 
 const SortFeature = {
   /**
+   * Obtém o valor para ordenação (usa valor original, não renderizado)
+   */
+  getSortValue(grid, row, column) {
+    let value = row[column.field];
+    
+    // Para ordenação, usa o valor original do campo
+    // (não aplica render/formatters para evitar ordenação por strings formatadas)
+    
+    return value;
+  },
+  /**
    * Manipula clique em coluna para ordenar
    */
   handleSort(grid, field) {
@@ -42,8 +53,8 @@ const SortFeature = {
     const column = grid.options.columns.find(col => col.field === grid.sortColumn);
     
     grid.options.data.sort((a, b) => {
-      let valueA = a[grid.sortColumn];
-      let valueB = b[grid.sortColumn];
+      let valueA = this.getSortValue(grid, a, column);
+      let valueB = this.getSortValue(grid, b, column);
 
       // Aplica função de comparação customizada se existir
       if (column && column.sortCompare && typeof column.sortCompare === 'function') {
@@ -56,10 +67,19 @@ const SortFeature = {
       if (valueA == null) valueA = '';
       if (valueB == null) valueB = '';
 
-      // Detecta o tipo de dado e ordena apropriadamente
-      if (typeof valueA === 'number' && typeof valueB === 'number') {
-        // Ordenação numérica
-        return grid.sortDirection === 'asc' ? valueA - valueB : valueB - valueA;
+      // Determina o tipo de ordenação
+      const sortType = column?.sortType || this.inferSortType(valueA, valueB);
+
+      if (sortType === 'number') {
+        const numA = parseFloat(valueA) || 0;
+        const numB = parseFloat(valueB) || 0;
+        return grid.sortDirection === 'asc' ? numA - numB : numB - numA;
+      } else if (sortType === 'date') {
+        const dateA = new Date(valueA);
+        const dateB = new Date(valueB);
+        const timeA = isNaN(dateA.getTime()) ? 0 : dateA.getTime();
+        const timeB = isNaN(dateB.getTime()) ? 0 : dateB.getTime();
+        return grid.sortDirection === 'asc' ? timeA - timeB : timeB - timeA;
       } else {
         // Ordenação de string (case-insensitive)
         const strA = String(valueA).toLowerCase();
@@ -78,8 +98,23 @@ const SortFeature = {
   },
 
   /**
-   * Renderiza ícone de ordenação no header
+   * Infere o tipo de ordenação baseado nos valores
    */
+  inferSortType(valueA, valueB) {
+    // Tenta detectar números
+    if (!isNaN(valueA) && !isNaN(valueB) && valueA !== '' && valueB !== '') {
+      return 'number';
+    }
+    
+    // Tenta detectar datas (formato ISO ou comum)
+    const dateRegex = /^\d{4}-\d{2}-\d{2}/;
+    if (dateRegex.test(String(valueA)) && dateRegex.test(String(valueB))) {
+      return 'date';
+    }
+    
+    // Default para string
+    return 'string';
+  },
   renderSortIcon(grid, field) {
     const icon = document.createElement('span');
     icon.className = 'sort-icon';

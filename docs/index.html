@@ -458,8 +458,8 @@ new Skargrid('myTable', { data, columns: cols, searchable:true, pagination:true,
                 { field: 'email', title: 'Email' },
                 { field: 'status', title: 'Status', filterable: true, filterType: 'select' },
                 { field: 'cidade', title: 'City', filterable: true, filterType: 'select' },
-                { field: 'idade', title: 'Age', sortable: true },
-                { field: 'salario', title: 'Salary', render: v => `R$ ${v.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}` },
+                { field: 'idade', title: 'Age', sortable: true, sortType: 'number' },
+                { field: 'salario', title: 'Salary', render: v => `R$ ${v.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`, sortable: true, sortType: 'number' },
                 { field: 'grupo', title: 'Group', filterable: true },
                 { field: 'cargo', title: 'Role' },
                 { field: 'admissao', title: 'Hired' },
@@ -999,9 +999,9 @@ const sortData = [
 const sortCols = [
     { field: 'id', title: 'ID', sortable: true },
     { field: 'nome', title: 'Nome' },
-    { field: 'idade', title: 'Idade', sortable: true },
+    { field: 'idade', title: 'Idade', sortable: true, sortType: 'number' },
     { field: 'cidade', title: 'Cidade', sortable: true },
-    { field: 'salario', title: 'Salário', sortable: true, render: v => `R$ ${v.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}` }
+    { field: 'salario', title: 'Salário', sortable: true, render: v => `R$ ${v.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`, sortType: 'number' }
 ];
 
 new Skargrid('sortTable', { data: sortData, columns: sortCols, sortable: true });

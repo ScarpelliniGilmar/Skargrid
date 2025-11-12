@@ -215,6 +215,7 @@ new Skargrid(containerId, options)
 	width: '200px',          // Largura da coluna (opcional)
 	visible: true,           // Visibilidade inicial (padrão: true)
 	sortable: true,          // Permite ordenação (padrão: false)
+	sortType: 'string',      // Tipo de ordenação: 'string', 'number', 'date' (inferido automaticamente se não definido)
 	filterable: true,        // Mostra ícone de filtro (padrão: false)
 	filterType: 'text',      // Tipo: 'text', 'number', 'date', 'select'
 	// Formatação customizada

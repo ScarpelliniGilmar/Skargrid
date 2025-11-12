@@ -7,6 +7,43 @@ const FilterFeature = {
   // Token interno para representar valores vazios (null/undefined/'')
   EMPTY_TOKEN: '__SG_EMPTY__',
   /**
+   * Obtém o valor de exibição de uma célula (aplicando renderer se presente)
+   */
+  getDisplayValue(grid, row, column) {
+    let value = row[column.field];
+    
+    // Se a coluna tem render customizado, extrai o texto puro
+    // Suporta tanto `render` (docs/exemplos) quanto `formatter` (core antigo)
+    const exportRenderer = (column.render && typeof column.render === 'function')
+      ? column.render
+      : (column.formatter && typeof column.formatter === 'function')
+        ? column.formatter
+        : null;
+
+    if (exportRenderer) {
+      // Renderiza e remove HTML tags
+      try {
+        const rendered = exportRenderer(value, row);
+        value = grid.stripHTML(rendered);
+      } catch (e) {
+        // Mantém o valor original como fallback
+      }
+    }
+    
+    // Formata valores
+    if (value === null || value === undefined) {
+      value = '';
+    } else if (typeof value === 'boolean') {
+      value = value ? 'Sim' : 'Não';
+    } else if (typeof value === 'number') {
+      value = value.toString();
+    } else {
+      value = value.toString();
+    }
+    
+    return value;
+  },
+  /**
    * Normaliza string removendo acentos para busca
    */
   normalizeString(str) {
@@ -30,7 +67,7 @@ const FilterFeature = {
       filtered = filtered.filter(row => {
         // Busca em todas as colunas
         return grid.options.columns.some(column => {
-          const value = row[column.field];
+          const value = this.getDisplayValue(grid, row, column);
           if (value == null) return false;
           
           // Normaliza valor e compara sem acentos
@@ -45,9 +82,9 @@ const FilterFeature = {
       filtered = filtered.filter(row => {
         // Todas as condições de filtro devem ser atendidas (AND)
         return Object.entries(grid.columnFilterValues).every(([field, filterValue]) => {
-          const cellValue = row[field];
-          
           const column = grid.options.columns.find(col => col.field === field);
+          const cellValue = this.getDisplayValue(grid, row, column);
+          
           const filterType = column?.filterType || 'text';
 
           // Filtro por tipo
@@ -235,7 +272,8 @@ const FilterFeature = {
    * Obtém valores únicos de uma coluna (dos dados originais)
    */
   getUniqueColumnValues(grid, field) {
-    const values = grid.options.data.map(row => row[field]);
+    const column = grid.options.columns.find(col => col.field === field);
+    const values = grid.options.data.map(row => this.getDisplayValue(grid, row, column));
 
     const unique = new Set();
     let hasEmpty = false;
@@ -273,7 +311,7 @@ const FilterFeature = {
       const searchNormalized = this.normalizeString(grid.searchText);
       data = data.filter(row => {
         return grid.options.columns.some(column => {
-          const value = row[column.field];
+          const value = this.getDisplayValue(grid, row, column);
           if (value == null) return false;
           const valueNormalized = this.normalizeString(value);
           return valueNormalized.includes(searchNormalized);
@@ -288,8 +326,8 @@ const FilterFeature = {
           // Ignora o filtro da coluna atual
           if (filterField === field) return true;
           
-          const cellValue = row[filterField];
           const column = grid.options.columns.find(col => col.field === filterField);
+          const cellValue = this.getDisplayValue(grid, row, column);
           const filterType = column?.filterType || 'text';
 
           if (filterType === 'select') {
@@ -333,7 +371,8 @@ const FilterFeature = {
     }
 
     // Extrai valores únicos da coluna nos dados filtrados
-    const values = data.map(row => row[field]);
+    const column = grid.options.columns.find(col => col.field === field);
+    const values = data.map(row => this.getDisplayValue(grid, row, column));
 
     const unique = new Set();
     let hasEmpty = false;
