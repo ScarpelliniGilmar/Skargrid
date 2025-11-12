@@ -23,7 +23,7 @@
             --sg-white: #FFFFFF;
         }
 
-    body {
+        body {
             font-family: Inter, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
             background: #f8f9fa;
             color: #222
@@ -40,10 +40,25 @@
             color: #fff;
             border: none;
         }
-        .footer-brand .footer-links a { color: rgba(255,255,255,0.95); text-decoration: none; padding: 0 .6rem }
-        .footer-brand .footer-links a:hover { color: #fff; text-decoration: underline }
-        .footer-brand .text-muted { color: rgba(255,255,255,0.85) !important }
-        .footer-brand .btn-outline-dark { filter: brightness(1.2); }
+
+        .footer-brand .footer-links a {
+            color: rgba(255, 255, 255, 0.95);
+            text-decoration: none;
+            padding: 0 .6rem
+        }
+
+        .footer-brand .footer-links a:hover {
+            color: #fff;
+            text-decoration: underline
+        }
+
+        .footer-brand .text-muted {
+            color: rgba(255, 255, 255, 0.85) !important
+        }
+
+        .footer-brand .btn-outline-dark {
+            filter: brightness(1.2);
+        }
 
         .brand-title {
             font-weight: 700;
@@ -85,15 +100,71 @@
         }
 
         /* fade-in for demo content */
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity:1; transform: translateY(0); } }
-        .demo-fade { animation: fadeIn .22s ease; }
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(6px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .demo-fade {
+            animation: fadeIn .22s ease;
+        }
 
         /* demo header actions */
-        .demo-header { display:flex; align-items:center; gap:.5rem; margin-bottom:.5rem }
-        .demo-header .title { font-weight:600 }
-    /* footer tweaks */
-    .footer-links a { color: var(--sg-gray); text-decoration: none; padding: 0 .6rem }
-    .footer-links a:hover { color: var(--sg-primary); text-decoration: underline }
+        .demo-header {
+            display: flex;
+            align-items: center;
+            gap: .5rem;
+            margin-bottom: .5rem
+        }
+
+        .demo-header .title {
+            font-weight: 600
+        }
+
+        /* Theme toggle button: compact, aligned control that matches the demo header */
+        #toggleThemeBtn {
+            display: inline-flex;
+            align-items: center;
+            gap: .35rem;
+            padding: 6px 10px;
+            height: 36px;
+            font-size: 13px;
+            border-radius: 6px;
+            line-height: 1;
+            box-shadow: none;
+            transition: all .15s ease;
+        }
+        /* Slight visual lift on hover to increase affordance */
+        #toggleThemeBtn:hover {
+            transform: translateY(-1px);
+        }
+        /* Icon sizing inside the button */
+        #toggleThemeBtn .bi { font-size: 1rem; }
+        /* When the script toggles to 'dark' styling we keep a strong contrast */
+        #toggleThemeBtn[data-theme="dark"] {
+            background: var(--sg-accent);
+            color: var(--sg-white) !important;
+            border-color: var(--sg-accent) !important;
+        }
+
+        /* footer tweaks */
+        .footer-links a {
+            color: var(--sg-gray);
+            text-decoration: none;
+            padding: 0 .6rem
+        }
+
+        .footer-links a:hover {
+            color: var(--sg-primary);
+            text-decoration: underline
+        }
 
         a.btn-brand {
             background: var(--sg-accent);
@@ -110,6 +181,7 @@
         html {
             scroll-behavior: smooth;
         }
+
         @media (max-width:720px) {
             .hero {
                 padding: 24px 0
@@ -118,22 +190,62 @@
 
         /* Left menu sticky on larger screens to improve alignment */
         @media (min-width: 768px) {
-            .sticky-left { position: sticky; top: 100px; align-self: flex-start; }
+            .sticky-left {
+                position: sticky;
+                top: 100px;
+                align-self: flex-start;
+            }
         }
 
+        /* Enhanced sidebar styles */
+        .sidebar {
+            background: #fff;
+            border-radius: .5rem;
+            padding: .6rem;
+            box-shadow: 0 6px 18px rgba(3,10,18,0.06);
+        }
+        .menu-search { padding: 6px 8px; }
+        .menu-section { margin-bottom: .25rem; }
+        .menu-section .section-toggle {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+            padding: .45rem .5rem;
+            border: none;
+            background: transparent;
+            font-weight: 600;
+            color: var(--sg-gray);
+        }
+        .menu-section .submenu .list-group-item { padding-left: 1.05rem; }
+        .menu-section .chev { transition: transform .18s ease; }
+        /* when toggler has class collapsed (bootstrap), rotate the chevron */
+        .menu-section .section-toggle.collapsed .chev { transform: rotate(-90deg); }
+
         /* ensure code blocks never overflow their container */
-        .demo-wrapper pre.code { max-width: 100%; box-sizing: border-box; }
+        .demo-wrapper pre.code {
+            max-width: 100%;
+            box-sizing: border-box;
+        }
 
         /* subtle visual for list-group */
-        .list-group { border-radius: .5rem; }
-        .list-group-item { padding-top: .7rem; padding-bottom: .7rem; }
+        .list-group {
+            border-radius: .5rem;
+        }
+
+        .list-group-item {
+            padding-top: .7rem;
+            padding-bottom: .7rem;
+        }
 
         /* make right demo area a bit more spacious vertically */
-        .col-lg-9 > .demo-wrapper { min-height: 220px; }
+        .col-lg-9>.demo-wrapper {
+            min-height: 220px;
+        }
     </style>
- </head>
+</head>
 
- <body id="top">
+<body id="top">
     <nav class="brand-bar py-2">
         <div class="container d-flex align-items-center justify-content-between">
             <div class="d-flex align-items-center gap-3">
@@ -143,9 +255,9 @@
                 <a class="link" href="https://www.npmjs.com/package/skargrid" target="_blank"><img
                         src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/npm.svg" alt="NPM"
                         style="height:22px;filter:invert(1);"></a>
-                <a class="link" href="https://github.com/ScarpelliniGilmar/skargrid"
-                    target="_blank"><img src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/github.svg"
-                        alt="GitHub" style="height:22px;filter:invert(1);"></a>
+                <a class="link" href="https://github.com/ScarpelliniGilmar/skargrid" target="_blank"><img
+                        src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/github.svg" alt="GitHub"
+                        style="height:22px;filter:invert(1);"></a>
             </div>
         </div>
     </nav>
@@ -154,21 +266,22 @@
         <section class="hero">
             <div class="row align-items-center">
                 <div class="col-lg">
-                    <h1 class="mb-3">Uma tabela simples. Poderosa quando precisar.</h1>
-                    <p class="lead text-muted">SkarGrid é uma grid JavaScript com paginação, ordenação, filtros e
-                        exportação. Esta página traz um resumo rápido para começar.</p>
+                    <h1 class="mb-3">A simple table. Powerful when you need it.</h1>
+                    <p class="lead text-muted">SkarGrid is a JavaScript grid with pagination, sorting, filters and
+                        export. This page contains a quick overview to get started.</p>
                     <p>
-                        <a href="#quickstart" class="btn btn-brand btn-lg me-2">Começar</a>
-                        <a href="#features" class="btn btn-outline-secondary btn-lg">Exemplos</a>
+                        <a href="#quickstart" class="btn btn-brand btn-lg me-2">Get started</a>
+                        <a href="#features" class="btn btn-outline-secondary btn-lg">Examples</a>
                     </p>
                 </div>
-                <div class="col-lg-7" style="max-height: 500px;">
+                <div class="col-lg-7" >
                     <div class="demo-wrapper border shadow" id="demoArea">
                         <!-- Demo header with theme toggle -->
                         <div class="demo-header">
                             <!-- <div class="title">Demo principal</div> -->
                             <div class="ms-auto">
-                                <button id="toggleThemeBtn" class="btn btn-sm btn-outline-dark" type="button" data-theme="light" title="Alternar tema">
+                                <button id="toggleThemeBtn" class="btn btn-sm btn-outline-dark" type="button"
+                                    data-theme="light" title="Toggle theme">
                                     <i class="bi bi-moon-fill me-1" aria-hidden="true"></i>
                                     Dark
                                 </button>
@@ -176,17 +289,17 @@
                         </div>
 
                         <!-- Tabela fixa no topo: imutável, apenas mostra a demo principal -->
-                        <div id="demoFixedTable"></div>
+                        <div id="demoFixedTable" style="height: 500px;"></div>
                     </div>
                 </div>
             </div>
         </section>
 
         <section id="quickstart" class="mb-4">
-            <h3>Instalação rápida</h3>
+            <h3>Quickstart</h3>
             <hr>
             <p class="text-muted">Usando CDN — HTML + JS mínimo:</p>
-                        <pre class="code">&lt;div id="myTable"&gt;&lt;/div&gt;
+            <pre class="code">&lt;div id="myTable"&gt;&lt;/div&gt;
 
 &lt;link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/skargrid/dist/skargrid.css"&gt;
 &lt;script src="https://cdn.jsdelivr.net/npm/skargrid/dist/skargrid.min.js"&gt;&lt;/script&gt;
@@ -206,61 +319,99 @@ new Skargrid('myTable', { data, columns: cols, searchable:true, pagination:true,
 
         <section id="features" class="mb-5">
             <div class="row align-items-start">
-                <h3 class="mt-2">Exemplos</h3>
+                <h3 class="mt-2">Examples</h3>
                 <hr>
                 <div class="col-lg-3">
-                    <div class="d-flex align-items-center mb-2">                        
+                    <div class="d-flex align-items-center mb-2">
                         <!-- Toggle para telas pequenas -->
-                        <button class="btn btn-sm btn-outline-secondary ms-auto d-md-none" type="button" data-bs-toggle="collapse" data-bs-target="#featuresMenuCollapse" aria-expanded="false" aria-controls="featuresMenuCollapse">Menu</button>
+                        <button class="btn btn-sm btn-outline-secondary ms-auto d-md-none" type="button"
+                            data-bs-toggle="collapse" data-bs-target="#featuresMenuCollapse" aria-expanded="false"
+                            aria-controls="featuresMenuCollapse">Menu</button>
                     </div>
                     <!-- Colapso responsivo: visível por padrão em md+, colapsável em sm -->
                     <div class="collapse d-md-block sticky-left" id="featuresMenuCollapse">
-                        <div class="list-group" id="featuresMenu" role="tablist" aria-label="Funcionalidades">
-                            <button class="list-group-item list-group-item-action" data-example="minimal"><i class="bi bi-table me-2"></i>Minimal</button>
-                            <button class="list-group-item list-group-item-action" data-example="pagination"><i class="bi bi-list-ol me-2"></i>Paginação</button>
-                            <button class="list-group-item list-group-item-action" data-example="sort"><i class="bi bi-sort-alpha-down me-2"></i>Ordenação</button>
-                            <button class="list-group-item list-group-item-action" data-example="filters"><i class="bi bi-funnel me-2"></i>Filtros</button>
-                            <button class="list-group-item list-group-item-action" data-example="selection"><i class="bi bi-check2-square me-2"></i>Seleção</button>
-                            <button class="list-group-item list-group-item-action" data-example="export"><i class="bi bi-download me-2"></i>Exportação</button>
-                            <button class="list-group-item list-group-item-action" data-example="columns"><i class="bi bi-layout-three-columns me-2"></i>Configuração de Colunas</button>
-                            <!-- Dataset Grande and Demo Completa removed as requested -->
+                        <div class="sidebar" id="featuresMenu" role="tablist" aria-label="Funcionalidades">
+                            <div class="menu-search">
+                                <input id="menuSearch" class="form-control form-control-sm" placeholder="Pesquisar..."></input>
+                            </div>
+
+                            <div class="menu-section">
+                                <button class="section-toggle collapsed" data-bs-toggle="collapse" data-bs-target="#secBasics" aria-expanded="false" aria-controls="#secBasics">Basics <span class="chev">▾</span></button>
+                                <div id="secBasics" class="collapse show submenu">
+                                    <div class="list-group">
+                                        <button class="list-group-item list-group-item-action menu-item" data-example="minimal"><i class="bi bi-table me-2"></i>Minimal</button>
+                                        <button class="list-group-item list-group-item-action menu-item" data-example="searchable"><i class="bi bi-search me-2"></i>Search</button>
+                                        <button class="list-group-item list-group-item-action menu-item" data-example="pagination"><i class="bi bi-list-ol me-2"></i>Pagination</button>
+                                        <button class="list-group-item list-group-item-action menu-item" data-example="sort"><i class="bi bi-sort-alpha-down me-2"></i>Sorting</button>
+                                        <button class="list-group-item list-group-item-action menu-item" data-example="filters"><i class="bi bi-funnel me-2"></i>Filters</button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="menu-section">
+                                <button class="section-toggle collapsed" data-bs-toggle="collapse" data-bs-target="#secInteractions" aria-expanded="false" aria-controls="secInteractions">Interactions <span class="chev">▾</span></button>
+                                <div id="secInteractions" class="collapse submenu">
+                                    <div class="list-group">
+                                        <button class="list-group-item list-group-item-action menu-item" data-example="selection"><i class="bi bi-check2-square me-2"></i>Selection</button>
+                                        <button class="list-group-item list-group-item-action menu-item" data-example="export"><i class="bi bi-download me-2"></i>Export</button>
+                                        <button class="list-group-item list-group-item-action menu-item" data-example="columns"><i class="bi bi-layout-three-columns me-2"></i>Column Config</button>
+                                        <button class="list-group-item list-group-item-action menu-item" data-example="custom"><i class="bi bi-brush me-2"></i>Custom Renderer</button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="menu-section">
+                                <button class="section-toggle collapsed" data-bs-toggle="collapse" data-bs-target="#secAdvanced" aria-expanded="false" aria-controls="secAdvanced">Advanced <span class="chev">▾</span></button>
+                                <div id="secAdvanced" class="collapse submenu">
+                                    <div class="list-group">
+                                        <button class="list-group-item list-group-item-action menu-item" data-example="async"><i class="bi bi-arrow-clockwise me-2"></i>Async / Remote</button>
+                                        <button class="list-group-item list-group-item-action menu-item" data-example="advancedFilters"><i class="bi bi-funnel-fill me-2"></i>Advanced Filters</button>
+                                        <button class="list-group-item list-group-item-action menu-item" data-example="formatting"><i class="bi bi-calendar2-date me-2"></i>Formatting</button>
+                                        <button class="list-group-item list-group-item-action menu-item" data-example="large"><i class="bi bi-collection me-2"></i>Large Dataset</button>
+                                        <button class="list-group-item list-group-item-action menu-item" data-example="complete"><i class="bi bi-play-btn me-2"></i>Combined Demo</button>
+                                        <button class="list-group-item list-group-item-action menu-item" data-example="themeGreen"><i class="bi bi-palette-fill me-2"></i>Theme - Green</button>
+                                        <button class="list-group-item list-group-item-action menu-item" data-example="themeDark"><i class="bi bi-moon-fill me-2"></i>Theme - Dark</button>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    <p class="text-muted small mt-3">Clique em uma funcionalidade para visualizar a tabela à direita; o código do exemplo aparece abaixo da tabela.</p>
+                    <p class="text-muted small mt-3">Click a feature to load the table on the right; the example code appears below the table.</p>
                 </div>
 
                 <div class="col-lg-9">
                     <div class="demo-wrapper mt-2 border shadow">
-                        <h5 id="featureTitle" class="p-3">Visualizador de Exemplo</h5>
+                        <h5 id="featureTitle" class="p-3">Example Viewer</h5>
                         <hr>
                         <!-- Área onde os exemplos serão renderizados (ao lado do menu). Mantemos a tabela do topo fixa. -->
                         <div id="demoPanel">
                             <!-- loading spinner (visível enquanto o exemplo carrega) -->
                             <div id="demoPanelSpinner" class="text-center py-3 d-none">
                                 <div class="spinner-border text-primary" role="status">
-                                    <span class="visually-hidden">Carregando...</span>
+                                    <span class="visually-hidden">Loading...</span>
                                 </div>
                             </div>
                             <!-- conteúdo do painel onde instanciamos o Skargrid para exemplos -->
-                            <div id="demoPanelContent"></div>
+                            <div id="demoPanelContent" style="height: 400px;"></div>
                         </div>
                         <div class="mt-3">
                             <div class="d-flex align-items-start">
                                 <!-- <h6 class="mb-0">Código do exemplo</h6> -->
-                                <button id="copyCodeBtn" class="btn btn-sm btn-outline-secondary ms-auto">Copiar</button>
+                                <button id="copyCodeBtn"
+                                    class="btn btn-sm btn-outline-secondary ms-auto">Copy</button>
                             </div>
-                            <pre id="exampleCode" class="code mt-2">Carregue uma funcionalidade para ver o código.</pre>
+                            <pre id="exampleCode" class="code mt-2">Load a feature to view the code.</pre>
                         </div>
                     </div>
                 </div>
             </div>
         </section>
 
-                
-        </main>
+
+    </main>
 
     <footer class="footer-brand mt-5">
-        <div class="container py-1">            
+        <div class="container py-1">
             <div class="row">
                 <div class="col text-center">
                     <small class="text-muted">© 2025 SkarGrid</small>
@@ -301,16 +452,16 @@ new Skargrid('myTable', { data, columns: cols, searchable:true, pagination:true,
             // Colunas completas (exemplo)
             const fullCols = [
                 { field: 'id', title: 'ID', sortable: true },
-                { field: 'nome', title: 'Nome', filterable: true, sortable: true },
-                { field: 'email', title: 'E-mail' },
+                { field: 'nome', title: 'Name', filterable: true, sortable: true },
+                { field: 'email', title: 'Email' },
                 { field: 'status', title: 'Status', filterable: true, filterType: 'select' },
-                { field: 'cidade', title: 'Cidade', filterable: true, filterType: 'select' },
-                { field: 'idade', title: 'Idade', sortable: true },
-                { field: 'salario', title: 'Salário', render: v => `R$ ${v.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}` },
-                { field: 'grupo', title: 'Grupo', filterable: true },
-                { field: 'cargo', title: 'Cargo' },
-                { field: 'admissao', title: 'Admissão' },
-                { field: 'telefone', title: 'Telefone' }
+                { field: 'cidade', title: 'City', filterable: true, filterType: 'select' },
+                { field: 'idade', title: 'Age', sortable: true },
+                { field: 'salario', title: 'Salary', render: v => `R$ ${v.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}` },
+                { field: 'grupo', title: 'Group', filterable: true },
+                { field: 'cargo', title: 'Role' },
+                { field: 'admissao', title: 'Hired' },
+                { field: 'telefone', title: 'Phone' }
             ];
 
             // Instala a demo completa (todas as funcionalidades ligadas)
@@ -360,6 +511,21 @@ new Skargrid('myTable', { data, columns: cols, searchable:true, pagination:true,
                     cols: [{ field: 'id', title: 'ID' }, { field: 'produto', title: 'Produto' }, { field: 'categoria', title: 'Categoria' }, { field: 'preco', title: 'Preço', render: v => `R$ ${v.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}` }],
                     options: { searchable: false, pagination: false }
                 },
+                searchable: {
+                    data: [
+                        { id: 1, name: 'Alpha', category: 'A', price: 10 },
+                        { id: 2, name: 'Beta', category: 'B', price: 20 },
+                        { id: 3, name: 'Gamma', category: 'A', price: 30 },
+                        { id: 4, name: 'Delta', category: 'C', price: 40 }
+                    ],
+                    cols: [
+                        { field: 'id', title: 'ID' },
+                        { field: 'name', title: 'Name' },
+                        { field: 'category', title: 'Category' },
+                        { field: 'price', title: 'Price', render: v => `R$ ${v.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}` }
+                    ],
+                    options: { searchable: true, pagination: false }
+                },
                 pagination: {
                     data: Array.from({ length: 40 }, (_, i) => ({ id: i + 1, nome: `Item ${i + 1}`, categoria: ['A', 'B', 'C', 'D'][i % 4], preco: 100 + i * 5 })),
                     cols: [{ field: 'id', title: 'ID' }, { field: 'nome', title: 'Nome' }, { field: 'categoria', title: 'Categoria' }, { field: 'preco', title: 'Preço' }],
@@ -408,6 +574,113 @@ new Skargrid('myTable', { data, columns: cols, searchable:true, pagination:true,
                     ],
                     options: { searchable: true, columnConfig: true, persistColumnConfig: true }
                 },
+                custom: {
+                    data: [
+                        { id: 1, produto: 'Caneca', preco: 29.9, estoque: 120, destaque: true },
+                        { id: 2, produto: 'Camiseta', preco: 59.9, estoque: 40, destaque: false }
+                    ],
+                    cols: [
+                        { field: 'id', title: 'ID' },
+                        { field: 'produto', title: 'Produto' },
+                        { field: 'preco', title: 'Preço', render: v => `R$ ${v.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}` },
+                        { field: 'estoque', title: 'Estoque' },
+                        { field: 'destaque', title: 'Destaque', render: v => v ? '<span class="badge bg-success">Sim</span>' : '<span class="badge bg-secondary">Não</span>' }
+                    ],
+                    options: { searchable: true, pagination: false }
+                },
+                async: {
+                    // Demonstrates a remote/async dataset (here we use a small static set for the demo)
+                    data: [
+                        { id: 1, nome: 'Remoto A', valor: 10 },
+                        { id: 2, nome: 'Remoto B', valor: 20 }
+                    ],
+                    cols: [
+                        { field: 'id', title: 'ID' },
+                        { field: 'nome', title: 'Nome' },
+                        { field: 'valor', title: 'Valor', render: v => `R$ ${v.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}` }
+                    ],
+                    options: { searchable: true, pagination: false }
+                },
+                advancedFilters: {
+                    data: [
+                        { id: 1, nome: 'Item 1', preco: 100, data: '2023-01-02' },
+                        { id: 2, nome: 'Item 2', preco: 250, data: '2024-05-10' },
+                        { id: 3, nome: 'Item 3', preco: 75, data: '2022-11-22' }
+                    ],
+                    cols: [
+                        { field: 'id', title: 'ID' },
+                        { field: 'nome', title: 'Nome' },
+                        { field: 'preco', title: 'Preço', filterable: true, filterType: 'range', render: v => `R$ ${v.toLocaleString('pt-BR', {minimumFractionDigits:2})}` },
+                        { field: 'data', title: 'Data', filterable: true, filterType: 'date' }
+                    ],
+                    options: { searchable: true, columnFilters: true }
+                },
+                formatting: {
+                    data: [
+                        { id: 1, nome: 'Ana', nascimento: '1990-03-10', salario: 4500 },
+                        { id: 2, nome: 'Bruno', nascimento: '1985-12-01', salario: 6200 }
+                    ],
+                    cols: [
+                        { field: 'id', title: 'ID' },
+                        { field: 'nome', title: 'Nome' },
+                        { field: 'nascimento', title: 'Nascimento', render: v => new Date(v).toLocaleDateString('pt-BR') },
+                        { field: 'salario', title: 'Salário', render: v => `R$ ${v.toLocaleString('pt-BR', {minimumFractionDigits:2})}` }
+                    ],
+                    options: { searchable: false }
+                },
+                large: {
+                    data: Array.from({ length: 200 }, (_, i) => ({ id: i + 1, nome: `Registro ${i + 1}`, categoria: ['A','B','C'][i % 3], valor: (100 + i) })),
+                    cols: [
+                        { field: 'id', title: 'ID' },
+                        { field: 'nome', title: 'Nome' },
+                        { field: 'categoria', title: 'Categoria' },
+                        { field: 'valor', title: 'Valor' }
+                    ],
+                    options: { searchable: true, pagination: true, pageSize: 25 }
+                },
+                complete: {
+                    // Combined demo: many features enabled to show integration
+                    data: Array.from({ length: 30 }, (_, i) => ({ id: i + 1, nome: `Pessoa ${i + 1}`, cidade: ['SP','RJ','MG'][i % 3], idade: 20 + (i % 30), salario: 3000 + i * 100 })),
+                    cols: fullCols,
+                    options: { searchable: true, sortable: true, pagination: true, pageSize: 10, columnFilters: true, selectable: true, exportCSV: true }
+                },
+                themeGreen: {
+                    // Full demo using the library's feature set but with a green brand override
+                    data: makeData(12),
+                    cols: fullCols,
+                    options: {
+                        searchable: true,
+                        sortable: true,
+                        pagination: true,
+                        pageSize: 6,
+                        pageSizeOptions: [6, 12, 24],
+                        selectable: true,
+                        columnFilters: true,
+                        columnConfig: true,
+                        persistColumnConfig: true,
+                        exportCSV: true,
+                        // custom flag read by demo loader to toggle CSS variables
+                        themeOverride: 'green'
+                    }
+                },
+                themeDark: {
+                    // Full demo using the library's dark theme
+                    data: makeData(12),
+                    cols: fullCols,
+                    options: {
+                        searchable: true,
+                        sortable: true,
+                        pagination: true,
+                        pageSize: 6,
+                        pageSizeOptions: [6, 12, 24],
+                        selectable: true,
+                        columnFilters: true,
+                        columnConfig: true,
+                        persistColumnConfig: true,
+                        exportCSV: true,
+                        theme: 'dark'
+                    }
+                },
                 // 'complete' example removed
             };
 
@@ -430,6 +703,40 @@ new Skargrid('myTable', { data, columns: cols, searchable:true, pagination:true,
                     // Slight delay to give spinner a chance to show on slow UIs
                     setTimeout(() => {
                         try {
+                            // handle theme override: allow examples to set CSS variables for brand colors
+                            try {
+                                const root = document.documentElement;
+                                // store defaults once so we can restore later
+                                if (!window.__skargrid_theme_defaults) {
+                                    const cs = getComputedStyle(root);
+                                    window.__skargrid_theme_defaults = {
+                                        primary: cs.getPropertyValue('--sg-primary') || '',
+                                        accent: cs.getPropertyValue('--sg-accent') || '',
+                                        accentRgb: cs.getPropertyValue('--sg-accent-rgb') || '',
+                                        theadBg: cs.getPropertyValue('--sg-thead-bg') || '',
+                                        theadColor: cs.getPropertyValue('--sg-thead-color') || ''
+                                    };
+                                }
+                                if (opts && opts.themeOverride === 'green') {
+                                    // green palette
+                                    root.style.setProperty('--sg-primary', '#0a8f08');
+                                    root.style.setProperty('--sg-accent', '#2db84d');
+                                    // RGB for rgba() uses 'r,g,b' format
+                                    root.style.setProperty('--sg-accent-rgb', '10,143,8');
+                                    // header background and text for contrast
+                                    root.style.setProperty('--sg-thead-bg', '#eaf9ea');
+                                    root.style.setProperty('--sg-thead-color', '#0b4d08');
+                                } else if (!opts || !opts.themeOverride) {
+                                    // restore defaults when no override requested
+                                    const def = window.__skargrid_theme_defaults || {};
+                                    if (def.primary) root.style.setProperty('--sg-primary', def.primary.trim());
+                                    if (def.accent) root.style.setProperty('--sg-accent', def.accent.trim());
+                                    if (def.accentRgb) root.style.setProperty('--sg-accent-rgb', def.accentRgb.trim());
+                                    if (def.theadBg) root.style.setProperty('--sg-thead-bg', def.theadBg.trim());
+                                    if (def.theadColor) root.style.setProperty('--sg-thead-color', def.theadColor.trim());
+                                }
+                            } catch (e) { /* non-fatal */ }
+
                             currentDemo = new Skargrid('demoPanelContent', opts);
                             // add fade-in class for a subtle transition
                             const panelEl = document.getElementById('demoPanelContent');
@@ -441,7 +748,7 @@ new Skargrid('myTable', { data, columns: cols, searchable:true, pagination:true,
                             }
                             // atualiza título e código
                             const titleMap = {
-                                minimal: 'Minimal', pagination: 'Paginação', sort: 'Ordenação', filters: 'Filtros', selection: 'Seleção', export: 'Exportação', columns: 'Configuração de Colunas'
+                                minimal: 'Minimal', searchable: 'Search', pagination: 'Pagination', sort: 'Sorting', filters: 'Filters', selection: 'Selection', export: 'Export', columns: 'Column Config', custom: 'Custom Renderer', async: 'Async / Remote', advancedFilters: 'Advanced Filters', formatting: 'Formatting', large: 'Large Dataset', complete: 'Combined Demo', themeGreen: 'Theme — Green', themeDark: 'Theme — Dark'
                             };
                             document.getElementById('featureTitle').textContent = titleMap[name] || 'Exemplo';
                             setExampleCode(name);
@@ -495,6 +802,28 @@ new Skargrid('myTable', { data, columns: cols, searchable:true, pagination:true,
                     } catch (e) { /* ignore */ }
                 });
             });
+            
+                // new: wire up menu search and chevron toggles
+                const menuSearch = document.getElementById('menuSearch');
+                if (menuSearch) {
+                    menuSearch.addEventListener('input', (ev) => {
+                        const q = ev.target.value.trim().toLowerCase();
+                        document.querySelectorAll('#featuresMenu .list-group-item[data-example]').forEach(li => {
+                            const txt = (li.textContent || '').toLowerCase();
+                            li.style.display = q === '' || txt.indexOf(q) !== -1 ? '' : 'none';
+                        });
+                    });
+                }
+
+                // ensure collapse toggles rotate chevron correctly (bootstrap adds .collapsed)
+                document.querySelectorAll('.menu-section .section-toggle').forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        // small delay to allow bootstrap to toggle class
+                        setTimeout(() => {
+                            // nothing else needed — CSS uses .collapsed state to rotate chevron
+                        }, 120);
+                    });
+                });
             // Set first menu item active by default (if any) and auto-load it into the right panel
             const first = document.querySelector('#featuresMenu [data-example]');
             if (first) {
@@ -543,7 +872,7 @@ new Skargrid('myTable', { data, columns: cols, searchable:true, pagination:true,
                     try {
                         await navigator.clipboard.writeText(text);
                         const original = copyBtn.textContent;
-                        copyBtn.textContent = 'Copiado!';
+                        copyBtn.textContent = 'Copied!';
                         setTimeout(() => copyBtn.textContent = original, 1400);
                     } catch (e) {
                         // fallback: select and attempt execCommand
@@ -556,11 +885,11 @@ new Skargrid('myTable', { data, columns: cols, searchable:true, pagination:true,
                             document.execCommand('copy');
                             sel.removeAllRanges();
                             const original = copyBtn.textContent;
-                            copyBtn.textContent = 'Copiado!';
+                            copyBtn.textContent = 'Copied!';
                             setTimeout(() => copyBtn.textContent = original, 1400);
                         } catch (err) {
                             console.error('Clipboard failed', err);
-                            alert('Não foi possível copiar o código automaticamente.');
+                            alert('Could not copy the code automatically.');
                         }
                     }
                 });
@@ -576,62 +905,84 @@ new Skargrid('myTable', { data, columns: cols, searchable:true, pagination:true,
             });
         });
     </script>
-        <script>
-                // centralized snippets stored as script templates
-                function setExampleCode(name){
-                        const tpl = document.getElementById('snippet-' + name);
-                        const pre = document.getElementById('exampleCode');
-                        if(!pre) return;
-                        if(tpl){
-                                pre.textContent = tpl.textContent.trim();
-                        } else {
-                                pre.textContent = 'Código não disponível para este exemplo.';
-                        }
-                }
-        </script>
+    <script>
+        // centralized snippets stored as script templates
+        function setExampleCode(name) {
+            const tpl = document.getElementById('snippet-' + name);
+            const pre = document.getElementById('exampleCode');
+            if (!pre) return;
+            if (tpl) {
+                pre.textContent = tpl.textContent.trim();
+            } else {
+                pre.textContent = 'Code not available for this example.';
+            }
+        }
+    </script>
 
-        <!-- Snippet templates (plain text) -->
-        <script type="text/plain" id="snippet-minimal">
+    <!-- Snippet templates (plain text) -->
+    <script type="text/plain" id="snippet-minimal">
 <!-- HTML -->
 <div id="minimalTable"></div>
 
 <!-- JS -->
 const minimalData = [
-    { id: 1, produto: 'Notebook Dell', categoria: 'Eletrônicos', preco: 3499.00, estoque: 15 },
-    { id: 2, produto: 'Mouse Logitech', categoria: 'Periféricos', preco: 99.90, estoque: 50 }
+    { id: 1, produto: 'Notebook Dell', categoria: 'Eletrônicos', preco: 3499.0, estoque: 15 },
+    { id: 2, produto: 'Mouse Logitech', categoria: 'Periféricos', preco: 99.9, estoque: 50 }
 ];
+
 const minimalCols = [
     { field: 'id', title: 'ID' },
     { field: 'produto', title: 'Produto' },
     { field: 'categoria', title: 'Categoria' },
-    { field: 'preco', title: 'Preço', render: v => `R$ ${v.toLocaleString('pt-BR', {minimumFractionDigits:2})}` }
+    { field: 'preco', title: 'Preço', render: v => `R$ ${v.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}` }
 ];
-new Skargrid('minimalTable', { data: minimalData, columns: minimalCols });
-        </script>
 
-        <script type="text/plain" id="snippet-pagination">
+new Skargrid('minimalTable', { data: minimalData, columns: minimalCols });
+</script>
+
+    <script type="text/plain" id="snippet-searchable">
+<!-- HTML -->
+    <div id="searchableTable"></div>
+
+    <!-- JS -->
+    const searchData = [
+    { id: 1, name: 'Alpha', category: 'A', price: 10 },
+    { id: 2, name: 'Beta', category: 'B', price: 20 },
+    { id: 3, name: 'Gamma', category: 'A', price: 30 },
+    { id: 4, name: 'Delta', category: 'C', price: 40 }
+    ];
+    const searchCols = [
+    { field: 'id', title: 'ID' },
+    { field: 'name', title: 'Name' },
+    { field: 'category', title: 'Category' },
+    { field: 'price', title: 'Price' }
+    ];
+    new Skargrid('searchableTable', { data: searchData, columns: searchCols, searchable: true });
+    </script>
+
+    <script type="text/plain" id="snippet-pagination">
 <!-- HTML -->
 <div id="paginationTable"></div>
 
 <!-- JS -->
-const pageData = Array.from({length: 40}, (_,i)=>(
-    {
-        id: i+1,
-        nome: `Item ${i+1}`,
-        categoria: ['A','B','C','D'][i%4],
-        preco: (100 + i*5)
-    }
-));
-const pageCols = [
-    {field:'id',title:'ID'},
-    {field:'nome',title:'Nome'},
-    {field:'categoria',title:'Categoria'},
-    {field:'preco',title:'Preço'}
-];
-new Skargrid('paginationTable', { data: pageData, columns: pageCols, pagination: true, pageSize: 10 });
-        </script>
+const pageData = Array.from({ length: 40 }, (_, i) => ({
+    id: i + 1,
+    nome: `Item ${i + 1}`,
+    categoria: ['A', 'B', 'C', 'D'][i % 4],
+    preco: 100 + i * 5
+}));
 
-        <script type="text/plain" id="snippet-sort">
+const pageCols = [
+    { field: 'id', title: 'ID' },
+    { field: 'nome', title: 'Nome' },
+    { field: 'categoria', title: 'Categoria' },
+    { field: 'preco', title: 'Preço' }
+];
+
+new Skargrid('paginationTable', { data: pageData, columns: pageCols, pagination: true, pageSize: 10 });
+    </script>
+
+    <script type="text/plain" id="snippet-sort">
 <!-- HTML -->
 <div id="sortTable"></div>
 
@@ -641,92 +992,301 @@ const sortData = [
     { id: 2, nome: 'Bruno', idade: 35, cidade: 'RJ', salario: 4200 },
     { id: 3, nome: 'Carla', idade: 25, cidade: 'MG', salario: 6100 }
 ];
+
 const sortCols = [
     { field: 'id', title: 'ID', sortable: true },
-    { field: 'nome', title: 'Nome', sortable: false },
+    { field: 'nome', title: 'Nome' },
     { field: 'idade', title: 'Idade', sortable: true },
     { field: 'cidade', title: 'Cidade', sortable: true },
-    { field: 'salario', title: 'Salário', sortable: true, render: v => `R$ ${v.toLocaleString('pt-BR', {minimumFractionDigits:2})}` }
+    { field: 'salario', title: 'Salário', sortable: true, render: v => `R$ ${v.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}` }
 ];
-new Skargrid('sortTable', { data: sortData, columns: sortCols, sortable: true });
-        </script>
 
-        <script type="text/plain" id="snippet-filters">
+new Skargrid('sortTable', { data: sortData, columns: sortCols, sortable: true });
+    </script>
+
+    <script type="text/plain" id="snippet-filters">
 <!-- HTML -->
 <div id="filtersTable"></div>
 
 <!-- JS -->
 const filtData = [
-    {id:1,status:'Ativo',cidade:'SP',idade:22,grupo:'A'},
-    {id:2,status:'Inativo',cidade:'RJ',idade:31,grupo:'B'},
-    {id:3,status:'Ativo',cidade:'MG',idade:27,grupo:'A'}
+    { id: 1, status: 'Ativo', cidade: 'SP', idade: 22, grupo: 'A' },
+    { id: 2, status: 'Inativo', cidade: 'RJ', idade: 31, grupo: 'B' },
+    { id: 3, status: 'Ativo', cidade: 'MG', idade: 27, grupo: 'A' }
 ];
-const filtCols = [
-    {field:'id',title:'ID'},
-    {field:'status',title:'Status',filterable:true,filterType:'select'},
-    {field:'cidade',title:'Cidade',filterable:true,filterType:'select'},
-    {field:'idade',title:'Idade'}
-];
-new Skargrid('filtersTable', { data: filtData, columns: filtCols, columnFilters: true });
-        </script>
 
-        <script type="text/plain" id="snippet-selection">
+const filtCols = [
+    { field: 'id', title: 'ID' },
+    { field: 'status', title: 'Status', filterable: true, filterType: 'select' },
+    { field: 'cidade', title: 'Cidade', filterable: true, filterType: 'select' },
+    { field: 'idade', title: 'Idade' }
+];
+
+new Skargrid('filtersTable', { data: filtData, columns: filtCols, columnFilters: true });
+</script>
+
+    <script type="text/plain" id="snippet-selection">
 <!-- HTML -->
 <div id="selectionTable"></div>
 
 <!-- JS -->
 const selData = [
-    {id:1,nome:'João',idade:22,cidade:'SP',status:'Ativo'},
-    {id:2,nome:'Maria',idade:31,cidade:'RJ',status:'Inativo'},
-    {id:3,nome:'Pedro',idade:27,cidade:'MG',status:'Ativo'}
+    { id: 1, nome: 'João', idade: 22, cidade: 'SP', status: 'Ativo' },
+    { id: 2, nome: 'Maria', idade: 31, cidade: 'RJ', status: 'Inativo' },
+    { id: 3, nome: 'Pedro', idade: 27, cidade: 'MG', status: 'Ativo' }
 ];
-const selCols = [
-    {field:'id',title:'ID'},
-    {field:'nome',title:'Nome'},
-    {field:'idade',title:'Idade'},
-    {field:'cidade',title:'Cidade'}
-];
-new Skargrid('selectionTable', { data: selData, columns: selCols, selectable: true });
-        </script>
 
-        <script type="text/plain" id="snippet-export">
+const selCols = [
+    { field: 'id', title: 'ID' },
+    { field: 'nome', title: 'Nome' },
+    { field: 'idade', title: 'Idade' },
+    { field: 'cidade', title: 'Cidade' }
+];
+
+new Skargrid('selectionTable', { data: selData, columns: selCols, selectable: true });
+</script>
+
+    <script type="text/plain" id="snippet-export">
 <!-- HTML -->
 <div id="exportTable"></div>
 
 <!-- JS -->
 const expData = [
-    {id:1,nome:'Ana',email:'ana@email.com',cidade:'SP',idade:29},
-    {id:2,nome:'Bruno',email:'bruno@email.com',cidade:'RJ',idade:35}
+    { id: 1, nome: 'Ana', email: 'ana@email.com', cidade: 'SP', idade: 29 },
+    { id: 2, nome: 'Bruno', email: 'bruno@email.com', cidade: 'RJ', idade: 35 }
 ];
-const expCols = [
-    {field:'id',title:'ID'},
-    {field:'nome',title:'Nome'},
-    {field:'email',title:'E-mail'},
-    {field:'cidade',title:'Cidade'}
-];
-new Skargrid('exportTable', { data: expData, columns: expCols, exportCSV: true });
-        </script>
 
-        <script type="text/plain" id="snippet-columns">
+const expCols = [
+    { field: 'id', title: 'ID' },
+    { field: 'nome', title: 'Nome' },
+    { field: 'email', title: 'E-mail' },
+    { field: 'cidade', title: 'Cidade' }
+];
+
+new Skargrid('exportTable', { data: expData, columns: expCols, exportCSV: true });
+</script>
+
+    <script type="text/plain" id="snippet-columns">
 <!-- HTML -->
 <div id="columnsTable"></div>
 
 <!-- JS -->
 const colData = [
-    {id:1,produto:'Notebook',preco:3500,estoque:10,categoria:'Eletrônicos'},
-    {id:2,produto:'Mouse',preco:90,estoque:50,categoria:'Periféricos'}
+    { id: 1, produto: 'Notebook', preco: 3500, estoque: 10, categoria: 'Eletrônicos' },
+    { id: 2, produto: 'Mouse', preco: 90, estoque: 50, categoria: 'Periféricos' }
 ];
-const colCols = [
-    {field:'id',title:'ID'},
-    {field:'produto',title:'Produto'},
-    {field:'preco',title:'Preço'},
-    {field:'estoque',title:'Estoque'},
-    {field:'categoria',title:'Categoria'}
-];
-new Skargrid('columnsTable', { data: colData, columns: colCols, columnConfig: true, persistColumnConfig: true });
-        </script>
 
-        <!-- 'large' and 'complete' snippets removed -->
+const colCols = [
+    { field: 'id', title: 'ID' },
+    { field: 'produto', title: 'Produto' },
+    { field: 'preco', title: 'Preço' },
+    { field: 'estoque', title: 'Estoque' },
+    { field: 'categoria', title: 'Categoria' }
+];
+
+new Skargrid('columnsTable', { data: colData, columns: colCols, columnConfig: true, persistColumnConfig: true });
+</script>
+
+    <script type="text/plain" id="snippet-custom">
+<!-- HTML -->
+<div id="customTable"></div>
+
+<!-- JS -->
+const customData = [
+    { id: 1, produto: 'Caneca', preco: 29.9, estoque: 120, destaque: true },
+    { id: 2, produto: 'Camiseta', preco: 59.9, estoque: 40, destaque: false }
+];
+
+const customCols = [
+    { field: 'id', title: 'ID' },
+    { field: 'produto', title: 'Produto' },
+    { field: 'preco', title: 'Preço', render: v => `R$ ${v.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}` },
+    { field: 'estoque', title: 'Estoque' },
+    { field: 'destaque', title: 'Destaque', render: v => v ? '<span class="badge bg-success">Sim</span>' : '<span class="badge bg-secondary">Não</span>' }
+];
+
+new Skargrid('customTable', { data: customData, columns: customCols, searchable: true });
+</script>
+
+    <script type="text/plain" id="snippet-async">
+<!-- HTML -->
+<div id="asyncTable"></div>
+
+<!-- JS (simulated fetch) -->
+async function loadRemoteData() {
+    // example: return fetch('/api/data').then(r => r.json())
+    return new Promise(resolve => setTimeout(() => resolve([
+        { id: 1, nome: 'Remoto A', valor: 10 },
+        { id: 2, nome: 'Remoto B', valor: 20 }
+    ]), 400));
+}
+
+(async () => {
+    const data = await loadRemoteData();
+    const cols = [
+        { field: 'id', title: 'ID' },
+        { field: 'nome', title: 'Nome' },
+        { field: 'valor', title: 'Valor', render: v => `R$ ${v.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}` }
+    ];
+    new Skargrid('asyncTable', { data, columns: cols, searchable: true });
+})();
+</script>
+
+    <script type="text/plain" id="snippet-advancedFilters">
+<!-- HTML -->
+<div id="advancedFiltersTable"></div>
+
+<!-- JS -->
+const advData = [
+    { id: 1, nome: 'Item 1', preco: 100, data: '2023-01-02' },
+    { id: 2, nome: 'Item 2', preco: 250, data: '2024-05-10' },
+    { id: 3, nome: 'Item 3', preco: 75, data: '2022-11-22' }
+];
+
+const advCols = [
+    { field: 'id', title: 'ID' },
+    { field: 'nome', title: 'Nome' },
+    { field: 'preco', title: 'Preço', filterable: true, filterType: 'range', render: v => `R$ ${v.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}` },
+    { field: 'data', title: 'Data', filterable: true, filterType: 'date' }
+];
+
+new Skargrid('advancedFiltersTable', { data: advData, columns: advCols, columnFilters: true });
+</script>
+
+    <script type="text/plain" id="snippet-formatting">
+<!-- HTML -->
+<div id="formattingTable"></div>
+
+<!-- JS -->
+const fmtData = [
+    { id: 1, nome: 'Ana', nascimento: '1990-03-10', salario: 4500 },
+    { id: 2, nome: 'Bruno', nascimento: '1985-12-01', salario: 6200 }
+];
+
+const fmtCols = [
+    { field: 'id', title: 'ID' },
+    { field: 'nome', title: 'Nome' },
+    { field: 'nascimento', title: 'Nascimento', render: v => new Date(v).toLocaleDateString('pt-BR') },
+    { field: 'salario', title: 'Salário', render: v => `R$ ${v.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}` }
+];
+
+new Skargrid('formattingTable', { data: fmtData, columns: fmtCols });
+</script>
+
+    <script type="text/plain" id="snippet-large">
+<!-- HTML -->
+<div id="largeTable"></div>
+
+<!-- JS -->
+const largeData = Array.from({ length: 200 }, (_, i) => ({
+    id: i + 1,
+    nome: `Registro ${i + 1}`,
+    categoria: ['A', 'B', 'C'][i % 3],
+    valor: 100 + i
+}));
+
+const largeCols = [
+    { field: 'id', title: 'ID' },
+    { field: 'nome', title: 'Nome' },
+    { field: 'categoria', title: 'Categoria' },
+    { field: 'valor', title: 'Valor' }
+];
+
+new Skargrid('largeTable', { data: largeData, columns: largeCols, pagination: true, pageSize: 25 });
+</script>
+
+    <script type="text/plain" id="snippet-complete">
+<!-- HTML -->
+<div id="completeTable"></div>
+
+<!-- JS -->
+const completeData = Array.from({ length: 30 }, (_, i) => ({
+    id: i + 1,
+    nome: `Pessoa ${i + 1}`,
+    cidade: ['SP', 'RJ', 'MG'][i % 3],
+    idade: 20 + (i % 30),
+    salario: 3000 + i * 100
+}));
+
+// reuse fullCols from the page for column definitions
+new Skargrid('completeTable', {
+    data: completeData,
+    columns: fullCols,
+    searchable: true,
+    sortable: true,
+    pagination: true,
+    pageSize: 10,
+    columnFilters: true,
+    columnConfig: true,
+    persistColumnConfig: true,
+    selectable: true,
+    exportCSV: true
+});
+</script>
+
+    <!-- 'large' and 'complete' snippets removed -->
+    <script type="text/plain" id="snippet-themeGreen">
+<!-- HTML -->
+<div id="themeGreenTable"></div>
+
+<!-- JS -->
+    // Option A: override CSS variables to change the brand colors before initializing the grid
+    // Match the same tokens the demo loader uses so the snippet reflects runtime behavior.
+    const root = document.documentElement;
+    root.style.setProperty('--sg-primary', '#0a8f08');
+    root.style.setProperty('--sg-accent', '#2db84d');
+    // accent RGB must be 'r,g,b' for rgba() usages in the CSS
+    root.style.setProperty('--sg-accent-rgb', '10,143,8');
+    // header background and text tokens for proper contrast
+    root.style.setProperty('--sg-thead-bg', '#eaf9ea');
+    root.style.setProperty('--sg-thead-color', '#0b4d08');
+
+    // This example uses the same column set as the combined demo and sample data generator
+    // (makeData and fullCols are defined in the page). We initialize a full-featured grid.
+    const themeGreenData = makeData(12);
+    const themeGreenCols = fullCols;
+
+    new Skargrid('themeGreenTable', {
+        data: themeGreenData,
+        columns: themeGreenCols,
+        searchable: true,
+        sortable: true,
+        pagination: true,
+        pageSize: 6,
+        pageSizeOptions: [6, 12, 24],
+        selectable: true,
+        columnFilters: true,
+        columnConfig: true,
+        persistColumnConfig: true,
+        exportCSV: true
+    });
+</script>
+
+    <script type="text/plain" id="snippet-themeDark">
+<!-- HTML -->
+<div id="themeDarkTable"></div>
+
+<!-- JS -->
+    // Full-featured dark theme example (uses makeData and fullCols defined in the page)
+    const darkData = makeData(12);
+    const darkCols = fullCols;
+
+    new Skargrid('themeDarkTable', {
+        data: darkData,
+        columns: darkCols,
+        searchable: true,
+        sortable: true,
+        pagination: true,
+        pageSize: 6,
+        pageSizeOptions: [6, 12, 24],
+        selectable: true,
+        columnFilters: true,
+        columnConfig: true,
+        persistColumnConfig: true,
+        exportCSV: true,
+        theme: 'dark'
+    });
+</script>
 </body>
 
 </html>
