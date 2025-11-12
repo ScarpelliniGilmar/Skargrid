@@ -3,9 +3,9 @@
  */
 
 :root {
-  --skargrid-bg: #ffffff;
+  --skargrid-bg: var(--sg-white);
   --skargrid-header-bg: #f8f9fa;
-  --skargrid-header-text: #495057;
+  --skargrid-header-text: var(--sg-gray);
   --skargrid-border: #dee2e6;
   --skargrid-hover-bg: #e9ecef;
   --skargrid-selected-bg: #e7f1ff;
@@ -14,7 +14,7 @@
   --skargrid-text: #212529;
   --skargrid-text-muted: #6c757d;
   --skargrid-shadow: rgba(0, 0, 0, 0.1);
-  --skargrid-input-bg: #ffffff;
+  --skargrid-input-bg: var(--sg-white);
   --skargrid-search-bg: #f8f9fa;
 }
 
