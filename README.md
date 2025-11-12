@@ -105,6 +105,11 @@ What's new in v1.0.2
 
 ---
 
+## Release v1.0.3 — Docs & Examples
+
+What's new in v1.0.3
+- Scrolling & layout fix: addressed an issue where changing pagination or filters could change the table height and push the page scroll; the demo now constrains example panels with an internal max-height and enables internal vertical scrolling so the header remains sticky and the page layout stays stable.
+
 ## �🚀 Quick Start
 
 ### Installation
