@@ -114,6 +114,32 @@ What's new in v1.0.2
 What's new in v1.0.3
 - Scrolling & layout fix: addressed an issue where changing pagination or filters could change the table height and push the page scroll; the demo now constrains example panels with an internal max-height and enables internal vertical scrolling so the header remains sticky and the page layout stays stable.
 
+## Release v1.1.0 — Major fixes & improvements
+
+What's new in v1.1.0
+- **Filters & Export**: Filters and export now use rendered values (HTML stripped) instead of raw cell values
+- **Sorting**: Added `sortType` option ('string', 'number', 'date') for correct data type sorting
+- **XLSX Export**: Fixed to properly strip HTML from rendered values
+- **Custom filenames**: Added `exportFilename` option to customize exported file names
+- **Theme fixes**: Fixed green theme sorting colors (now uses green instead of blue)
+- **Fixed height tables**: Pagination now stays at bottom in fixed-height containers
+- **CSS variables**: Added `--sg-sort-hover-bg` and `--sg-sort-active-bg` for theme customization
+
+Quick example with new features:
+```javascript
+new Skargrid('myTable', {
+  data, columns,
+  searchable: true,
+  pagination: true,
+  exportCSV: true,
+  exportXLSX: true,
+  exportFilename: 'my-report', // custom filename
+  columns: [
+    { field: 'price', title: 'Price', render: v => `$${v}`, sortType: 'number' }
+  ]
+});
+```
+
 ## Release v1.0.4 — Export & XLSX (no deps)
 
 What's new in v1.0.4

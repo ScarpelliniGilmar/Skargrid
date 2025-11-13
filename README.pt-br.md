@@ -115,6 +115,32 @@ O que há de novo em v1.0.2
 O que há de novo em v1.0.3
 - Correção de rolagem e layout: corrigimos um problema em que mudanças de paginação ou filtros podiam alterar a altura da tabela e deslocar a página; o playground agora limita os painéis de exemplo com um max-height e ativa rolagem vertical interna para que o cabeçalho permaneça sticky e o layout da página fique estável.
 
+## Release v1.1.0 — Correções abrangentes e melhorias
+
+O que há de novo em v1.1.0
+- **Filtros e Exportação**: Filtros e exportação agora usam valores renderizados (HTML removido) ao invés de valores brutos das células
+- **Ordenação**: Adicionado suporte a `sortType` ('string', 'number', 'date') para ordenação correta por tipo de dados
+- **Exportação XLSX**: Corrigida para remover HTML dos valores renderizados
+- **Nomes personalizados**: Adicionada opção `exportFilename` para personalizar nomes dos arquivos exportados
+- **Correções de tema**: Corrigidas as cores de ordenação no tema verde (agora usa verde ao invés de azul)
+- **Tabelas com altura fixa**: Paginação agora permanece no fundo em containers com altura definida
+- **Variáveis CSS**: Adicionadas `--sg-sort-hover-bg` e `--sg-sort-active-bg` para temas customizáveis
+
+Exemplo rápido com novos recursos:
+```javascript
+new Skargrid('myTable', {
+	data, columns,
+	searchable: true,
+	pagination: true,
+	exportCSV: true,
+	exportXLSX: true,
+	exportFilename: 'meu-relatorio', // nome personalizado
+	columns: [
+		{ field: 'preco', title: 'Preço', render: v => `R$ ${v}`, sortType: 'number' }
+	]
+});
+```
+
 ## Release v1.0.4 — Exportação XLSX (sem dependências)
 
 O que há de novo em v1.0.4
