@@ -729,6 +729,9 @@ new Skargrid('myTable', { data, columns: cols, searchable:true, pagination:true,
                                     // header background and text for contrast
                                     root.style.setProperty('--sg-thead-bg', '#eaf9ea');
                                     root.style.setProperty('--sg-thead-color', '#0b4d08');
+                                    // override sorting colors to match green theme
+                                    root.style.setProperty('--sg-sort-hover-bg', '#d4edda');
+                                    root.style.setProperty('--sg-sort-active-bg', '#c8e6c9');
                                 } else if (!opts || !opts.themeOverride) {
                                     // restore defaults when no override requested
                                     const def = window.__skargrid_theme_defaults || {};
@@ -1244,6 +1247,9 @@ new Skargrid('completeTable', {
     // header background and text tokens for proper contrast
     root.style.setProperty('--sg-thead-bg', '#eaf9ea');
     root.style.setProperty('--sg-thead-color', '#0b4d08');
+    // override sorting colors to match green theme
+    root.style.setProperty('--sg-sort-hover-bg', '#d4edda');
+    root.style.setProperty('--sg-sort-active-bg', '#c8e6c9');
 
     // This example uses the same column set as the combined demo and sample data generator
     // (makeData and fullCols are defined in the page). We initialize a full-featured grid.
