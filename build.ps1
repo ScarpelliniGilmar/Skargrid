@@ -8,11 +8,13 @@ $src = "src"
 $dist = "dist"
 
 # Cria dist
-if (!(Test-Path $dist)) {
-    New-Item -ItemType Directory -Path $dist | Out-Null
+if (Test-Path $dist) {
+    # Limpa dist antes de build
+    Remove-Item $dist -Recurse -Force
 }
+New-Item -ItemType Directory -Path $dist | Out-Null
 
-# Header
+# Header (mantém para desenvolvimento/debugging)
 $header = @"
 /**
  * Skargrid
@@ -27,6 +29,13 @@ $header = @"
 }(typeof self !== 'undefined' ? self : this, function() {
 
 "@
+
+# Header minificado (sem comentários para produção)
+$headerMin = @"
+(function(global,factory){if(typeof module==="object"&&module.exports){module.exports=factory()}else{global.Skargrid=factory()}}(typeof self!=="undefined"?self:this,function(){
+"@
+
+Write-Host "Concatenando arquivos..." -ForegroundColor Yellow
 Write-Host "Concatenando arquivos..." -ForegroundColor Yellow
 
 # Lê os arquivos com UTF-8
@@ -51,8 +60,7 @@ $export = $export -replace "(?s)if \(typeof window.*?$", ""
 $core = $core -replace "class ScarGridCore", "class Skargrid"
 $core = $core -replace "(?s)if \(typeof window.*?$", ""
 
-# Monta o bundle
-
+# Monta o bundle (versão de desenvolvimento)
 $bundle = @"
 $header
 $core
@@ -67,23 +75,61 @@ return Skargrid;
 }));
 "@
 
-# Salva com UTF-8 sem BOM
-$bundlePath = "$dist\skargrid.min.js"
+# Salva versão de desenvolvimento (skargrid.js)
+# $devBundlePath = "$dist\skargrid.js"
 $utf8NoBom = New-Object System.Text.UTF8Encoding $false
-[System.IO.File]::WriteAllText($bundlePath, $bundle, $utf8NoBom)
+# [System.IO.File]::WriteAllText($devBundlePath, $bundle, $utf8NoBom)
 
-$size = [math]::Round((Get-Item $bundlePath).Length / 1KB, 2)
-Write-Host "Bundle criado: $bundlePath ($size KB)" -ForegroundColor Green
+# Monta o bundle minificado (versão de produção)
+$minBundle = @"
+$headerMin
+$core
+$pagination
+$sort
+$selection
+$filter
+$columnConfig
+$export
 
-# Copia CSS
+return Skargrid;
+}));
+"@
+
+# Salva versão não minificada temporária para o Terser
+$tempBundlePath = "$dist\skargrid.temp.js"
+[System.IO.File]::WriteAllText($tempBundlePath, $minBundle, $utf8NoBom)
+
+# Minifica com Terser
+Write-Host "Minificando JavaScript..." -ForegroundColor Yellow
+$minBundlePath = "$dist\skargrid.min.js"
+
+# Executa Terser via npx
+npx terser "$tempBundlePath" --compress --mangle --output "$minBundlePath" --comments false
+
+# Remove arquivo temporário
+Remove-Item $tempBundlePath
+
+$size = [math]::Round((Get-Item $minBundlePath).Length / 1KB, 2)
+Write-Host "Bundle minificado criado: $minBundlePath ($size KB)" -ForegroundColor Green
+
+# Copia CSS (versão de desenvolvimento)
 Write-Host "Copiando CSS..." -ForegroundColor Yellow
-Copy-Item "$src\css\skargrid.css" "$dist\skargrid.css"
+# Copy-Item "$src\css\skargrid.css" "$dist\skargrid.css"  # Removido para economizar espaço
+
+# Minifica CSS
+Write-Host "Minificando CSS..." -ForegroundColor Yellow
+npx cleancss "$src\css\skargrid.css" -o "$dist\skargrid.min.css"
 
 # Copia temas
-if (!(Test-Path "$dist\themes")) {
-    New-Item -ItemType Directory -Path "$dist\themes" | Out-Null
-}
-Copy-Item "$src\css\themes\*.css" "$dist\themes\"
+# if (!(Test-Path "$dist\themes")) {
+#     New-Item -ItemType Directory -Path "$dist\themes" | Out-Null
+# }
+# Copy-Item "$src\css\themes\*.css" "$dist\themes\"  # Removido para economizar espaço
+
+# Minifica temas
+# Write-Host "Minificando temas..." -ForegroundColor Yellow
+# npx cleancss "$src\css\themes\dark.css" -o "$dist\themes\dark.min.css"
+# npx cleancss "$src\css\themes\light.css" -o "$dist\themes\light.min.css"
 
 Write-Host "Build completo!" -ForegroundColor Green
 Write-Host "Arquivos em dist/:" -ForegroundColor Cyan
