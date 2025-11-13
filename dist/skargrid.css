@@ -696,7 +696,10 @@
   overflow-x: auto;
   /* enable internal vertical scrolling so the table respects host height */
   overflow-y: auto;
-  max-height: 100%;
+  /* Make table container flexible to push pagination to bottom when height is constrained */
+  flex: 1;
+  /* Ensure the container doesn't shrink below its minimum height */
+  min-height: 0;
 }
 
 /* Estilização do scroll horizontal */

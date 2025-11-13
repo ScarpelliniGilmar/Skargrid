@@ -355,6 +355,7 @@ new Skargrid('myTable', { data, columns: cols, searchable:true, pagination:true,
                                     <div class="list-group">
                                         <button class="list-group-item list-group-item-action menu-item" data-example="selection"><i class="bi bi-check2-square me-2"></i>Selection</button>
                                         <button class="list-group-item list-group-item-action menu-item" data-example="export"><i class="bi bi-download me-2"></i>Export</button>
+                                        <button class="list-group-item list-group-item-action menu-item" data-example="fixedHeight"><i class="bi bi-arrows-fullscreen me-2"></i>Fixed Height</button>
                                         <button class="list-group-item list-group-item-action menu-item" data-example="columns"><i class="bi bi-layout-three-columns me-2"></i>Column Config</button>
                                         <button class="list-group-item list-group-item-action menu-item" data-example="custom"><i class="bi bi-brush me-2"></i>Custom Renderer</button>
                                     </div>
@@ -558,6 +559,23 @@ new Skargrid('myTable', { data, columns: cols, searchable:true, pagination:true,
                     ],
                     options: { searchable: true, selectable: true }
                 },
+                fixedHeight: {
+                    data: Array.from({ length: 20 }, (_, i) => ({
+                        id: i + 1,
+                        nome: `Pessoa ${i + 1}`,
+                        email: `pessoa${i + 1}@email.com`,
+                        cidade: ['SP', 'RJ', 'MG', 'PR'][i % 4],
+                        idade: 20 + (i % 30)
+                    })),
+                    cols: [
+                        { field: 'id', title: 'ID' },
+                        { field: 'nome', title: 'Nome' },
+                        { field: 'email', title: 'E-mail' },
+                        { field: 'cidade', title: 'Cidade' },
+                        { field: 'idade', title: 'Idade' }
+                    ],
+                    options: { searchable: true, pagination: true, pageSize: 5, columnFilters: true }
+                },
                 export: {
                     data: [{ id: 1, nome: 'Ana', email: 'ana@mail.com' }, { id: 2, nome: 'Bruno', email: 'bruno@mail.com' }],
                     cols: [{ field: 'id', title: 'ID' }, { field: 'nome', title: 'Nome' }, { field: 'email', title: 'E-mail' }],
@@ -754,7 +772,7 @@ new Skargrid('myTable', { data, columns: cols, searchable:true, pagination:true,
                             }
                             // atualiza título e código
                             const titleMap = {
-                                minimal: 'Minimal', searchable: 'Search', pagination: 'Pagination', sort: 'Sorting', filters: 'Filters', selection: 'Selection', export: 'Export', columns: 'Column Config', custom: 'Custom Renderer', async: 'Async / Remote', advancedFilters: 'Advanced Filters', formatting: 'Formatting', large: 'Large Dataset', complete: 'Combined Demo', themeGreen: 'Theme — Green', themeDark: 'Theme — Dark'
+                                minimal: 'Minimal', searchable: 'Search', pagination: 'Pagination', sort: 'Sorting', filters: 'Filters', selection: 'Selection', fixedHeight: 'Fixed Height', export: 'Export', columns: 'Column Config', custom: 'Custom Renderer', async: 'Async / Remote', advancedFilters: 'Advanced Filters', formatting: 'Formatting', large: 'Large Dataset', complete: 'Combined Demo', themeGreen: 'Theme — Green', themeDark: 'Theme — Dark'
                             };
                             document.getElementById('featureTitle').textContent = titleMap[name] || 'Exemplo';
                             setExampleCode(name);
@@ -1052,6 +1070,37 @@ const selCols = [
 new Skargrid('selectionTable', { data: selData, columns: selCols, selectable: true });
 </script>
 
+    <script type="text/plain" id="snippet-fixedHeight">
+<!-- HTML -->
+<div id="fixedHeightTable" style="height: 400px;"></div>
+
+<!-- JS -->
+const fixedData = Array.from({ length: 20 }, (_, i) => ({
+    id: i + 1,
+    nome: `Pessoa ${i + 1}`,
+    email: `pessoa${i + 1}@email.com`,
+    cidade: ['SP', 'RJ', 'MG', 'PR'][i % 4],
+    idade: 20 + (i % 30)
+}));
+
+const fixedCols = [
+    { field: 'id', title: 'ID' },
+    { field: 'nome', title: 'Nome' },
+    { field: 'email', title: 'E-mail' },
+    { field: 'cidade', title: 'Cidade' },
+    { field: 'idade', title: 'Idade' }
+];
+
+new Skargrid('fixedHeightTable', {
+    data: fixedData,
+    columns: fixedCols,
+    searchable: true,
+    pagination: true,
+    pageSize: 5,
+    columnFilters: true
+});
+</script>
+
     <script type="text/plain" id="snippet-export">
 <!-- HTML -->
 <div id="exportTable"></div>
@@ -1071,6 +1120,37 @@ const expCols = [
 ];
 
 new Skargrid('exportTable', { data: expData, columns: expCols, exportCSV: true });
+</script>
+
+    <script type="text/plain" id="snippet-fixedHeight">
+<!-- HTML -->
+<div id="fixedHeightTable" style="height: 400px;"></div>
+
+<!-- JS -->
+const fixedData = Array.from({ length: 20 }, (_, i) => ({
+    id: i + 1,
+    nome: `Pessoa ${i + 1}`,
+    email: `pessoa${i + 1}@email.com`,
+    cidade: ['SP', 'RJ', 'MG', 'PR'][i % 4],
+    idade: 20 + (i % 30)
+}));
+
+const fixedCols = [
+    { field: 'id', title: 'ID' },
+    { field: 'nome', title: 'Nome' },
+    { field: 'email', title: 'E-mail' },
+    { field: 'cidade', title: 'Cidade' },
+    { field: 'idade', title: 'Idade' }
+];
+
+new Skargrid('fixedHeightTable', {
+    data: fixedData,
+    columns: fixedCols,
+    searchable: true,
+    pagination: true,
+    pageSize: 5,
+    columnFilters: true
+});
 </script>
 
     <script type="text/plain" id="snippet-columns">
