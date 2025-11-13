@@ -47,6 +47,10 @@ Abaixo exemplos visuais dos recursos do Skargrid, em ordem recomendada:
 ![Seleção](docs/img/selection.png)
 <div align="center"><sub>Seleção de linhas</sub></div>
 
+#### Altura Fixa
+![Altura Fixa](docs/img/complete.png)
+<div align="center"><sub>Container com altura fixa e paginação fixa</sub></div>
+
 #### Configuração de Colunas
 ![Configuração de Colunas](docs/img/columns.png)
 <div align="center"><sub>Configuração de colunas (mostrar/ocultar, reordenar, persistir)</sub></div>

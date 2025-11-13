@@ -48,6 +48,10 @@ Below are visual examples of Skargrid features, in recommended order:
 ![Selection](docs/img/selection.png)
 <div align="center"><sub>Row selection</sub></div>
 
+#### Fixed Height
+![Fixed Height](docs/img/complete.png)
+<div align="center"><sub>Fixed height container with sticky pagination</sub></div>
+
 #### Column Config
 ![Column Config](docs/img/columns.png)
 <div align="center"><sub>Column configuration (show/hide, reorder, persist)</sub></div>
