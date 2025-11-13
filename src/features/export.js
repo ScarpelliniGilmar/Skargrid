@@ -29,7 +29,7 @@
    * Exporta dados visíveis para CSV
    */
   Skargrid.prototype.exportToCSV = function(filename) {
-    filename = filename || 'skargrid-export.csv';
+    filename = filename || (this.options.exportFilename + '.csv');
 
     // Obtém colunas visíveis na ordem atual
     const visibleColumns = this.columnOrder
@@ -122,7 +122,7 @@
    * Implementação leve, sem dependências externas. Sem formatação avançada.
    */
   Skargrid.prototype.exportToExcel = function(filename) {
-    filename = filename || 'skargrid-export.xls';
+    filename = filename || (this.options.exportFilename + '.xls');
 
     // Obtém colunas visíveis na ordem atual
     const visibleColumns = this.columnOrder
@@ -204,7 +204,7 @@
    * Exporta linhas selecionadas para Excel
    */
   Skargrid.prototype.exportSelectedToExcel = function(filename) {
-    filename = filename || 'skargrid-selected.xls';
+    filename = filename || (this.options.exportFilename + '-selected.xls');
     const selectedRows = this.getSelectedRows();
     if (selectedRows.length === 0) {
       alert('Nenhuma linha selecionada para exportar.');
@@ -248,7 +248,7 @@
    * Exporta dados selecionados para CSV
    */
   Skargrid.prototype.exportSelectedToCSV = function(filename) {
-    filename = filename || 'skargrid-selected.csv';
+    filename = filename || (this.options.exportFilename + '-selected.csv');
     
     const selectedRows = this.getSelectedRows();
     if (selectedRows.length === 0) {
@@ -417,7 +417,7 @@
   }
 
   // build minimal XLSX from data rows and columns
-  function buildXLSXFromTable(columns, rows) {
+  function buildXLSXFromTable(columns, rows, stripHTML) {
     // columns: [{title, field}], rows: array of objects
     // collect shared strings
     const shared = [];
@@ -448,6 +448,10 @@
         const renderer = (c.render && typeof c.render === 'function') ? c.render : (c.formatter && typeof c.formatter === 'function') ? c.formatter : null;
         if (renderer) {
           try { v = renderer(v, row); } catch (e) { /* ignore */ }
+        }
+        // strip HTML from rendered value
+        if (stripHTML && typeof stripHTML === 'function') {
+          v = stripHTML(v);
         }
         if (v === null || v === undefined) v = '';
         if (typeof v === 'number') {
@@ -500,7 +504,7 @@
 
   // public API: exportToXLSX and exportSelectedToXLSX
   Skargrid.prototype.exportToXLSX = function(filename) {
-    filename = filename || 'skargrid-export.xlsx';
+    filename = filename || (this.options.exportFilename + '.xlsx');
 
     const visibleColumns = this.columnOrder
       .filter(field => this.visibleColumns.has(field))
@@ -510,7 +514,7 @@
 
     const dataToExport = this.filteredData.length > 0 ? this.filteredData : this.data;
 
-    const zipBuf = buildXLSXFromTable(visibleColumns, dataToExport);
+    const zipBuf = buildXLSXFromTable(visibleColumns, dataToExport, this.stripHTML.bind(this));
 
     const blob = new Blob([zipBuf], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
 
@@ -532,7 +536,7 @@
   };
 
   Skargrid.prototype.exportSelectedToXLSX = function(filename) {
-    filename = filename || 'skargrid-selected.xlsx';
+    filename = filename || (this.options.exportFilename + '-selected.xlsx');
     const selectedRows = this.getSelectedRows();
     if (selectedRows.length === 0) { alert('Nenhuma linha selecionada para exportar.'); return; }
     const originalFiltered = this.filteredData;

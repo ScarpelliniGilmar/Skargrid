@@ -25,6 +25,7 @@ class Skargrid {
       columnFilters: options.columnFilters !== undefined ? options.columnFilters : false,
       columnConfig: options.columnConfig !== undefined ? options.columnConfig : false, // Botão de configuração desabilitado por padrão
       exportCSV: options.exportCSV !== undefined ? options.exportCSV : false, // Exportar CSV desabilitado por padrão
+      exportFilename: options.exportFilename || 'skargrid-export', // Nome base para arquivos exportados
       ...options
     };
 

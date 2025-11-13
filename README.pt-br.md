@@ -128,6 +128,16 @@ new Skargrid('myTable', {
 });
 ```
 
+#### Nome de Arquivo de Exportação Personalizado
+```javascript
+new Skargrid('myTable', {
+	data, columns,
+	exportCSV: true,
+	exportXLSX: true,
+	exportFilename: 'meu-relatorio' // arquivos serão: meu-relatorio.csv, meu-relatorio.xlsx
+});
+```
+
 ## �🚀 Início Rápido
 
 ### Instalação
@@ -205,6 +215,7 @@ new Skargrid(containerId, options)
 | `className` | String | `'skargrid'` | Classe CSS da tabela |
 | `exportCSV` | Boolean | `false` | Habilita botão de exportação CSV (mostra "Exportar CSV" nas ações). Usa renderers de coluna quando presentes e remove HTML para exportação. |
 | `exportXLSX` | Boolean | `false` | Habilita exportador XLSX puro em JS (gera um arquivo .xlsx real no navegador). Adiciona um botão "XLSX" ao lado do CSV. |
+| `exportFilename` | String | `'skargrid-export'` | Nome base para arquivos exportados (CSV/XLSX). Extensões são adicionadas automaticamente. |
 
 #### Configuração de Colunas
 
