@@ -11,6 +11,9 @@
   /* header background and text tokens - can be overridden by themes */
   --sg-thead-bg: #f8f9fa;
   --sg-thead-color: #495057;
+  /* sorting colors - can be overridden by themes */
+  --sg-sort-hover-bg: #e9ecef;
+  --sg-sort-active-bg: #e7f1ff;
 }
 
 .skargrid {
@@ -74,11 +77,11 @@
 }
 
 .skargrid thead th.sortable:hover {
-  background-color: #e9ecef;
+  background-color: var(--sg-sort-hover-bg);
 }
 
 .skargrid thead th.sortable.sorted {
-  background-color: #e7f1ff;
+  background-color: var(--sg-sort-active-bg);
   color: var(--sg-accent);
 }
 
