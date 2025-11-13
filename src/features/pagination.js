@@ -136,13 +136,13 @@ const PaginationFeature = {
         start = grid.totalPages - 3;
       }
 
-      if (start > 2) pages.push('...');
+      if (start > 2) {pages.push('...');}
 
       for (let i = start; i <= end; i++) {
         pages.push(i);
       }
 
-      if (end < grid.totalPages - 1) pages.push('...');
+      if (end < grid.totalPages - 1) {pages.push('...');}
 
       pages.push(grid.totalPages);
     }
@@ -227,7 +227,7 @@ const PaginationFeature = {
     const startIndex = (grid.currentPage - 1) * grid.options.pageSize;
     const endIndex = startIndex + grid.options.pageSize;
     return grid.filteredData.slice(startIndex, endIndex);
-  }
+  },
 };
 
 // Exporta para uso global

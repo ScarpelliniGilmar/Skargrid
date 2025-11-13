@@ -32,7 +32,7 @@ describe('SkarGrid Performance Tests', () => {
         city: cities[i % cities.length],
         salary: 1500 + (i % 5000),
         department: ['TI', 'RH', 'Financeiro', 'Vendas', 'Marketing'][i % 5],
-        active: i % 3 !== 0 // 66% ativos
+        active: i % 3 !== 0, // 66% ativos
       });
     }
     return data;
@@ -45,7 +45,7 @@ describe('SkarGrid Performance Tests', () => {
     { field: 'city', title: 'Cidade' },
     { field: 'salary', title: 'Salário' },
     { field: 'department', title: 'Departamento' },
-    { field: 'active', title: 'Ativo' }
+    { field: 'active', title: 'Ativo' },
   ];
 
   test('deve renderizar 1.000 registros em menos de 2 segundos', () => {
@@ -57,7 +57,7 @@ describe('SkarGrid Performance Tests', () => {
       data: data,
       columns: columns,
       pagination: true,
-      pageSize: 50
+      pageSize: 50,
     });
 
     const endTime = performance.now();
@@ -78,7 +78,7 @@ describe('SkarGrid Performance Tests', () => {
       data: data,
       columns: columns,
       pagination: true,
-      pageSize: 100
+      pageSize: 100,
     });
 
     const endTime = performance.now();
@@ -97,7 +97,7 @@ describe('SkarGrid Performance Tests', () => {
       data: data,
       columns: columns,
       sortable: true,
-      pagination: false // Sem paginação para teste de ordenação
+      pagination: false, // Sem paginação para teste de ordenação
     });
 
     // Medir tempo de ordenação por nome
@@ -122,14 +122,14 @@ describe('SkarGrid Performance Tests', () => {
       columns: columns,
       columnFilters: true,
       pagination: true,
-      pageSize: 50
+      pageSize: 50,
     });
 
     // Verificar se filtros foram criados
     const filterInputs = container.querySelectorAll('input[type="text"], select');
     expect(filterInputs.length).toBeGreaterThan(0);
 
-    console.log(`Filtros criados para 10.000 registros`);
+    console.log('Filtros criados para 10.000 registros');
   });
 
   test('deve lidar com busca em 15.000 registros', () => {
@@ -142,7 +142,7 @@ describe('SkarGrid Performance Tests', () => {
       columns: columns,
       searchable: true,
       pagination: true,
-      pageSize: 100
+      pageSize: 100,
     });
 
     const endTime = performance.now();
@@ -171,7 +171,7 @@ describe('SkarGrid Performance Tests', () => {
       selectable: true,
       searchable: true,
       columnFilters: true,
-      exportCSV: true
+      exportCSV: true,
     });
 
     const endTime = performance.now();
@@ -197,7 +197,7 @@ describe('SkarGrid Performance Tests', () => {
       data: data,
       columns: columns,
       pagination: true,
-      pageSize: 200
+      pageSize: 200,
     });
 
     const finalMemory = performance.memory ? performance.memory.usedJSHeapSize : 0;

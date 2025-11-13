@@ -26,7 +26,7 @@ class Skargrid {
       columnConfig: options.columnConfig !== undefined ? options.columnConfig : false, // Botão de configuração desabilitado por padrão
       exportCSV: options.exportCSV !== undefined ? options.exportCSV : false, // Exportar CSV desabilitado por padrão
       exportFilename: options.exportFilename || 'skargrid-export', // Nome base para arquivos exportados
-      ...options
+      ...options,
     };
 
     // Ensure current pageSize is present in pageSizeOptions. If the user set
@@ -50,7 +50,7 @@ class Skargrid {
     } catch (e) {
       // if anything weird happens, leave the provided options as-is
       // but avoid throwing during construction
-      if (console && console.warn) console.warn('Skargrid: error normalizing pageSizeOptions', e);
+      if (console && console.warn) {console.warn('Skargrid: error normalizing pageSizeOptions', e);}
     }
     // Estado da paginação
     this.currentPage = 1;
@@ -86,7 +86,7 @@ class Skargrid {
     this.visibleColumns = new Set(
       this.options.columns
         .filter(col => col.visible !== false)
-        .map(col => col.field)
+        .map(col => col.field),
     );
     this.columnOrder = this.options.columns.map(col => col.field);
 
@@ -221,7 +221,7 @@ class Skargrid {
    */
   updateTableContent() {
     const table = this.container.querySelector('.skargrid');
-    if (!table) return;
+    if (!table) {return;}
 
     // Atualiza tbody
     const oldTbody = table.querySelector('tbody');
@@ -275,7 +275,7 @@ class Skargrid {
     }
 
     // Renderiza botões de ação (sempre que houver algum botão)
-  if (hasFilterClear || hasColumnConfig || hasExportCSV || hasExportXLSX) {
+    if (hasFilterClear || hasColumnConfig || hasExportCSV || hasExportXLSX) {
       const actionsContainer = document.createElement('div');
       actionsContainer.className = 'skargrid-search-actions';
 
@@ -549,7 +549,7 @@ class Skargrid {
       return FilterFeature.normalizeString(str);
     }
     // Fallback se FilterFeature não disponível
-    if (!str) return '';
+    if (!str) {return '';}
     return String(str)
       .normalize('NFD')
       .replace(/[\u0300-\u036f]/g, '')
@@ -610,7 +610,7 @@ class Skargrid {
       // Prefer always opening below the button. If there's not enough room
       // below, don't flip above; instead constrain the dropdown height so it
       // fits the available space and enable internal scrolling.
-      let top = rect.bottom + 6;
+      const top = rect.bottom + 6;
       let left = rect.left;
 
       // Ajusta se sair pela direita
@@ -734,9 +734,9 @@ class Skargrid {
     const selectAllWrapper = document.createElement('div');
     selectAllWrapper.className = 'filter-select-all';
     
-  const selectAllCheckbox = document.createElement('input');
-  selectAllCheckbox.type = 'checkbox';
-  selectAllCheckbox.className = 'skargrid-checkbox';
+    const selectAllCheckbox = document.createElement('input');
+    selectAllCheckbox.type = 'checkbox';
+    selectAllCheckbox.className = 'skargrid-checkbox';
     selectAllCheckbox.id = `select-all-${column.field}`;
     selectAllCheckbox.checked = this.columnFilterSelected[column.field].length === allUniqueValues.length;
     
@@ -773,9 +773,9 @@ class Skargrid {
           item.title = 'Não disponível com os filtros atuais';
         }
         
-  const checkbox = document.createElement('input');
-  checkbox.type = 'checkbox';
-  checkbox.className = 'skargrid-checkbox';
+        const checkbox = document.createElement('input');
+        checkbox.type = 'checkbox';
+        checkbox.className = 'skargrid-checkbox';
         checkbox.value = value;
         // sanitize id (remove spaces/specials)
         const safeVal = String(value).replace(/[^a-z0-9-_]/gi, '_');
@@ -836,7 +836,7 @@ class Skargrid {
         // Adiciona os valores exibidos (somente os disponíveis) sem remover os já selecionados
         const current = new Set(this.columnFilterSelected[column.field] || []);
         toChange.forEach(v => {
-          if (availableValues.includes(v)) current.add(v);
+          if (availableValues.includes(v)) {current.add(v);}
         });
         this.columnFilterSelected[column.field] = [...current];
       } else {
@@ -893,7 +893,7 @@ class Skargrid {
     const input = document.createElement('input');
     input.type = filterType === 'number' ? 'number' : filterType === 'date' ? 'date' : 'text';
     input.className = 'filter-dropdown-input';
-    input.placeholder = `Digite para filtrar...`;
+    input.placeholder = 'Digite para filtrar...';
     input.value = this.columnFilterValues[column.field] || '';
     
     inputWrapper.appendChild(input);
@@ -1025,7 +1025,7 @@ class Skargrid {
             // Falha ao executar renderer — fallback para texto simples
             td.textContent = value !== undefined && value !== null ? String(value) : '';
             // Log para debug em consoles do dev
-            if (console && console.warn) console.warn('Skargrid: erro ao executar renderer para coluna', column.field, e);
+            if (console && console.warn) {console.warn('Skargrid: erro ao executar renderer para coluna', column.field, e);}
           }
         } else {
           td.textContent = value !== undefined && value !== null ? value : '';
@@ -1129,13 +1129,13 @@ class Skargrid {
       button = this.container.querySelector('.skargrid-clear-filters-btn');
     }
     
-    if (!button) return;
+    if (!button) {return;}
     
     // Conta quantos filtros estão ativos
     let activeCount = 0;
     
     // Conta busca global
-    if (this.searchText) activeCount++;
+    if (this.searchText) {activeCount++;}
     
     // Conta filtros de coluna
     this.options.columns.forEach(column => {

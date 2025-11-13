@@ -8,7 +8,7 @@ const SortFeature = {
    * Obtém o valor para ordenação (usa valor original, não renderizado)
    */
   getSortValue(grid, row, column) {
-    let value = row[column.field];
+    const value = row[column.field];
     
     // Para ordenação, usa o valor original do campo
     // (não aplica render/formatters para evitar ordenação por strings formatadas)
@@ -64,8 +64,8 @@ const SortFeature = {
       }
 
       // Tratamento de valores nulos/undefined
-      if (valueA == null) valueA = '';
-      if (valueB == null) valueB = '';
+      if (valueA === null) {valueA = '';}
+      if (valueB === null) {valueB = '';}
 
       // Determina o tipo de ordenação
       const sortType = column?.sortType || this.inferSortType(valueA, valueB);
@@ -126,7 +126,7 @@ const SortFeature = {
     }
     
     return icon;
-  }
+  },
 };
 
 // Exporta para uso global

@@ -22,12 +22,12 @@ describe('SkarGrid Core', () => {
   test('deve criar instância com opções padrão', () => {
     const mockData = [
       { id: 1, name: 'João', age: 25 },
-      { id: 2, name: 'Maria', age: 30 }
+      { id: 2, name: 'Maria', age: 30 },
     ];
 
     const mockColumns = [
       { field: 'name', title: 'Nome' },
-      { field: 'age', title: 'Idade' }
+      { field: 'age', title: 'Idade' },
     ];
 
     // Verificar se SkarGrid está disponível
@@ -53,7 +53,7 @@ describe('SkarGrid Core', () => {
       columns: [],
       pagination: true,
       sortable: true,
-      selectable: false
+      selectable: false,
     };
 
     // Verificar se opções são válidas
@@ -73,7 +73,7 @@ describe('SkarGrid Features', () => {
     const options = {
       pagination: true,
       pageSize: 10,
-      pageSizeOptions: [10, 25, 50]
+      pageSizeOptions: [10, 25, 50],
     };
 
     expect(options.pagination).toBe(true);
@@ -83,7 +83,7 @@ describe('SkarGrid Features', () => {
 
   test('deve suportar ordenação', () => {
     const options = {
-      sortable: true
+      sortable: true,
     };
 
     expect(options.sortable).toBe(true);
@@ -92,7 +92,7 @@ describe('SkarGrid Features', () => {
   test('deve suportar filtros', () => {
     const options = {
       columnFilters: true,
-      searchable: true
+      searchable: true,
     };
 
     expect(options.columnFilters).toBe(true);
@@ -101,7 +101,7 @@ describe('SkarGrid Features', () => {
 
   test('deve suportar seleção', () => {
     const options = {
-      selectable: true
+      selectable: true,
     };
 
     expect(options.selectable).toBe(true);
@@ -110,7 +110,7 @@ describe('SkarGrid Features', () => {
   test('deve suportar export', () => {
     const options = {
       exportCSV: true,
-      exportFilename: 'test-export'
+      exportFilename: 'test-export',
     };
 
     expect(options.exportCSV).toBe(true);

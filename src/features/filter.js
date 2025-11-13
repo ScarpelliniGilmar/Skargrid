@@ -25,7 +25,7 @@ const FilterFeature = {
       try {
         const rendered = exportRenderer(value, row);
         value = grid.stripHTML(rendered);
-      } catch (e) {
+      } catch {
         // Mantém o valor original como fallback
       }
     }
@@ -47,7 +47,7 @@ const FilterFeature = {
    * Normaliza string removendo acentos para busca
    */
   normalizeString(str) {
-    if (!str) return '';
+    if (!str) {return '';}
     return String(str)
       .normalize('NFD') // Decompõe caracteres acentuados
       .replace(/[\u0300-\u036f]/g, '') // Remove marcas diacríticas
@@ -68,7 +68,7 @@ const FilterFeature = {
         // Busca em todas as colunas
         return grid.options.columns.some(column => {
           const value = this.getDisplayValue(grid, row, column);
-          if (value == null) return false;
+          if (value === null) {return false;}
           
           // Normaliza valor e compara sem acentos
           const valueNormalized = this.normalizeString(value);
@@ -113,17 +113,17 @@ const FilterFeature = {
             }
             return String(cellValue) === String(filterValue);
           } else if (filterType === 'number') {
-            if (!filterValue) return true;
-            if (cellValue == null) return false;
+            if (!filterValue) {return true;}
+            if (cellValue === null) {return false;}
             return Number(cellValue) === Number(filterValue);
           } else if (filterType === 'date') {
-            if (!filterValue) return true;
-            if (cellValue == null) return false;
+            if (!filterValue) {return true;}
+            if (cellValue === null) {return false;}
             return String(cellValue).startsWith(filterValue);
           } else {
             // text - busca parcial case-insensitive com normalização
-            if (!filterValue) return true;
-            if (cellValue == null) return false;
+            if (!filterValue) {return true;}
+            if (cellValue === null) {return false;}
             const cellNormalized = this.normalizeString(cellValue);
             const filterNormalized = this.normalizeString(filterValue);
             return cellNormalized.includes(filterNormalized);
@@ -283,7 +283,7 @@ const FilterFeature = {
         hasEmpty = true;
       } else if (Array.isArray(v)) {
         v.forEach(elem => {
-          if (elem !== null && elem !== undefined && elem !== '') unique.add(elem);
+          if (elem !== null && elem !== undefined && elem !== '') {unique.add(elem);}
         });
       } else {
         unique.add(v);
@@ -312,7 +312,7 @@ const FilterFeature = {
       data = data.filter(row => {
         return grid.options.columns.some(column => {
           const value = this.getDisplayValue(grid, row, column);
-          if (value == null) return false;
+          if (value === null) {return false;}
           const valueNormalized = this.normalizeString(value);
           return valueNormalized.includes(searchNormalized);
         });
@@ -324,7 +324,7 @@ const FilterFeature = {
       data = data.filter(row => {
         return Object.entries(grid.columnFilterValues).every(([filterField, filterValue]) => {
           // Ignora o filtro da coluna atual
-          if (filterField === field) return true;
+          if (filterField === field) {return true;}
           
           const column = grid.options.columns.find(col => col.field === filterField);
           const cellValue = this.getDisplayValue(grid, row, column);
@@ -352,16 +352,16 @@ const FilterFeature = {
             }
             return String(cellValue) === String(filterValue);
           } else if (filterType === 'number') {
-            if (!filterValue) return true;
-            if (cellValue == null) return false;
+            if (!filterValue) {return true;}
+            if (cellValue === null) {return false;}
             return Number(cellValue) === Number(filterValue);
           } else if (filterType === 'date') {
-            if (!filterValue) return true;
-            if (cellValue == null) return false;
+            if (!filterValue) {return true;}
+            if (cellValue === null) {return false;}
             return String(cellValue).startsWith(filterValue);
           } else {
-            if (!filterValue) return true;
-            if (cellValue == null) return false;
+            if (!filterValue) {return true;}
+            if (cellValue === null) {return false;}
             const cellNormalized = this.normalizeString(cellValue);
             const filterNormalized = this.normalizeString(filterValue);
             return cellNormalized.includes(filterNormalized);
@@ -382,7 +382,7 @@ const FilterFeature = {
         hasEmpty = true;
       } else if (Array.isArray(v)) {
         v.forEach(elem => {
-          if (elem !== null && elem !== undefined && elem !== '') unique.add(elem);
+          if (elem !== null && elem !== undefined && elem !== '') {unique.add(elem);}
         });
       } else {
         unique.add(v);
@@ -402,14 +402,14 @@ const FilterFeature = {
    */
   hasActiveFilter(grid, field) {
     const column = grid.options.columns.find(col => col.field === field);
-    if (!column || column.filterable === false) return false;
+    if (!column || column.filterable === false) {return false;}
 
     if (column.filterType === 'select') {
       const allValues = this.getUniqueColumnValues(grid, field);
       const selected = grid.columnFilterSelected[field];
       
       // Se não foi inicializado ainda, considera sem filtro
-      if (!selected || selected.length === 0) return false;
+      if (!selected || selected.length === 0) {return false;}
       
       // Se todos estão selecionados, não há filtro
       // Se algum foi desmarcado, há filtro ativo
@@ -418,7 +418,7 @@ const FilterFeature = {
       // Para text, number, date: há filtro se tem valor
       return !!grid.columnFilterValues[field];
     }
-  }
+  },
 };
 
 // Exporta para uso global
