@@ -1055,15 +1055,16 @@ new Skargrid('selectionTable', { data: selData, columns: selCols, selectable: tr
 
 <!-- JS -->
 const expData = [
-    { id: 1, nome: 'Ana', email: 'ana@email.com', cidade: 'SP', idade: 29 },
-    { id: 2, nome: 'Bruno', email: 'bruno@email.com', cidade: 'RJ', idade: 35 }
+    { id: 1, nome: 'Ana', email: 'ana@email.com', cidade: 'SP', idade: 29, status: 'Ativo' },
+    { id: 2, nome: 'Bruno', email: 'bruno@email.com', cidade: 'RJ', idade: 35, status: 'Inativo' }
 ];
 
 const expCols = [
     { field: 'id', title: 'ID' },
     { field: 'nome', title: 'Nome' },
     { field: 'email', title: 'E-mail' },
-    { field: 'cidade', title: 'Cidade' }
+    { field: 'cidade', title: 'Cidade', render: v => `<span class="badge bg-primary">${v}</span>` },
+    { field: 'status', title: 'Status', render: v => v === 'Ativo' ? '<span class="badge bg-success">✓ Ativo</span>' : '<span class="badge bg-danger">✗ Inativo</span>' }
 ];
 
 new Skargrid('exportTable', { data: expData, columns: expCols, exportCSV: true });
