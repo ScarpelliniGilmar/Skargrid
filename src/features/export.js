@@ -68,7 +68,7 @@
             const rendered = exportRenderer(value, row);
             value = this.stripHTML(rendered);
           } catch (e) {
-            if (console && console.warn) console.warn('Skargrid export: erro ao executar renderer para coluna', col.field, e);
+            if (console && console.warn) {console.warn('Skargrid export: erro ao executar renderer para coluna', col.field, e);}
             // Mantém o valor original como fallback
           }
         }
@@ -160,11 +160,11 @@
             const rendered = exportRenderer(value, row);
             value = this.stripHTML(rendered);
           } catch (e) {
-            if (console && console.warn) console.warn('Skargrid exportToExcel: renderer error for', col.field, e);
+            if (console && console.warn) {console.warn('Skargrid exportToExcel: renderer error for', col.field, e);}
           }
         }
 
-        if (value === null || value === undefined) value = '';
+        if (value === null || value === undefined) {value = '';}
         // escape basic HTML entities
         const cell = String(value)
           .replace(/&/g, '&amp;')
@@ -424,7 +424,7 @@
     const sMap = new Map();
 
     function addString(str) {
-      if (sMap.has(str)) return sMap.get(str);
+      if (sMap.has(str)) {return sMap.get(str);}
       const idx = shared.length;
       shared.push(str);
       sMap.set(str, idx);
@@ -447,13 +447,13 @@
         // if renderer exists, try to get text
         const renderer = (c.render && typeof c.render === 'function') ? c.render : (c.formatter && typeof c.formatter === 'function') ? c.formatter : null;
         if (renderer) {
-          try { v = renderer(v, row); } catch (e) { /* ignore */ }
+          try { v = renderer(v, row); } catch { /* ignore */ }
         }
         // strip HTML from rendered value
         if (stripHTML && typeof stripHTML === 'function') {
           v = stripHTML(v);
         }
-        if (v === null || v === undefined) v = '';
+        if (v === null || v === undefined) {v = '';}
         if (typeof v === 'number') {
           return `<c r="${colIndexToName(ci)}${r+2}"><v>${v}</v></c>`;
         }
@@ -472,17 +472,17 @@
     const sst = `<?xml version="1.0" encoding="UTF-8"?>\n<sst xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" count="${shared.length}" uniqueCount="${shared.length}">${sItems}</sst>`;
 
     // workbook
-    const workbook = `<?xml version="1.0" encoding="UTF-8"?>\n<workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"><sheets><sheet name="Sheet1" sheetId="1" r:id="rId1"/></sheets></workbook>`;
+    const workbook = '<?xml version="1.0" encoding="UTF-8"?>\n<workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"><sheets><sheet name="Sheet1" sheetId="1" r:id="rId1"/></sheets></workbook>';
 
     // minimal styles (required)
-    const styles = `<?xml version="1.0" encoding="UTF-8"?>\n<styleSheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><fonts count="1"><font><sz val="11"/><color theme="1"/><name val="Calibri"/></font></fonts><fills count="1"><fill><patternFill patternType="none"/></fill></fills><borders count="1"><border/></borders><cellStyleXfs count="1"><xf numFmtId="0"/></cellStyleXfs><cellXfs count="1"><xf numFmtId="0" xfId="0"/></cellXfs></styleSheet>`;
+    const styles = '<?xml version="1.0" encoding="UTF-8"?>\n<styleSheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><fonts count="1"><font><sz val="11"/><color theme="1"/><name val="Calibri"/></font></fonts><fills count="1"><fill><patternFill patternType="none"/></fill></fills><borders count="1"><border/></borders><cellStyleXfs count="1"><xf numFmtId="0"/></cellStyleXfs><cellXfs count="1"><xf numFmtId="0" xfId="0"/></cellXfs></styleSheet>';
 
     // relationships
-    const relsRels = `<?xml version="1.0" encoding="UTF-8"?>\n<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="/xl/workbook.xml"/></Relationships>`;
+    const relsRels = '<?xml version="1.0" encoding="UTF-8"?>\n<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="/xl/workbook.xml"/></Relationships>';
 
-    const workbookRels = `<?xml version="1.0" encoding="UTF-8"?>\n<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet1.xml"/><Relationship Id="rId2" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/><Relationship Id="rId3" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/sharedStrings" Target="sharedStrings.xml"/></Relationships>`;
+    const workbookRels = '<?xml version="1.0" encoding="UTF-8"?>\n<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet1.xml"/><Relationship Id="rId2" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/><Relationship Id="rId3" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/sharedStrings" Target="sharedStrings.xml"/></Relationships>';
 
-    const contentTypes = `<?xml version="1.0" encoding="UTF-8"?>\n<Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/><Override PartName="/xl/worksheets/sheet1.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/><Override PartName="/xl/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.styles+xml"/><Override PartName="/xl/sharedStrings.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sharedStrings+xml"/></Types>`;
+    const contentTypes = '<?xml version="1.0" encoding="UTF-8"?>\n<Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/><Override PartName="/xl/worksheets/sheet1.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/><Override PartName="/xl/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.styles+xml"/><Override PartName="/xl/sharedStrings.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sharedStrings+xml"/></Types>';
 
     // assemble entries
     const entries = [
@@ -492,7 +492,7 @@
       { name: 'xl/_rels/workbook.xml.rels', content: new TextEncoder().encode(workbookRels) },
       { name: 'xl/worksheets/sheet1.xml', content: new TextEncoder().encode(worksheet) },
       { name: 'xl/sharedStrings.xml', content: new TextEncoder().encode(sst) },
-      { name: 'xl/styles.xml', content: new TextEncoder().encode(styles) }
+      { name: 'xl/styles.xml', content: new TextEncoder().encode(styles) },
     ];
 
     return buildZip(entries);
@@ -510,7 +510,7 @@
       .filter(field => this.visibleColumns.has(field))
       .map(field => this.options.columns.find(col => col.field === field))
       .filter(col => col);
-    if (visibleColumns.length === 0) visibleColumns.push(...this.options.columns);
+    if (visibleColumns.length === 0) {visibleColumns.push(...this.options.columns);}
 
     const dataToExport = this.filteredData.length > 0 ? this.filteredData : this.data;
 

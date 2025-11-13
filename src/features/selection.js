@@ -36,7 +36,7 @@ const SelectionFeature = {
    * Verifica se todas as linhas estão selecionadas
    */
   isAllSelected(grid) {
-    if (grid.options.data.length === 0) return false;
+    if (grid.options.data.length === 0) {return false;}
     return grid.selectedRows.size === grid.options.data.length;
   },
 
@@ -111,7 +111,7 @@ const SelectionFeature = {
       this.toggleSelectRow(grid, globalIndex, e.target.checked);
     };
     return checkbox;
-  }
+  },
 };
 
 // Exporta para uso global

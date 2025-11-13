@@ -15,13 +15,13 @@ export function initColumnConfig(grid) {
    * Salva configuração de colunas no localStorage
    */
   grid.saveColumnConfig = function() {
-    if (!grid.options.persistColumnConfig) return;
+    if (!grid.options.persistColumnConfig) {return;}
     
     try {
       const config = {
         visibleColumns: Array.from(this.visibleColumns),
         columnOrder: this.columnOrder,
-        timestamp: Date.now()
+        timestamp: Date.now(),
       };
       localStorage.setItem(this.storageKey, JSON.stringify(config));
     } catch (e) {
@@ -33,11 +33,11 @@ export function initColumnConfig(grid) {
    * Carrega configuração de colunas do localStorage
    */
   grid.loadColumnConfig = function() {
-    if (!grid.options.persistColumnConfig) return false;
+    if (!grid.options.persistColumnConfig) {return false;}
     
     try {
       const saved = localStorage.getItem(this.storageKey);
-      if (!saved) return false;
+      if (!saved) {return false;}
 
       const config = JSON.parse(saved);
       
@@ -193,7 +193,7 @@ export function initColumnConfig(grid) {
     // Renderiza cada coluna na ordem temporária
     this.tempColumnOrder.forEach((field, index) => {
       const column = this.options.columns.find(col => col.field === field);
-      if (!column) return;
+      if (!column) {return;}
 
       const item = document.createElement('div');
       item.className = 'skargrid-config-item';
@@ -216,8 +216,8 @@ export function initColumnConfig(grid) {
           items.forEach((item, idx) => {
             const btnUp = item.querySelector('.skargrid-config-move-btn:first-of-type');
             const btnDown = item.querySelector('.skargrid-config-move-btn:last-of-type');
-            if (btnUp) btnUp.disabled = idx === 0;
-            if (btnDown) btnDown.disabled = idx === items.length - 1;
+            if (btnUp) {btnUp.disabled = idx === 0;}
+            if (btnDown) {btnDown.disabled = idx === items.length - 1;}
           });
         }, 50);
       });
@@ -249,15 +249,15 @@ export function initColumnConfig(grid) {
         items.forEach((item, idx) => {
           const btnUp = item.querySelector('.skargrid-config-move-btn:first-of-type');
           const btnDown = item.querySelector('.skargrid-config-move-btn:last-of-type');
-          if (btnUp) btnUp.disabled = idx === 0;
-          if (btnDown) btnDown.disabled = idx === items.length - 1;
+          if (btnUp) {btnUp.disabled = idx === 0;}
+          if (btnDown) {btnDown.disabled = idx === items.length - 1;}
         });
       });
 
       // Checkbox para visibilidade (usa estado temporário)
-  const checkbox = document.createElement('input');
+      const checkbox = document.createElement('input');
       checkbox.type = 'checkbox';
-  checkbox.className = 'skargrid-checkbox';
+      checkbox.className = 'skargrid-checkbox';
       checkbox.checked = this.tempVisibleColumns.has(field);
       checkbox.addEventListener('change', (e) => {
         if (e.target.checked) {
@@ -312,7 +312,7 @@ export function initColumnConfig(grid) {
    */
   grid.moveColumnTemp = function(field, direction) {
     const currentIndex = this.tempColumnOrder.indexOf(field);
-    if (currentIndex === -1) return;
+    if (currentIndex === -1) {return;}
 
     const newOrder = [...this.tempColumnOrder];
     
@@ -335,7 +335,7 @@ export function initColumnConfig(grid) {
         list.innerHTML = '';
         this.tempColumnOrder.forEach((field, index) => {
           const column = this.options.columns.find(col => col.field === field);
-          if (!column) return;
+          if (!column) {return;}
 
           const item = document.createElement('div');
           item.className = 'skargrid-config-item';
@@ -358,8 +358,8 @@ export function initColumnConfig(grid) {
               items.forEach((item, idx) => {
                 const btnUp = item.querySelector('.skargrid-config-move-btn:first-of-type');
                 const btnDown = item.querySelector('.skargrid-config-move-btn:last-of-type');
-                if (btnUp) btnUp.disabled = idx === 0;
-                if (btnDown) btnDown.disabled = idx === items.length - 1;
+                if (btnUp) {btnUp.disabled = idx === 0;}
+                if (btnDown) {btnDown.disabled = idx === items.length - 1;}
               });
             }, 50);
           });
@@ -390,8 +390,8 @@ export function initColumnConfig(grid) {
             items.forEach((item, idx) => {
               const btnUp = item.querySelector('.skargrid-config-move-btn:first-of-type');
               const btnDown = item.querySelector('.skargrid-config-move-btn:last-of-type');
-              if (btnUp) btnUp.disabled = idx === 0;
-              if (btnDown) btnDown.disabled = idx === items.length - 1;
+              if (btnUp) {btnUp.disabled = idx === 0;}
+              if (btnDown) {btnDown.disabled = idx === items.length - 1;}
             });
           });
 
@@ -460,7 +460,7 @@ export function initColumnConfig(grid) {
     this.tempColumnOrder = null;
 
     const modal = this.container.querySelector('.skargrid-column-config-modal');
-    if (modal) modal.remove();
+    if (modal) {modal.remove();}
 
     // Salva configuração no localStorage
     this.saveColumnConfig();
@@ -484,7 +484,7 @@ export function initColumnConfig(grid) {
         list.innerHTML = '';
         this.tempColumnOrder.forEach((field, index) => {
           const column = this.options.columns.find(col => col.field === field);
-          if (!column) return;
+          if (!column) {return;}
 
           const item = document.createElement('div');
           item.className = 'skargrid-config-item';
@@ -507,8 +507,8 @@ export function initColumnConfig(grid) {
               items.forEach((item, idx) => {
                 const btnUp = item.querySelector('.skargrid-config-move-btn:first-of-type');
                 const btnDown = item.querySelector('.skargrid-config-move-btn:last-of-type');
-                if (btnUp) btnUp.disabled = idx === 0;
-                if (btnDown) btnDown.disabled = idx === items.length - 1;
+                if (btnUp) {btnUp.disabled = idx === 0;}
+                if (btnDown) {btnDown.disabled = idx === items.length - 1;}
               });
             }, 50);
           });
@@ -539,8 +539,8 @@ export function initColumnConfig(grid) {
             items.forEach((item, idx) => {
               const btnUp = item.querySelector('.skargrid-config-move-btn:first-of-type');
               const btnDown = item.querySelector('.skargrid-config-move-btn:last-of-type');
-              if (btnUp) btnUp.disabled = idx === 0;
-              if (btnDown) btnDown.disabled = idx === items.length - 1;
+              if (btnUp) {btnUp.disabled = idx === 0;}
+              if (btnDown) {btnDown.disabled = idx === items.length - 1;}
             });
           });
 

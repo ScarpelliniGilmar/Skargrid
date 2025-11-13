@@ -26,18 +26,18 @@ describe('SkarGrid Integration Tests', () => {
   test('deve renderizar tabela básica', () => {
     const data = [
       { id: 1, name: 'João', age: 25 },
-      { id: 2, name: 'Maria', age: 30 }
+      { id: 2, name: 'Maria', age: 30 },
     ];
 
     const columns = [
       { field: 'name', title: 'Nome' },
-      { field: 'age', title: 'Idade' }
+      { field: 'age', title: 'Idade' },
     ];
 
     // Criar instância do SkarGrid
     skargrid = new window.Skargrid('test-container', {
       data: data,
-      columns: columns
+      columns: columns,
     });
 
     // Verificar se elementos foram criados
@@ -50,12 +50,12 @@ describe('SkarGrid Integration Tests', () => {
     const data = [{ name: 'Test', age: 20 }];
     const columns = [
       { field: 'name', title: 'Nome' },
-      { field: 'age', title: 'Idade' }
+      { field: 'age', title: 'Idade' },
     ];
 
     skargrid = new window.Skargrid('test-container', {
       data: data,
-      columns: columns
+      columns: columns,
     });
 
     const headers = container.querySelectorAll('thead th');
@@ -67,16 +67,16 @@ describe('SkarGrid Integration Tests', () => {
   test('deve renderizar dados corretamente', () => {
     const data = [
       { name: 'João', age: 25 },
-      { name: 'Maria', age: 30 }
+      { name: 'Maria', age: 30 },
     ];
     const columns = [
       { field: 'name', title: 'Nome' },
-      { field: 'age', title: 'Idade' }
+      { field: 'age', title: 'Idade' },
     ];
 
     skargrid = new window.Skargrid('test-container', {
       data: data,
-      columns: columns
+      columns: columns,
     });
 
     const rows = container.querySelectorAll('tbody tr');
@@ -97,14 +97,14 @@ describe('SkarGrid Integration Tests', () => {
     const data = Array.from({ length: 25 }, (_, i) => ({ id: i + 1, name: `Item ${i + 1}` }));
     const columns = [
       { field: 'id', title: 'ID' },
-      { field: 'name', title: 'Nome' }
+      { field: 'name', title: 'Nome' },
     ];
 
     skargrid = new window.Skargrid('test-container', {
       data: data,
       columns: columns,
       pagination: true,
-      pageSize: 10
+      pageSize: 10,
     });
 
     // Verificar se paginação foi renderizada
@@ -120,17 +120,17 @@ describe('SkarGrid Integration Tests', () => {
     const data = [
       { name: 'João Silva', age: 25 },
       { name: 'Maria Santos', age: 30 },
-      { name: 'Pedro Costa', age: 35 }
+      { name: 'Pedro Costa', age: 35 },
     ];
     const columns = [
       { field: 'name', title: 'Nome' },
-      { field: 'age', title: 'Idade' }
+      { field: 'age', title: 'Idade' },
     ];
 
     skargrid = new window.Skargrid('test-container', {
       data: data,
       columns: columns,
-      searchable: true
+      searchable: true,
     });
 
     // Verificar se campo de busca foi renderizado
