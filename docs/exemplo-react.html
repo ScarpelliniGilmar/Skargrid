@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SkarGrid + React - Exemplo</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/skargrid@latest/dist/skargrid.min.css">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: #f8fafc;
+        }
+        .app {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .controls {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        button {
+            padding: 8px 16px;
+            border: 1px solid #d1d5db;
+            background: white;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        button:hover {
+            background: #f3f4f6;
+        }
+        .table-container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        .stats {
+            background: #f1f5f9;
+            padding: 15px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        .stat-item {
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+
+    <!-- React e ReactDOM via CDN -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+
+    <!-- Babel para JSX -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <!-- SkarGrid -->
+    <script src="https://cdn.jsdelivr.net/npm/skargrid@latest/dist/skargrid.min.js"></script>
+
+    <script type="text/babel">
+        const { useState, useEffect, useRef } = React;
+
+        function App() {
+            const tableRef = useRef(null);
+            const [users, setUsers] = useState([]);
+            const [loading, setLoading] = useState(true);
+            const [selectedCount, setSelectedCount] = useState(0);
+
+            // Simular carregamento de dados da API
+            useEffect(() => {
+                setTimeout(() => {
+                    const mockUsers = [
+                        { id: 1, name: 'João Silva', email: 'joao@email.com', role: 'Admin', status: 'Ativo', lastLogin: '2024-01-15' },
+                        { id: 2, name: 'Maria Santos', email: 'maria@email.com', role: 'User', status: 'Ativo', lastLogin: '2024-01-14' },
+                        { id: 3, name: 'Pedro Oliveira', email: 'pedro@email.com', role: 'User', status: 'Inativo', lastLogin: '2024-01-10' },
+                        { id: 4, name: 'Ana Costa', email: 'ana@email.com', role: 'Editor', status: 'Ativo', lastLogin: '2024-01-16' },
+                        { id: 5, name: 'Carlos Lima', email: 'carlos@email.com', role: 'User', status: 'Ativo', lastLogin: '2024-01-13' },
+                        { id: 6, name: 'Beatriz Rocha', email: 'beatriz@email.com', role: 'Editor', status: 'Ativo', lastLogin: '2024-01-12' },
+                        { id: 7, name: 'Lucas Mendes', email: 'lucas@email.com', role: 'User', status: 'Inativo', lastLogin: '2024-01-08' },
+                        { id: 8, name: 'Julia Ferreira', email: 'julia@email.com', role: 'Admin', status: 'Ativo', lastLogin: '2024-01-17' }
+                    ];
+                    setUsers(mockUsers);
+                    setLoading(false);
+                }, 1000);
+            }, []);
+
+            // Inicializar SkarGrid quando os dados estiverem carregados
+            useEffect(() => {
+                if (!loading && users.length > 0 && tableRef.current) {
+                    const columns = [
+                        { field: 'id', title: 'ID', width: '60px', sortable: true },
+                        { field: 'name', title: 'Nome', sortable: true },
+                        { field: 'email', title: 'Email', sortable: true },
+                        {
+                            field: 'role',
+                            title: 'Função',
+                            filterType: 'select',
+                            render: (value) => {
+                                const colors = {
+                                    'Admin': '#dc2626',
+                                    'Editor': '#2563eb',
+                                    'User': '#16a34a'
+                                };
+                                return `<span style="color: ${colors[value] || '#6b7280'};">${value}</span>`;
+                            }
+                        },
+                        {
+                            field: 'status',
+                            title: 'Status',
+                            filterType: 'select',
+                            render: (value) => value === 'Ativo' ?
+                                '<span style="color: #16a34a;">● Ativo</span>' :
+                                '<span style="color: #dc2626;">● Inativo</span>'
+                        },
+                        {
+                            field: 'lastLogin',
+                            title: 'Último Login',
+                            sortable: true,
+                            render: (value) => new Date(value).toLocaleDateString('pt-BR')
+                        }
+                    ];
+
+                    const table = new Skargrid(tableRef.current, {
+                        data: users,
+                        columns: columns,
+                        pagination: true,
+                        pageSize: 5,
+                        sortable: true,
+                        searchable: true,
+                        columnFilters: true,
+                        selectable: true,
+                        exportCSV: true,
+                        theme: 'light'
+                    });
+
+                    // Monitorar seleções
+                    table.on('selectionChange', (selectedRows) => {
+                        setSelectedCount(selectedRows.length);
+                    });
+
+                    // Salvar referência da tabela
+                    tableRef.current.skargrid = table;
+                }
+            }, [loading, users]);
+
+            const addUser = () => {
+                const newUser = {
+                    id: users.length + 1,
+                    name: `Novo Usuário ${users.length + 1}`,
+                    email: `user${users.length + 1}@email.com`,
+                    role: 'User',
+                    status: 'Ativo',
+                    lastLogin: new Date().toISOString().split('T')[0]
+                };
+                setUsers([...users, newUser]);
+            };
+
+            const exportSelected = () => {
+                if (tableRef.current?.skargrid) {
+                    const selected = tableRef.current.skargrid.getSelectedRows();
+                    if (selected.length > 0) {
+                        tableRef.current.skargrid.exportSelectedToCSV('usuarios-selecionados.csv');
+                    } else {
+                        alert('Nenhum usuário selecionado!');
+                    }
+                }
+            };
+
+            const toggleTheme = () => {
+                if (tableRef.current?.skargrid) {
+                    const currentTheme = tableRef.current.skargrid.options.theme;
+                    const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+                    tableRef.current.skargrid.setTheme(newTheme);
+                }
+            };
+
+            if (loading) {
+                return (
+                    <div style={{ textAlign: 'center', padding: '50px' }}>
+                        <div>Carregando dados...</div>
+                    </div>
+                );
+            }
+
+            return (
+                <div className="app">
+                    <div className="header">
+                        <h1>⚛️ SkarGrid + React</h1>
+                        <p>Integração completa com React Hooks e estado gerenciado</p>
+                    </div>
+
+                    <div className="stats">
+                        <div className="stat-item">👥 Total: {users.length}</div>
+                        <div className="stat-item">✅ Ativos: {users.filter(u => u.status === 'Ativo').length}</div>
+                        <div className="stat-item">🎯 Selecionados: {selectedCount}</div>
+                        <div className="stat-item">🔍 Filtrados: {tableRef.current?.skargrid?.getFilteredData()?.length || users.length}</div>
+                    </div>
+
+                    <div className="controls">
+                        <button onClick={addUser}>➕ Adicionar Usuário</button>
+                        <button onClick={exportSelected}>📊 Exportar Selecionados</button>
+                        <button onClick={toggleTheme}>🌙 Tema</button>
+                        <button onClick={() => tableRef.current?.skargrid?.clearAllFilters()}>
+                            🧹 Limpar Filtros
+                        </button>
+                    </div>
+
+                    <div className="table-container">
+                        <div ref={tableRef}></div>
+                    </div>
+                </div>
+            );
+        }
+
+        // Renderizar o app React
+        ReactDOM.render(<App />, document.getElementById('root'));
+    </script>
+</body>
+</html>

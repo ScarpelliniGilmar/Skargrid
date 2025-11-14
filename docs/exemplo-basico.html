@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SkarGrid - Exemplo Básico</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/skargrid@latest/dist/skargrid.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background: #f9f9f9;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+        .info {
+            background: #e8f4fd;
+            padding: 10px;
+            border-radius: 3px;
+            margin-bottom: 20px;
+            border-left: 3px solid #2196f3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📊 SkarGrid - Exemplo Básico</h1>
+
+        <div class="info">
+            <strong>Este exemplo demonstra:</strong>
+            <ul>
+                <li>✅ Tabela simples com dados</li>
+                <li>✅ Ordenação por coluna</li>
+                <li>✅ Paginação automática</li>
+                <li>✅ Busca global</li>
+            </ul>
+        </div>
+
+        <div id="simpleTable"></div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/skargrid@latest/dist/skargrid.min.js"></script>
+    <script>
+        // Dados simples de exemplo
+        const produtos = [
+            { id: 1, nome: 'Notebook Dell', categoria: 'Eletrônicos', preco: 4500, estoque: 15 },
+            { id: 2, nome: 'Mouse Logitech', categoria: 'Acessórios', preco: 120, estoque: 50 },
+            { id: 3, nome: 'Teclado Mecânico', categoria: 'Acessórios', preco: 350, estoque: 25 },
+            { id: 4, nome: 'Monitor 24"', categoria: 'Eletrônicos', preco: 1200, estoque: 8 },
+            { id: 5, nome: 'Impressora HP', categoria: 'Periféricos', preco: 800, estoque: 12 },
+            { id: 6, nome: 'HD Externo 1TB', categoria: 'Armazenamento', preco: 280, estoque: 30 },
+            { id: 7, nome: 'Webcam HD', categoria: 'Acessórios', preco: 150, estoque: 20 },
+            { id: 8, nome: 'Fone Bluetooth', categoria: 'Áudio', preco: 200, estoque: 35 }
+        ];
+
+        // Configuração das colunas
+        const colunas = [
+            { field: 'id', title: 'ID', width: '60px' },
+            { field: 'nome', title: 'Produto', sortable: true },
+            { field: 'categoria', title: 'Categoria', sortable: true },
+            {
+                field: 'preco',
+                title: 'Preço',
+                sortable: true,
+                render: (valor) => `R$ ${valor.toLocaleString('pt-BR')}`
+            },
+            { field: 'estoque', title: 'Estoque', sortable: true }
+        ];
+
+        // Criar a tabela
+        const tabela = new Skargrid('simpleTable', {
+            data: produtos,
+            columns: colunas,
+            pagination: true,
+            pageSize: 5,
+            sortable: true,
+            searchable: true
+        });
+
+        console.log('✅ Tabela criada com sucesso!');
+    </script>
+</body>
+</html>
