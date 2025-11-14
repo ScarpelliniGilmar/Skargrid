@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SkarGrid - Exemplo Completo</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/skargrid@latest/dist/skargrid.min.css">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #2563eb;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .controls {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        button {
+            padding: 8px 16px;
+            border: 1px solid #d1d5db;
+            background: white;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        button:hover {
+            background: #f3f4f6;
+        }
+        .stats {
+            background: #f8fafc;
+            padding: 15px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            border-left: 4px solid #2563eb;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🚀 SkarGrid - Exemplo Completo</h1>
+
+        <div class="stats">
+            <strong>Dados de exemplo:</strong> 500 funcionários | <strong>Features:</strong> Busca, filtros, paginação, seleção, export, temas
+        </div>
+
+        <div class="controls">
+            <button onclick="toggleTheme()">🌙 Alternar Tema</button>
+            <button onclick="clearFilters()">🧹 Limpar Filtros</button>
+            <button onclick="selectRandom()">🎲 Selecionar Aleatório</button>
+            <button onclick="exportData()">📊 Exportar CSV</button>
+            <button onclick="showStats()">📈 Estatísticas</button>
+        </div>
+
+        <div id="employeeTable"></div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/skargrid@latest/dist/skargrid.min.js"></script>
+    <script>
+        // Gerar dados de exemplo
+        function generateEmployees(count = 500) {
+            const names = ['João', 'Maria', 'Pedro', 'Ana', 'Carlos', 'Beatriz', 'Lucas', 'Julia', 'Fernando', 'Gabriela', 'Rafael', 'Camila', 'Gustavo', 'Larissa', 'Bruno', 'Amanda', 'Felipe', 'Carolina', 'Diego', 'Isabela'];
+            const surnames = ['Silva', 'Santos', 'Oliveira', 'Souza', 'Rodrigues', 'Ferreira', 'Almeida', 'Costa', 'Gomes', 'Martins', 'Araújo', 'Melo', 'Barbosa', 'Ribeiro', 'Alves', 'Pereira', 'Lima', 'Carvalho', 'Teixeira', 'Moreira'];
+            const cities = ['São Paulo', 'Rio de Janeiro', 'Belo Horizonte', 'Salvador', 'Brasília', 'Curitiba', 'Porto Alegre', 'Recife', 'Fortaleza', 'Manaus', 'Belém', 'Goiânia', 'Guarulhos', 'Campinas', 'São Luís'];
+            const departments = ['TI', 'RH', 'Financeiro', 'Vendas', 'Marketing', 'Operações', 'Jurídico', 'Compras', 'Logística', 'Produção'];
+            const positions = ['Analista', 'Coordenador', 'Gerente', 'Diretor', 'Assistente', 'Especialista', 'Consultor', 'Supervisor'];
+
+            const employees = [];
+
+            for (let i = 0; i < count; i++) {
+                const name = `${names[i % names.length]} ${surnames[i % surnames.length]}`;
+                const age = 22 + (i % 38); // 22-60 anos
+                const salary = 2500 + (i % 15000); // R$ 2.500 - R$ 17.500
+                const department = departments[i % departments.length];
+                const position = positions[i % positions.length];
+
+                employees.push({
+                    id: i + 1,
+                    name: name,
+                    age: age,
+                    city: cities[i % cities.length],
+                    department: department,
+                    position: position,
+                    salary: salary,
+                    active: Math.random() > 0.15, // 85% ativos
+                    hireDate: new Date(2020 + (i % 4), i % 12, 1 + (i % 28)).toISOString().split('T')[0]
+                });
+            }
+
+            return employees;
+        }
+
+        // Configuração das colunas
+        const columns = [
+            {
+                field: 'id',
+                title: 'ID',
+                width: '60px',
+                sortable: true,
+                filterType: 'number'
+            },
+            {
+                field: 'name',
+                title: 'Nome Completo',
+                sortable: true,
+                filterType: 'text',
+                render: (value, row) => `<strong>${value}</strong>`
+            },
+            {
+                field: 'age',
+                title: 'Idade',
+                width: '80px',
+                sortable: true,
+                filterType: 'number',
+                sortType: 'number'
+            },
+            {
+                field: 'city',
+                title: 'Cidade',
+                sortable: true,
+                filterType: 'select'
+            },
+            {
+                field: 'department',
+                title: 'Departamento',
+                filterType: 'select'
+            },
+            {
+                field: 'position',
+                title: 'Cargo',
+                filterType: 'select'
+            },
+            {
+                field: 'salary',
+                title: 'Salário',
+                sortable: true,
+                filterType: 'number',
+                sortType: 'number',
+                render: (value) => `R$ ${value.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`
+            },
+            {
+                field: 'active',
+                title: 'Status',
+                filterType: 'select',
+                render: (value) => value ?
+                    '<span style="color: #16a34a;">✅ Ativo</span>' :
+                    '<span style="color: #dc2626;">❌ Inativo</span>'
+            },
+            {
+                field: 'hireDate',
+                title: 'Data Admissão',
+                sortable: true,
+                filterType: 'date',
+                sortType: 'date',
+                render: (value) => new Date(value).toLocaleDateString('pt-BR')
+            }
+        ];
+
+        // Dados de exemplo
+        const employees = generateEmployees(500);
+
+        // Inicializar SkarGrid
+        const table = new Skargrid('employeeTable', {
+            data: employees,
+            columns: columns,
+            pagination: true,
+            pageSize: 25,
+            pageSizeOptions: [10, 25, 50, 100],
+            sortable: true,
+            searchable: true,
+            columnFilters: true,
+            selectable: true,
+            columnConfig: true,
+            persistColumnConfig: true,
+            storageKey: 'skargrid-demo-employees',
+            exportCSV: true,
+            exportXLSX: true,
+            exportFilename: 'funcionarios-empresa',
+            theme: 'light'
+        });
+
+        // Funções de controle
+        window.toggleTheme = function() {
+            const currentTheme = table.options.theme;
+            const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+            table.setTheme(newTheme);
+            console.log(`Tema alterado para: ${newTheme}`);
+        };
+
+        window.clearFilters = function() {
+            table.clearAllFilters();
+            console.log('Filtros limpos');
+        };
+
+        window.selectRandom = function() {
+            const randomIndices = [];
+            const count = Math.floor(Math.random() * 10) + 1; // 1-10 itens
+
+            for (let i = 0; i < count; i++) {
+                const randomIndex = Math.floor(Math.random() * employees.length);
+                if (!randomIndices.includes(randomIndex)) {
+                    randomIndices.push(randomIndex);
+                }
+            }
+
+            table.selectRows(randomIndices);
+            console.log(`${randomIndices.length} itens selecionados aleatoriamente`);
+        };
+
+        window.exportData = function() {
+            const selected = table.getSelectedRows();
+            if (selected.length > 0) {
+                table.exportSelectedToCSV('funcionarios-selecionados.csv');
+                console.log(`${selected.length} itens exportados`);
+            } else {
+                table.exportToCSV('todos-funcionarios.csv');
+                console.log('Todos os itens exportados');
+            }
+        };
+
+        window.showStats = function() {
+            const data = table.getData();
+            const selected = table.getSelectedRows();
+
+            const stats = {
+                total: data.length,
+                selected: selected.length,
+                active: data.filter(emp => emp.active).length,
+                inactive: data.filter(emp => !emp.active).length,
+                departments: [...new Set(data.map(emp => emp.department))].length,
+                avgSalary: data.reduce((sum, emp) => sum + emp.salary, 0) / data.length,
+                avgAge: data.reduce((sum, emp) => sum + emp.age, 0) / data.length
+            };
+
+            alert(`📊 Estatísticas dos Funcionários:
+
+👥 Total: ${stats.total}
+✅ Ativos: ${stats.active}
+❌ Inativos: ${stats.inactive}
+🏢 Departamentos: ${stats.departments}
+💰 Salário médio: R$ ${stats.avgSalary.toLocaleString('pt-BR', { maximumFractionDigits: 0 })}
+🎂 Idade média: ${stats.avgAge.toFixed(1)} anos
+
+${selected.length > 0 ? `🎯 Selecionados: ${selected.length}` : ''}`);
+        };
+
+        // Log inicial
+        console.log('🚀 SkarGrid inicializado com sucesso!');
+        console.log(`📊 ${employees.length} funcionários carregados`);
+        console.log('💡 Use os controles acima para testar as funcionalidades');
+    </script>
+</body>
+</html>
