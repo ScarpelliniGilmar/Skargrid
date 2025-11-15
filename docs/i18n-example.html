@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SkarGrid i18n Example</title>
+    <link rel="stylesheet" href="../dist/skargrid.min.css">
+</head>
+<body>
+    <h1>SkarGrid Internationalization Example</h1>
+
+    <h2>Default English Labels</h2>
+    <div id="grid1"></div>
+
+    <h2>Custom Portuguese Labels</h2>
+    <div id="grid2"></div>
+
+    <script src="../dist/skargrid.min.js"></script>
+    <script>
+        // Default English labels
+        const grid1 = new Skargrid('grid1', {
+            data: [
+                { id: 1, name: 'John Doe', age: 30, city: 'New York' },
+                { id: 2, name: 'Jane Smith', age: 25, city: 'Los Angeles' },
+                { id: 3, name: 'Bob Johnson', age: 35, city: 'Chicago' }
+            ],
+            columns: [
+                { field: 'id', title: 'ID', width: 50 },
+                { field: 'name', title: 'Name' },
+                { field: 'age', title: 'Age', width: 80 },
+                { field: 'city', title: 'City' }
+            ],
+            pagination: true,
+            searchable: true,
+            columnFilters: true,
+            exportCSV: true,
+            columnConfig: true
+        });
+
+        // Example with custom Portuguese labels
+        const grid2 = new Skargrid('grid2', {
+            data: [
+                { id: 1, name: 'João Silva', age: 30, city: 'São Paulo' },
+                { id: 2, name: 'Maria Santos', age: 25, city: 'Rio de Janeiro' }
+            ],
+            columns: [
+                { field: 'id', title: 'ID', width: 50 },
+                { field: 'name', title: 'Nome' },
+                { field: 'age', title: 'Idade', width: 80 },
+                { field: 'city', title: 'Cidade' }
+            ],
+            pagination: true,
+            searchable: true,
+            columnFilters: true,
+            exportCSV: true,
+            labels: {
+                searchPlaceholder: 'Buscar em todas as colunas...',
+                clearFilters: 'Limpar Filtros',
+                exportCSV: 'Exportar CSV',
+                filterTitle: 'Filtrar: {title}',
+                selectAll: 'Selecionar Todos',
+                filterSearchPlaceholder: 'Buscar...',
+                clear: 'Limpar',
+                apply: 'Aplicar',
+                showing: 'Mostrando {start} até {end} de {total} registros',
+                itemsPerPage: 'Itens por página:',
+                noRowsSelected: 'Nenhuma linha selecionada para exportar.'
+            }
+        });
+    </script>
+</body>
+</html>

@@ -89,7 +89,7 @@ export function initColumnConfig(grid) {
         <circle cx="12" cy="12" r="3"/>
       </svg>
     `;
-    btn.title = 'Configurar Colunas';
+    btn.title = grid.labels.columnConfigTitle;
 
     btn.addEventListener('click', (e) => {
       e.stopPropagation();
@@ -153,9 +153,9 @@ export function initColumnConfig(grid) {
           <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/>
           <circle cx="12" cy="12" r="3"/>
         </svg>
-        Configurar Colunas
+        ${grid.labels.columnConfigTitle}
       </h3>
-      <p>Marque para exibir, arraste ou use as setas para reordenar</p>
+      <p>${grid.labels.columnConfigDescription}</p>
     `;
 
     // Botões de ação NO TOPO (dentro do header)
@@ -164,13 +164,13 @@ export function initColumnConfig(grid) {
 
     const btnRestore = document.createElement('button');
     btnRestore.className = 'skargrid-config-action-btn';
-    btnRestore.innerHTML = 'Restaurar';
+    btnRestore.innerHTML = grid.labels.restore;
     btnRestore.title = 'Restaurar configuração padrão';
     btnRestore.addEventListener('click', () => this.restoreDefaultColumns());
 
     const btnCancel = document.createElement('button');
     btnCancel.className = 'skargrid-config-action-btn';
-    btnCancel.textContent = 'Cancelar';
+    btnCancel.textContent = grid.labels.cancel;
     btnCancel.addEventListener('click', () => {
       this.tempVisibleColumns = null;
       this.tempColumnOrder = null;
@@ -179,7 +179,7 @@ export function initColumnConfig(grid) {
 
     const btnApply = document.createElement('button');
     btnApply.className = 'skargrid-config-action-btn skargrid-config-action-btn-primary';
-    btnApply.textContent = 'Aplicar';
+    btnApply.textContent = grid.labels.apply;
     btnApply.addEventListener('click', () => this.applyColumnConfig());
 
     headerActions.appendChild(btnRestore);

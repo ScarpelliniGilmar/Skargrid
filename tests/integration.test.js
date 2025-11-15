@@ -136,6 +136,6 @@ describe('SkarGrid Integration Tests', () => {
     // Verificar se campo de busca foi renderizado
     const searchInput = container.querySelector('input[type="text"]');
     expect(searchInput).not.toBeNull();
-    expect(searchInput.placeholder).toContain('Buscar');
+    expect(searchInput.placeholder).toBe('Search all columns...');
   });
 });
