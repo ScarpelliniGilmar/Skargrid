@@ -26,6 +26,7 @@ class Skargrid {
       columnConfig: options.columnConfig !== undefined ? options.columnConfig : false, // Botão de configuração desabilitado por padrão
       exportCSV: options.exportCSV !== undefined ? options.exportCSV : false, // Exportar CSV desabilitado por padrão
       exportFilename: options.exportFilename || 'skargrid-export', // Nome base para arquivos exportados
+      virtualization: options.virtualization !== undefined ? options.virtualization : false, // Virtualização desabilitada por padrão
       ...options,
     };
 
@@ -115,6 +116,12 @@ class Skargrid {
     );
     this.columnOrder = this.options.columns.map(col => col.field);
 
+    // Estado da virtualização
+    this.virtualScrollTop = 0;
+    this.virtualRowHeight = 40; // Altura estimada por linha (px)
+    this.virtualVisibleRows = 20; // Número de linhas visíveis estimadas
+    this.virtualBufferSize = 5; // Buffer de linhas extras para scroll suave
+
     // Inicializa features modulares
     if (typeof initColumnConfig === 'function') {
       initColumnConfig(this);
@@ -198,6 +205,20 @@ class Skargrid {
     const tableContainer = document.createElement('div');
     tableContainer.className = 'skargrid-table-container';
     
+    // Configura virtualização se habilitada
+    if (this.options.virtualization) {
+      tableContainer.classList.add('skargrid-virtual-container');
+      tableContainer.style.overflowY = 'auto';
+      tableContainer.style.overflowX = 'auto';
+      tableContainer.style.position = 'relative';
+
+      // Calcula dinamicamente quantas linhas são visíveis baseado na altura do container
+      const containerHeight = tableContainer.clientHeight || 400; // fallback para 400px se não conseguir medir
+      this.virtualVisibleRows = Math.ceil(containerHeight / this.virtualRowHeight);
+
+      tableContainer.onscroll = (e) => this.handleVirtualScroll(e);
+    }
+    
     // Adiciona indicador de loading APENAS na área da tabela
     if (this.isLoading) {
       const loadingOverlay = document.createElement('div');
@@ -209,7 +230,7 @@ class Skargrid {
               <animateTransform attributeName="transform" type="rotate" from="0 25 25" to="360 25 25" dur="1s" repeatCount="indefinite"/>
             </circle>
           </svg>
-          <span>Carregando...</span>
+          <span>${this.labels.loading}</span>
         </div>
       `;
       tableContainer.appendChild(loadingOverlay);
@@ -219,16 +240,49 @@ class Skargrid {
     const table = document.createElement('table');
     table.className = this.options.className;
 
-    // Renderiza o cabeçalho
-    const thead = this.renderHeader();
-    table.appendChild(thead);
+    if (this.options.virtualization) {
+      // Para virtualização, criamos uma estrutura especial com container de altura total
+      const virtualContainer = document.createElement('div');
+      virtualContainer.style.position = 'relative';
+      virtualContainer.style.height = `${this.filteredData.length * this.virtualRowHeight}px`;
 
-    // Renderiza o corpo da tabela
-    const tbody = this.renderBody();
-    table.appendChild(tbody);
+      // Calcula quantas linhas serão realmente renderizadas
+      const startIndex = Math.max(0, Math.floor(this.virtualScrollTop / this.virtualRowHeight) - this.virtualBufferSize);
+      const endIndex = Math.min(this.filteredData.length, startIndex + this.virtualVisibleRows + (this.virtualBufferSize * 2));
+      const renderedRows = endIndex - startIndex;
 
-    // Adiciona a tabela ao container
-    tableContainer.appendChild(table);
+      // A tabela fica posicionada absolutamente dentro do container
+      table.style.position = 'absolute';
+      table.style.top = '0';
+      table.style.left = '0';
+      table.style.width = '100%';
+      // Define altura baseada no número real de linhas renderizadas
+      const tableHeight = renderedRows * this.virtualRowHeight;
+      table.style.height = `${tableHeight}px`;
+
+      const thead = this.renderHeader();
+      thead.style.position = 'sticky';
+      thead.style.top = '0';
+      thead.style.zIndex = '1';
+      thead.style.background = 'var(--sg-thead-bg, #f8f9fa)';
+      thead.style.width = '100%';
+      table.appendChild(thead);
+
+      const tbody = this.renderBody();
+      table.appendChild(tbody);
+
+      virtualContainer.appendChild(table);
+      tableContainer.appendChild(virtualContainer);
+    } else {
+      // Renderização normal
+      const thead = this.renderHeader();
+      table.appendChild(thead);
+
+      const tbody = this.renderBody();
+      table.appendChild(tbody);
+
+      tableContainer.appendChild(table);
+    }
     wrapper.appendChild(tableContainer);
 
     // Adiciona paginação se habilitada
@@ -245,21 +299,54 @@ class Skargrid {
    * Atualiza apenas o conteúdo da tabela (tbody e paginação) - mais rápido
    */
   updateTableContent() {
-    const table = this.container.querySelector('.skargrid');
-    if (!table) {return;}
+    if (this.options.virtualization) {
+      // Atualiza a altura do container virtual baseada nos dados filtrados
+      const virtualContainer = this.container.querySelector('.skargrid-table-container > div');
+      if (virtualContainer) {
+        virtualContainer.style.height = `${this.filteredData.length * this.virtualRowHeight}px`;
+      }
 
-    // Atualiza tbody
-    const oldTbody = table.querySelector('tbody');
-    const newTbody = this.renderBody();
-    if (oldTbody) {
-      table.replaceChild(newTbody, oldTbody);
-    }
+      // Para virtualização, atualiza o tbody
+      const table = this.container.querySelector('.skargrid');
+      if (!table) {
+        return;
+      }
 
-    // Atualiza header (ícones de ordenação e checkbox)
-    const oldThead = table.querySelector('thead');
-    const newThead = this.renderHeader();
-    if (oldThead) {
-      table.replaceChild(newThead, oldThead);
+      const oldTbody = table.querySelector('tbody');
+      const newTbody = this.renderBody();
+      if (oldTbody) {
+        table.replaceChild(newTbody, oldTbody);
+      }
+
+      // Atualiza header (ícones de ordenação e checkbox)
+      const oldThead = table.querySelector('thead');
+      const newThead = this.renderHeader();
+      newThead.style.position = 'sticky';
+      newThead.style.top = '0';
+      newThead.style.zIndex = '1';
+      newThead.style.background = 'var(--sg-thead-bg, #f8f9fa)';
+      newThead.style.width = '100%';
+      if (oldThead) {
+        table.replaceChild(newThead, oldThead);
+      }
+    } else {
+      // Atualização normal
+      const table = this.container.querySelector('.skargrid');
+      if (!table) {return;}
+
+      // Atualiza tbody
+      const oldTbody = table.querySelector('tbody');
+      const newTbody = this.renderBody();
+      if (oldTbody) {
+        table.replaceChild(newTbody, oldTbody);
+      }
+
+      // Atualiza header (ícones de ordenação e checkbox)
+      const oldThead = table.querySelector('thead');
+      const newThead = this.renderHeader();
+      if (oldThead) {
+        table.replaceChild(newThead, oldThead);
+      }
     }
 
     // Atualiza paginação
@@ -986,84 +1073,142 @@ class Skargrid {
    */
   renderBody() {
     const tbody = document.createElement('tbody');
-    const pageData = this.getPageData();
+    
+    if (this.options.virtualization) {
+      // Virtualização: renderiza apenas linhas visíveis
+      const totalRows = this.filteredData.length;
+      const startIndex = Math.max(0, Math.floor(this.virtualScrollTop / this.virtualRowHeight) - this.virtualBufferSize);
+      const endIndex = Math.min(totalRows, startIndex + this.virtualVisibleRows + (this.virtualBufferSize * 2));
 
-    pageData.forEach((row, pageIndex) => {
-      // Calcula o índice global do registro
-      const globalIndex = this.options.pagination
-        ? (this.currentPage - 1) * this.options.pageSize + pageIndex
-        : pageIndex;
+      console.log('Virtual render:', { totalRows, startIndex, endIndex, scrollTop: this.virtualScrollTop });
 
-      const tr = document.createElement('tr');
-      tr.dataset.index = globalIndex;
-
-      // Adiciona classe se a linha está selecionada
-      if (this.selectedRows.has(globalIndex)) {
-        tr.classList.add('selected');
+      // Renderiza apenas as linhas visíveis
+      for (let i = startIndex; i < endIndex; i++) {
+        const row = this.filteredData[i];
+        const tr = this.createTableRow(row, i);
+        tbody.appendChild(tr);
       }
-
-      // Adiciona coluna de checkbox se seleção está habilitada
-      if (this.options.selectable) {
-        const td = document.createElement('td');
-        td.className = 'skargrid-select-cell';
+    } else {
+      // Renderização normal (com paginação)
+      const pageData = this.getPageData();
+      
+      pageData.forEach((row, pageIndex) => {
+        // Calcula o índice global do registro
+        const globalIndex = this.options.pagination
+          ? (this.currentPage - 1) * this.options.pageSize + pageIndex
+          : pageIndex;
         
-        const checkbox = document.createElement('input');
-        checkbox.type = 'checkbox';
-        checkbox.className = 'skargrid-checkbox';
-        checkbox.checked = this.selectedRows.has(globalIndex);
-        checkbox.onchange = (e) => {
-          e.stopPropagation();
-          this.toggleSelectRow(globalIndex, e.target.checked);
-        };
-        
-        td.appendChild(checkbox);
-        tr.appendChild(td);
-
-        // Adiciona clique na linha para selecionar
-        tr.style.cursor = 'pointer';
-        tr.onclick = (e) => {
-          // Ignora clique no checkbox
-          if (e.target.type !== 'checkbox') {
-            checkbox.checked = !checkbox.checked;
-            this.toggleSelectRow(globalIndex, checkbox.checked);
-          }
-        };
-      }
-
-      this.getOrderedVisibleColumns().forEach(column => {
-        const td = document.createElement('td');
-        const value = row[column.field];
-        
-        // Permite formatação customizada
-        // Suporta ambas as propriedades `formatter` (antiga) e `render` (exemplo/docs)
-        const cellRenderer = (column.formatter && typeof column.formatter === 'function')
-          ? column.formatter
-          : (column.render && typeof column.render === 'function')
-            ? column.render
-            : null;
-
-        if (cellRenderer) {
-          // renderer pode retornar HTML ou texto
-          try {
-            td.innerHTML = cellRenderer(value, row, globalIndex);
-          } catch (e) {
-            // Falha ao executar renderer — fallback para texto simples
-            td.textContent = value !== undefined && value !== null ? String(value) : '';
-            // Log para debug em consoles do dev
-            if (console && console.warn) {console.warn('Skargrid: erro ao executar renderer para coluna', column.field, e);}
-          }
-        } else {
-          td.textContent = value !== undefined && value !== null ? value : '';
-        }
-
-        td.dataset.field = column.field;
-        tr.appendChild(td);
+        const tr = this.createTableRow(row, globalIndex);
+        tbody.appendChild(tr);
       });
-
-      tbody.appendChild(tr);
-    });
+    }
 
     return tbody;
+  }
+
+  /**
+   * Cria uma linha da tabela (usado tanto para virtualização quanto paginação normal)
+   */
+  createTableRow(row, globalIndex) {
+    const tr = document.createElement('tr');
+    tr.dataset.index = globalIndex;
+
+    // Adiciona classe se a linha está selecionada
+    if (this.selectedRows.has(globalIndex)) {
+      tr.classList.add('selected');
+    }
+
+    // Adiciona coluna de checkbox se seleção está habilitada
+    if (this.options.selectable) {
+      const td = document.createElement('td');
+      td.className = 'skargrid-select-cell';
+      
+      const checkbox = document.createElement('input');
+      checkbox.type = 'checkbox';
+      checkbox.className = 'skargrid-checkbox';
+      checkbox.checked = this.selectedRows.has(globalIndex);
+      checkbox.onchange = (e) => {
+        e.stopPropagation();
+        this.toggleSelectRow(globalIndex, e.target.checked);
+      };
+      
+      td.appendChild(checkbox);
+      tr.appendChild(td);
+
+      // Adiciona clique na linha para selecionar
+      tr.style.cursor = 'pointer';
+      tr.onclick = (e) => {
+        // Ignora clique no checkbox
+        if (e.target.type !== 'checkbox') {
+          checkbox.checked = !checkbox.checked;
+          this.toggleSelectRow(globalIndex, checkbox.checked);
+        }
+      };
+    }
+
+    this.getOrderedVisibleColumns().forEach(column => {
+      const td = document.createElement('td');
+      const value = row[column.field];
+      
+      // Permite formatação customizada
+      // Suporta ambas as propriedades `formatter` (antiga) e `render` (exemplo/docs)
+      const cellRenderer = (column.formatter && typeof column.formatter === 'function')
+        ? column.formatter
+        : (column.render && typeof column.render === 'function')
+          ? column.render
+          : null;
+
+      if (cellRenderer) {
+        // renderer pode retornar HTML ou texto
+        try {
+          td.innerHTML = cellRenderer(value, row, globalIndex);
+        } catch (e) {
+          // Falha ao executar renderer — fallback para texto simples
+          td.textContent = value !== undefined && value !== null ? String(value) : '';
+          // Log para debug em consoles do dev
+          if (console && console.warn) {console.warn('Skargrid: erro ao executar renderer para coluna', column.field, e);}
+        }
+      } else {
+        td.textContent = value !== undefined && value !== null ? value : '';
+      }
+
+      td.dataset.field = column.field;
+      tr.appendChild(td);
+    });
+
+    return tr;
+  }
+
+  /**
+   * Manipula o scroll virtual
+   */
+  handleVirtualScroll(e) {
+    const scrollTop = e.target.scrollTop;
+    console.log('Virtual scroll:', scrollTop, 'total rows:', this.filteredData.length);
+    this.virtualScrollTop = scrollTop;
+
+    // Atualiza a posição da tabela dentro do container virtual
+    const virtualContainer = this.container.querySelector('.skargrid-table-container > div');
+    const table = virtualContainer.querySelector('.skargrid');
+    if (table) {
+      // Calcula qual deve ser a posição da tabela baseada no scroll
+      const startIndex = Math.max(0, Math.floor(scrollTop / this.virtualRowHeight) - this.virtualBufferSize);
+      const topOffset = startIndex * this.virtualRowHeight;
+      table.style.top = `${topOffset}px`;
+
+      // Calcula a nova altura da tabela baseada nas linhas que serão renderizadas
+      const endIndex = Math.min(this.filteredData.length, startIndex + this.virtualVisibleRows + (this.virtualBufferSize * 2));
+      const renderedRows = endIndex - startIndex;
+      const tableHeight = renderedRows * this.virtualRowHeight;
+      table.style.height = `${tableHeight}px`;
+
+      // Re-renderiza apenas o corpo da tabela com as linhas corretas
+      const oldTbody = table.querySelector('tbody');
+      if (oldTbody) {
+        const newTbody = this.renderBody();
+        table.replaceChild(newTbody, oldTbody);
+      }
+    }
   }
 
   /**
@@ -1105,6 +1250,10 @@ class Skargrid {
     this.sortDirection = null;
     this.selectedRows.clear();  // Limpa seleções ao atualizar dados
     this.searchText = '';
+    
+    // Reseta scroll virtual
+    this.virtualScrollTop = 0;
+    
     this.applyFilters();
     this.calculatePagination();
     this.render();
@@ -1186,8 +1335,38 @@ class Skargrid {
    * Aplica filtros (busca + filtros de coluna) aos dados
    */
   applyFilters() {
+    const previousFilteredCount = this.filteredData ? this.filteredData.length : this.options.data.length;
+
     if (typeof FilterFeature !== 'undefined') {
       FilterFeature.applyFilters(this);
+    }
+
+    // Ajusta scroll virtual se necessário após aplicação de filtros
+    if (this.options.virtualization && this.filteredData) {
+      const newFilteredCount = this.filteredData.length;
+      const maxScrollTop = Math.max(0, (newFilteredCount * this.virtualRowHeight) - 400); // 400px é altura aproximada do container
+
+      // Se o scroll atual está além do novo tamanho máximo, ajusta para o topo ou final
+      if (this.virtualScrollTop > maxScrollTop) {
+        this.virtualScrollTop = Math.max(0, maxScrollTop);
+
+        // Atualiza o scroll do container no DOM
+        const tableContainer = this.container.querySelector('.skargrid-table-container');
+        if (tableContainer) {
+          tableContainer.scrollTop = this.virtualScrollTop;
+        }
+      }
+
+      // Se a quantidade de dados mudou drasticamente, volta ao topo para melhor UX
+      if (previousFilteredCount > newFilteredCount * 2) {
+        this.virtualScrollTop = 0;
+
+        // Atualiza o scroll do container no DOM
+        const tableContainer = this.container.querySelector('.skargrid-table-container');
+        if (tableContainer) {
+          tableContainer.scrollTop = 0;
+        }
+      }
     }
   }
 

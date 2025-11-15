@@ -31,6 +31,7 @@
 ## ✨ Principais Recursos
 
 - 🌐 **Internacionalização (i18n)** - Labels padrão em inglês, totalmente personalizáveis para qualquer idioma
+- ⚡ **Rolagem Virtual** - Renderização de alta performance para datasets grandes (100k+ linhas)
 - 🎨 **Configuração de Colunas** - Arrastar e soltar para reordenar, mostrar/ocultar colunas com persistência
 - 🗄️ **Persistência Inteligente** - Salva preferências do usuário no localStorage automaticamente
 - 🌓 **Suporte a Temas** - Tema claro/escuro com transições suaves e variáveis customizáveis
@@ -39,7 +40,6 @@
 - ↔️ **Rolagem Horizontal** - Barra de rolagem customizada para tabelas largas
 - 📦 **Bundle Único** - Apenas 2 arquivos (JS + CSS) - **27.8KB comprimido**
 - 🎯 **Zero Dependências** - JavaScript puro Vanilla, agnóstico a frameworks
-- ⚡ **Alta Performance** - Otimizado para datasets de até 25.000+ registros
 - 🧪 **Testes Automatizados** - 21 testes abrangentes cobrindo todas as funcionalidades
 - 📊 **Suporte a Exportação** - Exportação CSV e XLSX nativa sem dependências externas
 
