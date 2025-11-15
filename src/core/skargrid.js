@@ -29,6 +29,31 @@ class Skargrid {
       ...options,
     };
 
+    // Labels para internacionalização (padrão em inglês, sobrescrevível via options.labels)
+    this.labels = {
+      searchPlaceholder: 'Search all columns...',
+      clearFilters: 'Clear Filters',
+      exportCSV: 'Export CSV',
+      exportXLSX: 'Export XLSX',
+      filterTitle: 'Filter: {title}',
+      selectAll: 'Select All',
+      filterSearchPlaceholder: 'Search...',
+      filterInputPlaceholder: 'Type to filter...',
+      clear: 'Clear',
+      apply: 'Apply',
+      showing: 'Showing {start} to {end} of {total} entries',
+      filteredOfTotal: 'filtered from {total} total',
+      itemsPerPage: 'Items per page:',
+      noRowsSelected: 'No rows selected to export.',
+      columnConfigTitle: 'Configure Columns',
+      columnConfigDescription: 'Check to display, drag or use arrows to reorder',
+      restore: 'Restore',
+      cancel: 'Cancel',
+      noData: 'No data available',
+      loading: 'Loading...',
+      ...options.labels,
+    };
+
     // Ensure current pageSize is present in pageSizeOptions. If the user set
     // `options.pageSize` but didn't include it in `options.pageSizeOptions`,
     // add it (at the front) so the selector and current value stay consistent.
@@ -302,7 +327,7 @@ class Skargrid {
         // Button for real XLSX export (pure JS implementation)
         const xlsxBtn = document.createElement('button');
         xlsxBtn.className = 'skargrid-clear-filters-btn';
-        xlsxBtn.title = 'Exportar XLSX';
+        xlsxBtn.title = this.labels.exportXLSX;
         xlsxBtn.innerHTML = `
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
@@ -342,7 +367,7 @@ class Skargrid {
     const searchInput = document.createElement('input');
     searchInput.type = 'text';
     searchInput.className = 'skargrid-search-input';
-    searchInput.placeholder = 'Buscar em todas as colunas...';
+    searchInput.placeholder = this.labels.searchPlaceholder;
     searchInput.value = this.searchText;
     
     // Evento de busca COM debounce (300ms) para performance
@@ -389,7 +414,7 @@ class Skargrid {
       </svg>
       <span class="filter-count-badge" style="display: none;">0</span>
     `;
-    clearFiltersButton.title = 'Limpar Filtros';
+    clearFiltersButton.title = this.labels.clearFilters;
     clearFiltersButton.onclick = () => this.clearAllFilters();
     
     // Atualiza contador de filtros ativos
@@ -412,7 +437,7 @@ class Skargrid {
       </svg>
       <span style="margin-left:.35rem;font-size:12px">CSV</span>
     `;
-    exportButton.title = 'Exportar CSV';
+    exportButton.title = this.labels.exportCSV;
     exportButton.onclick = () => this.exportToCSV();
     
     return exportButton;
@@ -715,7 +740,7 @@ class Skargrid {
     // Header do dropdown
     const header = document.createElement('div');
     header.className = 'filter-dropdown-header';
-    header.innerHTML = `<strong>Filtrar: ${column.title || column.field}</strong>`;
+    header.innerHTML = `<strong>${this.labels.filterTitle.replace('{title}', column.title || column.field)}</strong>`;
     dropdown.appendChild(header);
 
     // Campo de busca interno
@@ -725,7 +750,7 @@ class Skargrid {
     const searchInput = document.createElement('input');
     searchInput.type = 'text';
     searchInput.className = 'filter-search-input';
-    searchInput.placeholder = 'Buscar...';
+    searchInput.placeholder = this.labels.filterSearchPlaceholder;
     
     searchWrapper.appendChild(searchInput);
     dropdown.appendChild(searchWrapper);
@@ -742,7 +767,7 @@ class Skargrid {
     
     const selectAllLabel = document.createElement('label');
     selectAllLabel.htmlFor = `select-all-${column.field}`;
-    selectAllLabel.textContent = 'Selecionar Todos';
+    selectAllLabel.textContent = this.labels.selectAll;
     
     selectAllWrapper.appendChild(selectAllCheckbox);
     selectAllWrapper.appendChild(selectAllLabel);
@@ -853,7 +878,7 @@ class Skargrid {
     footer.className = 'filter-dropdown-footer';
     
     const clearBtn = document.createElement('button');
-    clearBtn.textContent = 'Limpar';
+    clearBtn.textContent = this.labels.clear;
     clearBtn.className = 'filter-btn-clear';
     clearBtn.onclick = () => {
       this.columnFilterSelected[column.field] = [...allUniqueValues];
@@ -864,7 +889,7 @@ class Skargrid {
     };
     
     const applyBtn = document.createElement('button');
-    applyBtn.textContent = 'Aplicar';
+    applyBtn.textContent = this.labels.apply;
     applyBtn.className = 'filter-btn-apply';
     applyBtn.onclick = () => {
       this.handleColumnFilterCheckbox(column.field);
@@ -884,7 +909,7 @@ class Skargrid {
   createInputFilter(dropdown, column, filterType) {
     const header = document.createElement('div');
     header.className = 'filter-dropdown-header';
-    header.innerHTML = `<strong>Filtrar: ${column.title || column.field}</strong>`;
+    header.innerHTML = `<strong>${this.labels.filterTitle.replace('{title}', column.title || column.field)}</strong>`;
     dropdown.appendChild(header);
 
     const inputWrapper = document.createElement('div');
@@ -893,7 +918,7 @@ class Skargrid {
     const input = document.createElement('input');
     input.type = filterType === 'number' ? 'number' : filterType === 'date' ? 'date' : 'text';
     input.className = 'filter-dropdown-input';
-    input.placeholder = 'Digite para filtrar...';
+    input.placeholder = this.labels.filterInputPlaceholder;
     input.value = this.columnFilterValues[column.field] || '';
     
     inputWrapper.appendChild(input);
@@ -903,7 +928,7 @@ class Skargrid {
     footer.className = 'filter-dropdown-footer';
     
     const clearBtn = document.createElement('button');
-    clearBtn.textContent = 'Limpar';
+    clearBtn.textContent = this.labels.clear;
     clearBtn.className = 'filter-btn-clear';
     clearBtn.onclick = () => {
       this.handleColumnFilter(column.field, '');
@@ -912,7 +937,7 @@ class Skargrid {
     };
     
     const applyBtn = document.createElement('button');
-    applyBtn.textContent = 'Aplicar';
+    applyBtn.textContent = this.labels.apply;
     applyBtn.className = 'filter-btn-apply';
     applyBtn.onclick = () => {
       this.handleColumnFilter(column.field, input.value);

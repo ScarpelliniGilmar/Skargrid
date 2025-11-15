@@ -38,11 +38,14 @@ const PaginationFeature = {
     const startRecord = totalRecords === 0 ? 0 : (grid.currentPage - 1) * grid.options.pageSize + 1;
     const endRecord = Math.min(grid.currentPage * grid.options.pageSize, totalRecords);
 
-    let text = `Mostrando ${startRecord} até ${endRecord} de ${totalRecords} registros`;
+    let text = grid.labels.showing
+      .replace('{start}', startRecord)
+      .replace('{end}', endRecord)
+      .replace('{total}', totalRecords);
     
     // Adiciona info de filtro se houver busca ativa
     if (grid.searchText && totalRecords < totalOriginal) {
-      text += ` (filtrados de ${totalOriginal} total)`;
+      text += ` (${grid.labels.filteredOfTotal.replace('{total}', totalOriginal)})`;
     }
 
     info.textContent = text;
@@ -158,7 +161,7 @@ const PaginationFeature = {
     selector.className = 'skargrid-page-size';
 
     const label = document.createElement('span');
-    label.textContent = 'Itens por página: ';
+    label.textContent = grid.labels.itemsPerPage;
     selector.appendChild(label);
 
     const select = document.createElement('select');

@@ -30,6 +30,7 @@
 
 ## ✨ Principais Recursos
 
+- 🌐 **Internacionalização (i18n)** - Labels padrão em inglês, totalmente personalizáveis para qualquer idioma
 - 🎨 **Configuração de Colunas** - Arrastar e soltar para reordenar, mostrar/ocultar colunas com persistência
 - 🗄️ **Persistência Inteligente** - Salva preferências do usuário no localStorage automaticamente
 - 🌓 **Suporte a Temas** - Tema claro/escuro com transições suaves e variáveis customizáveis
@@ -313,6 +314,48 @@ const table = new Skargrid('myTable', {
     selectable: false       // Desabilitar se não necessário
 });
 ```
+
+---
+
+## 🌐 Internacionalização (i18n)
+
+O SkarGrid vem com labels padrão em inglês, mas suporta personalização completa para qualquer idioma. Sobrescreva os labels passando um objeto `labels` nas opções:
+
+```javascript
+const grid = new Skargrid('myGrid', {
+  // ... outras opções
+  labels: {
+    searchPlaceholder: 'Buscar em todas as colunas...',
+    clearFilters: 'Limpar Filtros',
+    exportCSV: 'Exportar CSV',
+    filterTitle: 'Filtrar: {title}',
+    selectAll: 'Selecionar Todos',
+    clear: 'Limpar',
+    apply: 'Aplicar',
+    showing: 'Mostrando {start} até {end} de {total} registros',
+    itemsPerPage: 'Itens por página:'
+  }
+});
+```
+
+Chaves de labels disponíveis:
+- `searchPlaceholder` - Placeholder do campo de busca
+- `clearFilters` - Botão limpar filtros
+- `exportCSV` / `exportXLSX` - Botões de exportação
+- `filterTitle` - Título do dropdown de filtro (suporta placeholder `{title}`)
+- `selectAll` - Checkbox "selecionar todos" nos filtros
+- `filterSearchPlaceholder` - Busca dentro do dropdown de filtro
+- `filterInputPlaceholder` - Placeholder do filtro de input
+- `clear` / `apply` - Botões do filtro
+- `showing` - Info de paginação (suporta `{start}`, `{end}`, `{total}`)
+- `filteredOfTotal` - Sufixo da contagem filtrada
+- `itemsPerPage` - Label do seletor de tamanho da página
+- `columnConfigTitle` - Título do modal de configuração de colunas
+- `columnConfigDescription` - Descrição da configuração de colunas
+- `restore` / `cancel` - Botões da configuração de colunas
+- `noRowsSelected` - Mensagem de erro de exportação
+- `noData` - Mensagem de estado vazio
+- `loading` - Mensagem de carregamento
 
 ---
 

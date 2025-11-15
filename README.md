@@ -30,6 +30,7 @@
 
 ## ✨ Key Features
 
+- 🌐 **Internationalization (i18n)** - Default English labels, fully customizable for any language
 - 🎨 **Column Configuration** - Drag & drop to reorder, show/hide columns with persistence
 - 🗄️ **Smart Persistence** - Saves user preferences in localStorage automatically
 - 🌓 **Theme Support** - Light/Dark theme with smooth transitions and custom variables
@@ -313,6 +314,48 @@ const table = new Skargrid('myTable', {
     selectable: false       // Disable if not needed
 });
 ```
+
+---
+
+## 🌐 Internationalization (i18n)
+
+SkarGrid comes with default English labels but supports full customization for any language. Override labels by passing a `labels` object in the options:
+
+```javascript
+const grid = new Skargrid('myGrid', {
+  // ... other options
+  labels: {
+    searchPlaceholder: 'Buscar em todas as colunas...',
+    clearFilters: 'Limpar Filtros',
+    exportCSV: 'Exportar CSV',
+    filterTitle: 'Filtrar: {title}',
+    selectAll: 'Selecionar Todos',
+    clear: 'Limpar',
+    apply: 'Aplicar',
+    showing: 'Mostrando {start} até {end} de {total} registros',
+    itemsPerPage: 'Itens por página:'
+  }
+});
+```
+
+Available label keys:
+- `searchPlaceholder` - Search input placeholder
+- `clearFilters` - Clear filters button
+- `exportCSV` / `exportXLSX` - Export buttons
+- `filterTitle` - Filter dropdown title (supports `{title}` placeholder)
+- `selectAll` - Select all checkbox in filters
+- `filterSearchPlaceholder` - Search within filter dropdown
+- `filterInputPlaceholder` - Input filter placeholder
+- `clear` / `apply` - Filter buttons
+- `showing` - Pagination info (supports `{start}`, `{end}`, `{total}`)
+- `filteredOfTotal` - Filtered count suffix
+- `itemsPerPage` - Page size selector label
+- `columnConfigTitle` - Column config modal title
+- `columnConfigDescription` - Column config description
+- `restore` / `cancel` - Column config buttons
+- `noRowsSelected` - Export error message
+- `noData` - Empty state message
+- `loading` - Loading state message
 
 ---
 

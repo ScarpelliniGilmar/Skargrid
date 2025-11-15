@@ -207,7 +207,7 @@
     filename = filename || (this.options.exportFilename + '-selected.xls');
     const selectedRows = this.getSelectedRows();
     if (selectedRows.length === 0) {
-      alert('Nenhuma linha selecionada para exportar.');
+      alert(this.labels.noRowsSelected);
       return;
     }
 
@@ -252,7 +252,7 @@
     
     const selectedRows = this.getSelectedRows();
     if (selectedRows.length === 0) {
-      alert('Nenhuma linha selecionada para exportar.');
+      alert(this.labels.noRowsSelected);
       return;
     }
 
@@ -538,7 +538,7 @@
   Skargrid.prototype.exportSelectedToXLSX = function(filename) {
     filename = filename || (this.options.exportFilename + '-selected.xlsx');
     const selectedRows = this.getSelectedRows();
-    if (selectedRows.length === 0) { alert('Nenhuma linha selecionada para exportar.'); return; }
+    if (selectedRows.length === 0) { alert(this.labels.noRowsSelected); return; }
     const originalFiltered = this.filteredData;
     this.filteredData = selectedRows;
     this.exportToXLSX(filename);
