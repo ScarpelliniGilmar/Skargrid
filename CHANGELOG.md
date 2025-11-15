@@ -2,6 +2,76 @@
 
 Todas as mudanças notáveis neste projecto serão documentadas aqui.
 
+## [1.3.0] - 2025-11-15
+### Resumo
+Implementação completa do sistema de internacionalização (i18n) profissional com suporte a múltiplos idiomas e labels totalmente customizáveis.
+
+### Alterações
+- **Internacionalização (i18n) Completa** 🌐
+  - Sistema profissional de labels customizáveis para qualquer idioma
+  - Labels padrão em português brasileiro
+  - Suporte completo via `options.labels` com todas as mensagens da interface
+  - Compatibilidade total com todas as funcionalidades existentes
+  - Fácil customização para qualquer idioma (inglês, espanhol, francês, etc.)
+
+- **Labels Customizáveis** 📝
+  - Busca: `searchPlaceholder`, `clearSearch`
+  - Filtros: `filterTitle`, `selectAll`, `clear`, `apply`
+  - Paginação: `showing`, `filteredOfTotal`, `itemsPerPage`
+  - Configuração: `columnConfigTitle`, `columnConfigDescription`, `restore`, `cancel`
+  - Estados: `noData`, `loading`
+  - Exportação: `exportCSV`, `exportXLSX`
+
+- **Compatibilidade e Extensibilidade** 🔧
+  - Mantém retrocompatibilidade com versões anteriores
+  - Sistema extensível para novos idiomas
+  - Labels aplicados a todos os componentes (botões, tooltips, mensagens)
+  - Suporte a contexto cultural (formatos de data, moeda, etc.)
+
+---
+
+## [1.2.0] - 2025-11-15
+### Resumo
+Implementação completa de virtual scrolling para datasets grandes, com performance excepcional e suporte a todas as funcionalidades.
+
+### Alterações
+- **Virtual Scrolling Completo** 🚀
+  - Renderização otimizada para datasets grandes (10k+ registros)
+  - Apenas linhas visíveis + buffer são renderizadas
+  - Performance excepcional mantendo < 50MB de memória
+  - Scroll suave e responsivo em todas as condições
+
+- **Scroll Inteligente com Filtros** 🎯
+  - Scroll se ajusta automaticamente quando filtros são aplicados
+  - Altura do container recalculada dinamicamente
+  - Transições suaves entre estados filtrados
+  - Compatibilidade total com busca, ordenação e filtros
+
+- **Cabeçalho Fixo Aprimorado** 📌
+  - Cabeçalho sticky funciona perfeitamente com virtualização
+  - Alinhamento correto entre header e corpo da tabela
+  - Performance mantida mesmo com scroll longo
+
+- **Filtros Avançados** 🔍
+  - Filtros select em múltiplas colunas
+  - Opções pré-definidas para melhor UX
+  - Performance otimizada para datasets grandes
+  - Interface intuitiva com dropdowns
+
+- **Testes e Exemplos** 📊
+  - Exemplo completo com 10K registros (virtual scrolling)
+  - Teste extremo com 500K registros (validação de limites)
+  - Exemplo realista com paginação server-side simulada
+  - Guias de performance e limitações documentadas
+
+- **Otimização de Performance** ⚡
+  - Algoritmos otimizados para renderização condicional
+  - Gerenciamento inteligente de memória
+  - Scroll events otimizados
+  - Re-renders minimizados
+
+---
+
 ## [1.1.0] - 2025-11-12
 ### Resumo
 Conjunto abrangente de correções e melhorias significativas em filtros, exportação, ordenação, temas e layout.

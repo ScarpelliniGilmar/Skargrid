@@ -370,6 +370,7 @@ new Skargrid('myTable', { data, columns: cols, searchable:true, pagination:true,
                                         <button class="list-group-item list-group-item-action menu-item" data-example="advancedFilters"><i class="bi bi-funnel-fill me-2"></i>Advanced Filters</button>
                                         <button class="list-group-item list-group-item-action menu-item" data-example="formatting"><i class="bi bi-calendar2-date me-2"></i>Formatting</button>
                                         <button class="list-group-item list-group-item-action menu-item" data-example="large"><i class="bi bi-collection me-2"></i>Large Dataset</button>
+                                        <button class="list-group-item list-group-item-action menu-item" data-example="virtual"><i class="bi bi-lightning me-2"></i>Virtual Scrolling</button>
                                         <button class="list-group-item list-group-item-action menu-item" data-example="complete"><i class="bi bi-play-btn me-2"></i>Combined Demo</button>
                                         <button class="list-group-item list-group-item-action menu-item" data-example="themeGreen"><i class="bi bi-palette-fill me-2"></i>Theme - Green</button>
                                         <button class="list-group-item list-group-item-action menu-item" data-example="themeDark"><i class="bi bi-moon-fill me-2"></i>Theme - Dark</button>
@@ -659,6 +660,16 @@ new Skargrid('myTable', { data, columns: cols, searchable:true, pagination:true,
                     ],
                     options: { searchable: true, pagination: true, pageSize: 25 }
                 },
+                virtual: {
+                    data: Array.from({ length: 1000 }, (_, i) => ({ id: i + 1, nome: `Registro ${i + 1}`, categoria: ['A','B','C'][i % 3], valor: (100 + i) })),
+                    cols: [
+                        { field: 'id', title: 'ID' },
+                        { field: 'nome', title: 'Nome' },
+                        { field: 'categoria', title: 'Categoria' },
+                        { field: 'valor', title: 'Valor' }
+                    ],
+                    options: { searchable: true, virtualization: true, sortable: true, selectable: true }
+                },
                 complete: {
                     // Combined demo: many features enabled to show integration
                     data: Array.from({ length: 30 }, (_, i) => ({ id: i + 1, nome: `Pessoa ${i + 1}`, cidade: ['SP','RJ','MG'][i % 3], idade: 20 + (i % 30), salario: 3000 + i * 100 })),
@@ -772,7 +783,7 @@ new Skargrid('myTable', { data, columns: cols, searchable:true, pagination:true,
                             }
                             // atualiza título e código
                             const titleMap = {
-                                minimal: 'Minimal', searchable: 'Search', pagination: 'Pagination', sort: 'Sorting', filters: 'Filters', selection: 'Selection', fixedHeight: 'Fixed Height', export: 'Export', columns: 'Column Config', custom: 'Custom Renderer', async: 'Async / Remote', advancedFilters: 'Advanced Filters', formatting: 'Formatting', large: 'Large Dataset', complete: 'Combined Demo', themeGreen: 'Theme — Green', themeDark: 'Theme — Dark'
+                                minimal: 'Minimal', searchable: 'Search', pagination: 'Pagination', sort: 'Sorting', filters: 'Filters', selection: 'Selection', fixedHeight: 'Fixed Height', export: 'Export', columns: 'Column Config', custom: 'Custom Renderer', async: 'Async / Remote', advancedFilters: 'Advanced Filters', formatting: 'Formatting', large: 'Large Dataset', virtual: 'Virtual Scrolling', complete: 'Combined Demo', themeGreen: 'Theme — Green', themeDark: 'Theme — Dark'
                             };
                             document.getElementById('featureTitle').textContent = titleMap[name] || 'Exemplo';
                             setExampleCode(name);

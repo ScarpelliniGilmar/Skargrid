@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SkarGrid Small Dataset Example</title>
+    <link rel="stylesheet" href="../dist/skargrid.min.css">
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .demo-info { margin-bottom: 20px; padding: 15px; background: #f0fff4; border-left: 4px solid #38a169; border-radius: 4px; }
+        .demo-info h3 { margin-top: 0; color: #38a169; }
+    </style>
+</head>
+<body>
+    <h1>SkarGrid Small Dataset Demo</h1>
+
+    <div class="demo-info">
+        <h3>No Pagination or Virtual Scrolling</h3>
+        <p>This demo shows <strong>50 rows</strong> with no pagination or virtual scrolling. All data is rendered at once.</p>
+        <p><strong>Features:</strong> Search, sorting, selection, filters, and export work normally!</p>
+        <p><strong>Use case:</strong> When you have small datasets (dozens to hundreds of rows) and want everything visible at once.</p>
+    </div>
+
+    <div id="grid1"></div>
+
+    <script src="../dist/skargrid.min.js"></script>
+    <script>
+        // Generate 50 sample rows
+        const generateSmallDataset = () => {
+            const data = [];
+            const firstNames = ['John', 'Jane', 'Bob', 'Alice', 'Charlie', 'Diana', 'Eve', 'Frank', 'Grace', 'Henry'];
+            const lastNames = ['Smith', 'Johnson', 'Williams', 'Brown', 'Jones', 'Garcia', 'Miller', 'Davis', 'Rodriguez', 'Martinez'];
+            const cities = ['New York', 'Los Angeles', 'Chicago', 'Houston', 'Phoenix'];
+
+            for (let i = 1; i <= 50; i++) {
+                data.push({
+                    id: i,
+                    name: `${firstNames[Math.floor(Math.random() * firstNames.length)]} ${lastNames[Math.floor(Math.random() * lastNames.length)]}`,
+                    age: Math.floor(Math.random() * 60) + 18,
+                    city: cities[Math.floor(Math.random() * cities.length)],
+                    salary: Math.floor(Math.random() * 100000) + 30000
+                });
+            }
+            return data;
+        };
+
+        const grid = new Skargrid('grid1', {
+            data: generateSmallDataset(),
+            columns: [
+                { field: 'id', title: 'ID', width: 80 },
+                { field: 'name', title: 'Name', width: 200 },
+                { field: 'age', title: 'Age', width: 80 },
+                { field: 'city', title: 'City', width: 150 },
+                { field: 'salary', title: 'Salary', width: 120, render: (value) => `$${value.toLocaleString()}` }
+            ],
+            // No pagination or virtualization - all rows shown at once
+            searchable: true,
+            sortable: true,
+            selectable: true,
+            columnFilters: true,
+            exportCSV: true,
+            columnConfig: true
+        });
+
+        console.log('Small dataset mode! All 50 rows are rendered at once.');
+    </script>
+</body>
+</html></content>
+<parameter name="filePath">c:\Users\Gilmar\Desktop\SkarGrid\Skargrid\docs\small-dataset-example.html
