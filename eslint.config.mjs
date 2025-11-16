@@ -14,6 +14,7 @@ export default [
         PaginationFeature: "readonly",
         FilterFeature: "readonly",
         SelectFilterFeature: "readonly",
+        VirtualizationFeature: "readonly",
         SortFeature: "readonly",
         SelectionFeature: "readonly",
         Skargrid: "readonly",

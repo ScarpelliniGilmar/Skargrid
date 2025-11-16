@@ -116,11 +116,16 @@ class Skargrid {
     );
     this.columnOrder = this.options.columns.map(col => col.field);
 
-    // Estado da virtualização
-    this.virtualScrollTop = 0;
-    this.virtualRowHeight = 40; // Altura estimada por linha (px)
-    this.virtualVisibleRows = 20; // Número de linhas visíveis estimadas
-    this.virtualBufferSize = 5; // Buffer de linhas extras para scroll suave
+    // Estado da virtualização (inicializado pela feature se disponível)
+    if (typeof VirtualizationFeature !== 'undefined') {
+      VirtualizationFeature.initVirtualization(this);
+    } else {
+      // Fallback básico se VirtualizationFeature não disponível
+      this.virtualScrollTop = 0;
+      this.virtualRowHeight = 40;
+      this.virtualVisibleRows = 20;
+      this.virtualBufferSize = 5;
+    }
 
     // Inicializa features modulares
     if (typeof initColumnConfig === 'function') {
@@ -204,19 +209,19 @@ class Skargrid {
     // Container da tabela com loading
     const tableContainer = document.createElement('div');
     tableContainer.className = 'skargrid-table-container';
-    
+
     // Configura virtualização se habilitada
     if (this.options.virtualization) {
-      tableContainer.classList.add('skargrid-virtual-container');
-      tableContainer.style.overflowY = 'auto';
-      tableContainer.style.overflowX = 'auto';
-      tableContainer.style.position = 'relative';
-
-      // Calcula dinamicamente quantas linhas são visíveis baseado na altura do container
-      const containerHeight = tableContainer.clientHeight || 400; // fallback para 400px se não conseguir medir
-      this.virtualVisibleRows = Math.ceil(containerHeight / this.virtualRowHeight);
-
-      tableContainer.onscroll = (e) => this.handleVirtualScroll(e);
+      if (typeof VirtualizationFeature !== 'undefined') {
+        VirtualizationFeature.setupVirtualContainer(this, tableContainer);
+      } else {
+        // Fallback básico se VirtualizationFeature não disponível
+        tableContainer.classList.add('skargrid-virtual-container');
+        tableContainer.style.overflowY = 'auto';
+        tableContainer.style.overflowX = 'auto';
+        tableContainer.style.position = 'relative';
+        tableContainer.onscroll = (e) => this.handleVirtualScroll(e);
+      }
     }
     
     // Adiciona indicador de loading APENAS na área da tabela
@@ -241,38 +246,14 @@ class Skargrid {
     table.className = this.options.className;
 
     if (this.options.virtualization) {
-      // Para virtualização, criamos uma estrutura especial com container de altura total
-      const virtualContainer = document.createElement('div');
-      virtualContainer.style.position = 'relative';
-      virtualContainer.style.height = `${this.filteredData.length * this.virtualRowHeight}px`;
-
-      // Calcula quantas linhas serão realmente renderizadas
-      const startIndex = Math.max(0, Math.floor(this.virtualScrollTop / this.virtualRowHeight) - this.virtualBufferSize);
-      const endIndex = Math.min(this.filteredData.length, startIndex + this.virtualVisibleRows + (this.virtualBufferSize * 2));
-      const renderedRows = endIndex - startIndex;
-
-      // A tabela fica posicionada absolutamente dentro do container
-      table.style.position = 'absolute';
-      table.style.top = '0';
-      table.style.left = '0';
-      table.style.width = '100%';
-      // Define altura baseada no número real de linhas renderizadas
-      const tableHeight = renderedRows * this.virtualRowHeight;
-      table.style.height = `${tableHeight}px`;
-
-      const thead = this.renderHeader();
-      thead.style.position = 'sticky';
-      thead.style.top = '0';
-      thead.style.zIndex = '1';
-      thead.style.background = 'var(--sg-thead-bg, #f8f9fa)';
-      thead.style.width = '100%';
-      table.appendChild(thead);
-
-      const tbody = this.renderBody();
-      table.appendChild(tbody);
-
-      virtualContainer.appendChild(table);
-      tableContainer.appendChild(virtualContainer);
+      if (typeof VirtualizationFeature !== 'undefined') {
+        // Usa a feature de virtualização
+        const virtualContainer = VirtualizationFeature.renderVirtualStructure(this);
+        tableContainer.appendChild(virtualContainer);
+      } else {
+        // Fallback básico se VirtualizationFeature não disponível
+        this.renderBasicVirtualStructure(tableContainer);
+      }
     } else {
       // Renderização normal
       const thead = this.renderHeader();
@@ -988,8 +969,6 @@ class Skargrid {
       const startIndex = Math.max(0, Math.floor(this.virtualScrollTop / this.virtualRowHeight) - this.virtualBufferSize);
       const endIndex = Math.min(totalRows, startIndex + this.virtualVisibleRows + (this.virtualBufferSize * 2));
 
-      console.log('Virtual render:', { totalRows, startIndex, endIndex, scrollTop: this.virtualScrollTop });
-
       // Renderiza apenas as linhas visíveis
       for (let i = startIndex; i < endIndex; i++) {
         const row = this.filteredData[i];
@@ -1091,8 +1070,19 @@ class Skargrid {
    * Manipula o scroll virtual
    */
   handleVirtualScroll(e) {
+    if (typeof VirtualizationFeature !== 'undefined') {
+      VirtualizationFeature.handleVirtualScroll(this, e);
+    } else {
+      // Fallback básico se VirtualizationFeature não disponível
+      this.handleBasicVirtualScroll(e);
+    }
+  }
+
+  /**
+   * Fallback básico para scroll virtual quando VirtualizationFeature não está disponível
+   */
+  handleBasicVirtualScroll(e) {
     const scrollTop = e.target.scrollTop;
-    console.log('Virtual scroll:', scrollTop, 'total rows:', this.filteredData.length);
     this.virtualScrollTop = scrollTop;
 
     // Atualiza a posição da tabela dentro do container virtual
@@ -1127,6 +1117,45 @@ class Skargrid {
       return PaginationFeature.renderPagination(this);
     }
     return document.createElement('div');
+  }
+
+  /**
+   * Fallback básico para renderização virtual quando VirtualizationFeature não está disponível
+   */
+  renderBasicVirtualStructure(tableContainer) {
+    const virtualContainer = document.createElement('div');
+    virtualContainer.style.position = 'relative';
+    virtualContainer.style.height = `${this.filteredData.length * this.virtualRowHeight}px`;
+
+    // Calcula quantas linhas serão realmente renderizadas
+    const startIndex = Math.max(0, Math.floor(this.virtualScrollTop / this.virtualRowHeight) - this.virtualBufferSize);
+    const endIndex = Math.min(this.filteredData.length, startIndex + this.virtualVisibleRows + (this.virtualBufferSize * 2));
+    const renderedRows = endIndex - startIndex;
+
+    // Cria a tabela posicionada absolutamente
+    const table = document.createElement('table');
+    table.className = this.options.className;
+    table.style.position = 'absolute';
+    table.style.top = '0';
+    table.style.left = '0';
+    table.style.width = '100%';
+    // Define altura baseada no número real de linhas renderizadas
+    const tableHeight = renderedRows * this.virtualRowHeight;
+    table.style.height = `${tableHeight}px`;
+
+    const thead = this.renderHeader();
+    thead.style.position = 'sticky';
+    thead.style.top = '0';
+    thead.style.zIndex = '1';
+    thead.style.background = 'var(--sg-thead-bg, #f8f9fa)';
+    thead.style.width = '100%';
+    table.appendChild(thead);
+
+    const tbody = this.renderBody();
+    table.appendChild(tbody);
+
+    virtualContainer.appendChild(table);
+    tableContainer.appendChild(virtualContainer);
   }
 
   /**

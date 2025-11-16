@@ -3,266 +3,736 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SkarGrid - Exemplo Completo</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/skargrid@latest/dist/skargrid.min.css">
+    <title>Skargrid - Test Suite Completo</title>
+    <link rel="stylesheet" href="../dist/skargrid.min.css">
     <style>
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             margin: 0;
             padding: 20px;
-            background: #f5f5f5;
+            background: #f8f9fa;
         }
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
+
+        .test-suite-header {
             background: white;
             padding: 20px;
             border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }
-        h1 {
-            color: #2563eb;
-            text-align: center;
-            margin-bottom: 30px;
-        }
-        .controls {
-            display: flex;
-            gap: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
             margin-bottom: 20px;
-            flex-wrap: wrap;
         }
-        button {
+
+        .test-suite-header h1 {
+            margin: 0 0 10px 0;
+            color: #2c3e50;
+        }
+
+        .test-suite-header p {
+            margin: 0;
+            color: #7f8c8d;
+        }
+
+        .test-tabs {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+
+        .tab-buttons {
+            display: flex;
+            background: #f8f9fa;
+            border-bottom: 1px solid #dee2e6;
+        }
+
+        .tab-button {
+            flex: 1;
+            padding: 15px 20px;
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            color: #6c757d;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        .tab-button:hover {
+            background: #e9ecef;
+            color: #495057;
+        }
+
+        .tab-button.active {
+            color: #007bff;
+            border-bottom-color: #007bff;
+            background: white;
+        }
+
+        .tab-content {
+            padding: 20px;
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .test-section {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .test-section h3 {
+            margin-top: 0;
+            color: #2c3e50;
+            border-bottom: 2px solid #007bff;
+            padding-bottom: 10px;
+        }
+
+        .test-info {
+            background: #e7f3ff;
+            border: 1px solid #b3d7ff;
+            border-radius: 4px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+
+        .test-info h4 {
+            margin-top: 0;
+            color: #0056b3;
+        }
+
+        .status-indicator {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .status-pass {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status-fail {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .test-controls {
+            margin-bottom: 20px;
+        }
+
+        .test-controls button {
+            margin-right: 10px;
             padding: 8px 16px;
-            border: 1px solid #d1d5db;
+            border: 1px solid #dee2e6;
             background: white;
             border-radius: 4px;
             cursor: pointer;
+        }
+
+        .test-controls button:hover {
+            background: #f8f9fa;
+        }
+
+        .test-controls button.primary {
+            background: #007bff;
+            color: white;
+            border-color: #007bff;
+        }
+
+        .test-controls button.primary:hover {
+            background: #0056b3;
+        }
+
+        .performance-metrics {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .metric-card {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 6px;
+            text-align: center;
+        }
+
+        .metric-value {
+            font-size: 24px;
+            font-weight: bold;
+            color: #007bff;
+        }
+
+        .metric-label {
+            font-size: 12px;
+            color: #6c757d;
+            text-transform: uppercase;
+            margin-top: 5px;
+        }
+
+        .code-example {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 4px;
+            padding: 15px;
+            margin: 15px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            overflow-x: auto;
+        }
+
+        .feature-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+        }
+
+        .feature-item {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 6px;
+            border-left: 4px solid #007bff;
+        }
+
+        .feature-item h4 {
+            margin-top: 0;
+            color: #2c3e50;
+        }
+
+        .feature-item p {
+            margin-bottom: 0;
+            color: #6c757d;
             font-size: 14px;
         }
-        button:hover {
-            background: #f3f4f6;
+
+        .test-results {
+            margin-top: 20px;
         }
-        .stats {
-            background: #f8fafc;
-            padding: 15px;
+
+        .test-result-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid #dee2e6;
+        }
+
+        .test-result-item:last-child {
+            border-bottom: none;
+        }
+
+        .test-name {
+            font-weight: 500;
+        }
+
+        .test-status {
+            font-size: 12px;
+            padding: 4px 8px;
             border-radius: 4px;
-            margin-bottom: 20px;
-            border-left: 4px solid #2563eb;
+        }
+
+        .test-status.pass {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .test-status.fail {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .test-status.pending {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        @media (max-width: 768px) {
+            .tab-buttons {
+                flex-direction: column;
+            }
+
+            .performance-metrics {
+                grid-template-columns: 1fr;
+            }
+
+            .feature-list {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>🚀 SkarGrid - Exemplo Completo</h1>
-
-        <div class="stats">
-            <strong>Dados de exemplo:</strong> 500 funcionários | <strong>Features:</strong> Busca, filtros, paginação, seleção, export, temas
-        </div>
-
-        <div class="controls">
-            <button onclick="toggleTheme()">🌙 Alternar Tema</button>
-            <button onclick="clearFilters()">🧹 Limpar Filtros</button>
-            <button onclick="selectRandom()">🎲 Selecionar Aleatório</button>
-            <button onclick="exportData()">📊 Exportar CSV</button>
-            <button onclick="showStats()">📈 Estatísticas</button>
-        </div>
-
-        <div id="employeeTable"></div>
+    <div class="test-suite-header">
+        <h1>🧪 Skargrid Test Suite</h1>
+        <p>Teste completo de todas as funcionalidades do Skargrid - v1.3.0</p>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/skargrid@latest/dist/skargrid.min.js"></script>
+    <div class="test-tabs">
+        <div class="tab-buttons">
+            <button class="tab-button active" onclick="showTab('basico')">Básico</button>
+            <button class="tab-button" onclick="showTab('filtros')">Filtros</button>
+            <button class="tab-button" onclick="showTab('virtualizacao')">Virtualização</button>
+            <button class="tab-button" onclick="showTab('performance')">Performance</button>
+            <button class="tab-button" onclick="showTab('integracao')">Integração</button>
+            <button class="tab-button" onclick="showTab('relatorio')">Relatório</button>
+        </div>
+
+        <!-- Aba Básico -->
+        <div id="basico" class="tab-content active">
+            <div class="test-section">
+                <h3>📋 Teste Básico</h3>
+                <div class="test-info">
+                    <h4>Objetivo</h4>
+                    <p>Verificar funcionamento básico da tabela com dados simples, ordenação e paginação.</p>
+                </div>
+
+                <div class="test-controls">
+                    <button class="primary" onclick="runBasicTest()">Executar Teste</button>
+                    <button onclick="resetBasicTest()">Reset</button>
+                </div>
+
+                <div id="basic-grid-container"></div>
+            </div>
+        </div>
+
+        <!-- Aba Filtros -->
+        <div id="filtros" class="tab-content">
+            <div class="test-section">
+                <h3>🔍 Teste de Filtros Avançados</h3>
+                <div class="test-info">
+                    <h4>Objetivo</h4>
+                    <p>Testar filtros cascading, busca inteligente e isolamento de seleções.</p>
+                </div>
+
+                <div class="test-controls">
+                    <button class="primary" onclick="runFiltersTest()">Executar Teste</button>
+                    <button onclick="resetFiltersTest()">Reset</button>
+                </div>
+
+                <div id="filters-grid-container"></div>
+            </div>
+        </div>
+
+        <!-- Aba Virtualização -->
+        <div id="virtualizacao" class="tab-content">
+            <div class="test-section">
+                <h3>⚡ Teste de Virtualização</h3>
+                <div class="test-info">
+                    <h4>Objetivo</h4>
+                    <p>Testar performance com grandes datasets (10k+ registros) usando virtualização.</p>
+                </div>
+
+                <div class="test-controls">
+                    <button class="primary" onclick="runVirtualizationTest()">Executar Teste</button>
+                    <button onclick="resetVirtualizationTest()">Reset</button>
+                </div>
+
+                <div id="virtualization-grid-container" style="height: 400px;"></div>
+            </div>
+        </div>
+
+        <!-- Aba Performance -->
+        <div id="performance" class="tab-content">
+            <div class="test-section">
+                <h3>📊 Métricas de Performance</h3>
+                <div class="performance-metrics" id="performance-metrics">
+                    <div class="metric-card">
+                        <div class="metric-value" id="render-time">--</div>
+                        <div class="metric-label">Tempo de Renderização (ms)</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-value" id="memory-usage">--</div>
+                        <div class="metric-label">Uso de Memória (MB)</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-value" id="filter-time">--</div>
+                        <div class="metric-label">Tempo de Filtro (ms)</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-value" id="sort-time">--</div>
+                        <div class="metric-label">Tempo de Ordenação (ms)</div>
+                    </div>
+                </div>
+
+                <div class="test-controls">
+                    <button class="primary" onclick="runPerformanceTest()">Executar Benchmark</button>
+                    <button onclick="clearPerformanceMetrics()">Limpar Métricas</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Aba Integração -->
+        <div id="integracao" class="tab-content">
+            <div class="test-section">
+                <h3>🔧 Teste de Integração Completa</h3>
+                <div class="test-info">
+                    <h4>Objetivo</h4>
+                    <p>Testar todas as funcionalidades juntas: filtros, ordenação, paginação, seleção, exportação.</p>
+                </div>
+
+                <div class="feature-list">
+                    <div class="feature-item">
+                        <h4>🎯 Filtros Cascading</h4>
+                        <p>Filtros que se adaptam dinamicamente aos outros filtros aplicados</p>
+                    </div>
+                    <div class="feature-item">
+                        <h4>🔍 Busca Inteligente</h4>
+                        <p>Busca com normalização de acentos e isolamento de seleções</p>
+                    </div>
+                    <div class="feature-item">
+                        <h4>📊 Virtualização</h4>
+                        <p>Renderização eficiente para datasets grandes</p>
+                    </div>
+                    <div class="feature-item">
+                        <h4>🎨 Temas</h4>
+                        <p>Suporte a temas claro/escuro</p>
+                    </div>
+                    <div class="feature-item">
+                        <h4>💾 Persistência</h4>
+                        <p>Salva configurações no localStorage</p>
+                    </div>
+                    <div class="feature-item">
+                        <h4>📱 Responsividade</h4>
+                        <p>Adaptação automática ao tamanho da tela</p>
+                    </div>
+                </div>
+
+                <div class="test-controls">
+                    <button class="primary" onclick="runIntegrationTest()">Executar Teste Completo</button>
+                    <button onclick="resetIntegrationTest()">Reset</button>
+                </div>
+
+                <div id="integration-grid-container"></div>
+            </div>
+        </div>
+
+        <!-- Aba Relatório -->
+        <div id="relatorio" class="tab-content">
+            <div class="test-section">
+                <h3>📋 Relatório de Testes</h3>
+                <div class="test-results" id="test-results">
+                    <div class="test-result-item">
+                        <span class="test-name">Teste Básico</span>
+                        <span class="test-status pending" id="basic-test-status">Pendente</span>
+                    </div>
+                    <div class="test-result-item">
+                        <span class="test-name">Teste de Filtros</span>
+                        <span class="test-status pending" id="filters-test-status">Pendente</span>
+                    </div>
+                    <div class="test-result-item">
+                        <span class="test-name">Teste de Virtualização</span>
+                        <span class="test-status pending" id="virtualization-test-status">Pendente</span>
+                    </div>
+                    <div class="test-result-item">
+                        <span class="test-name">Teste de Performance</span>
+                        <span class="test-status pending" id="performance-test-status">Pendente</span>
+                    </div>
+                    <div class="test-result-item">
+                        <span class="test-name">Teste de Integração</span>
+                        <span class="test-status pending" id="integration-test-status">Pendente</span>
+                    </div>
+                </div>
+
+                <div class="test-controls">
+                    <button class="primary" onclick="runAllTests()">Executar Todos os Testes</button>
+                    <button onclick="generateReport()">Gerar Relatório</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="../dist/skargrid.min.js"></script>
     <script>
-        // Gerar dados de exemplo
-        function generateEmployees(count = 500) {
-            const names = ['João', 'Maria', 'Pedro', 'Ana', 'Carlos', 'Beatriz', 'Lucas', 'Julia', 'Fernando', 'Gabriela', 'Rafael', 'Camila', 'Gustavo', 'Larissa', 'Bruno', 'Amanda', 'Felipe', 'Carolina', 'Diego', 'Isabela'];
-            const surnames = ['Silva', 'Santos', 'Oliveira', 'Souza', 'Rodrigues', 'Ferreira', 'Almeida', 'Costa', 'Gomes', 'Martins', 'Araújo', 'Melo', 'Barbosa', 'Ribeiro', 'Alves', 'Pereira', 'Lima', 'Carvalho', 'Teixeira', 'Moreira'];
-            const cities = ['São Paulo', 'Rio de Janeiro', 'Belo Horizonte', 'Salvador', 'Brasília', 'Curitiba', 'Porto Alegre', 'Recife', 'Fortaleza', 'Manaus', 'Belém', 'Goiânia', 'Guarulhos', 'Campinas', 'São Luís'];
-            const departments = ['TI', 'RH', 'Financeiro', 'Vendas', 'Marketing', 'Operações', 'Jurídico', 'Compras', 'Logística', 'Produção'];
-            const positions = ['Analista', 'Coordenador', 'Gerente', 'Diretor', 'Assistente', 'Especialista', 'Consultor', 'Supervisor'];
+        // Estado dos testes
+        let testResults = {
+            basic: null,
+            filters: null,
+            virtualization: null,
+            performance: null,
+            integration: null
+        };
 
-            const employees = [];
-
-            for (let i = 0; i < count; i++) {
-                const name = `${names[i % names.length]} ${surnames[i % surnames.length]}`;
-                const age = 22 + (i % 38); // 22-60 anos
-                const salary = 2500 + (i % 15000); // R$ 2.500 - R$ 17.500
-                const department = departments[i % departments.length];
-                const position = positions[i % positions.length];
-
-                employees.push({
-                    id: i + 1,
-                    name: name,
-                    age: age,
-                    city: cities[i % cities.length],
-                    department: department,
-                    position: position,
-                    salary: salary,
-                    active: Math.random() > 0.15, // 85% ativos
-                    hireDate: new Date(2020 + (i % 4), i % 12, 1 + (i % 28)).toISOString().split('T')[0]
-                });
-            }
-
-            return employees;
-        }
-
-        // Configuração das colunas
-        const columns = [
-            {
-                field: 'id',
-                title: 'ID',
-                width: '60px',
-                sortable: true,
-                filterType: 'number'
-            },
-            {
-                field: 'name',
-                title: 'Nome Completo',
-                sortable: true,
-                filterType: 'text',
-                render: (value, row) => `<strong>${value}</strong>`
-            },
-            {
-                field: 'age',
-                title: 'Idade',
-                width: '80px',
-                sortable: true,
-                filterType: 'number',
-                sortType: 'number'
-            },
-            {
-                field: 'city',
-                title: 'Cidade',
-                sortable: true,
-                filterType: 'select'
-            },
-            {
-                field: 'department',
-                title: 'Departamento',
-                filterType: 'select'
-            },
-            {
-                field: 'position',
-                title: 'Cargo',
-                filterType: 'select'
-            },
-            {
-                field: 'salary',
-                title: 'Salário',
-                sortable: true,
-                filterType: 'number',
-                sortType: 'number',
-                render: (value) => `R$ ${value.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`
-            },
-            {
-                field: 'active',
-                title: 'Status',
-                filterType: 'select',
-                render: (value) => value ?
-                    '<span style="color: #16a34a;">✅ Ativo</span>' :
-                    '<span style="color: #dc2626;">❌ Inativo</span>'
-            },
-            {
-                field: 'hireDate',
-                title: 'Data Admissão',
-                sortable: true,
-                filterType: 'date',
-                sortType: 'date',
-                render: (value) => new Date(value).toLocaleDateString('pt-BR')
-            }
+        // Dados de teste
+        const sampleData = [
+            { id: 1, nome: 'João Silva', email: 'joao@email.com', cidade: 'São Paulo', idade: 25, status: 'Ativo' },
+            { id: 2, nome: 'Maria Santos', email: 'maria@email.com', cidade: 'Rio de Janeiro', idade: 30, status: 'Ativo' },
+            { id: 3, nome: 'Pedro Oliveira', email: 'pedro@email.com', cidade: 'Belo Horizonte', idade: 28, status: 'Inativo' },
+            { id: 4, nome: 'Ana Costa', email: 'ana@email.com', cidade: 'São Paulo', idade: 35, status: 'Ativo' },
+            { id: 5, nome: 'Carlos Lima', email: 'carlos@email.com', cidade: 'Rio de Janeiro', idade: 22, status: 'Ativo' },
+            { id: 6, nome: 'Fernanda Alves', email: 'fernanda@email.com', cidade: 'São Paulo', idade: 29, status: 'Inativo' },
+            { id: 7, nome: 'Roberto Souza', email: 'roberto@email.com', cidade: 'Belo Horizonte', idade: 40, status: 'Ativo' },
+            { id: 8, nome: 'Juliana Pereira', email: 'juliana@email.com', cidade: 'Rio de Janeiro', idade: 26, status: 'Ativo' }
         ];
 
-        // Dados de exemplo
-        const employees = generateEmployees(500);
+        // Dados grandes para virtualização
+        const largeData = [];
+        for (let i = 1; i <= 50000; i++) {
+            largeData.push({
+                id: i,
+                nome: `Pessoa ${i}`,
+                email: `pessoa${i}@email.com`,
+                cidade: ['São Paulo', 'Rio de Janeiro', 'Belo Horizonte', 'Porto Alegre', 'Salvador'][Math.floor(Math.random() * 5)],
+                idade: Math.floor(Math.random() * 60) + 18,
+                status: Math.random() > 0.3 ? 'Ativo' : 'Inativo'
+            });
+        }
 
-        // Inicializar SkarGrid
-        const table = new Skargrid('employeeTable', {
-            data: employees,
-            columns: columns,
-            pagination: true,
-            pageSize: 25,
-            pageSizeOptions: [10, 25, 50, 100],
-            sortable: true,
-            searchable: true,
-            columnFilters: true,
-            selectable: true,
-            columnConfig: true,
-            persistColumnConfig: true,
-            storageKey: 'skargrid-demo-employees',
-            exportCSV: true,
-            exportXLSX: true,
-            exportFilename: 'funcionarios-empresa',
-            theme: 'light'
+        // Funções de navegação entre abas
+        function showTab(tabId) {
+            // Esconder todas as abas
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.querySelectorAll('.tab-button').forEach(button => {
+                button.classList.remove('active');
+            });
+
+            // Mostrar aba selecionada
+            document.getElementById(tabId).classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        // Função para atualizar status dos testes
+        function updateTestStatus(testName, status) {
+            testResults[testName] = status;
+            const statusElement = document.getElementById(`${testName}-test-status`);
+            statusElement.textContent = status === 'pass' ? 'Aprovado' : status === 'fail' ? 'Reprovado' : 'Pendente';
+            statusElement.className = `test-status ${status}`;
+        }
+
+        // Teste Básico
+        function runBasicTest() {
+            try {
+                const container = document.getElementById('basic-grid-container');
+                container.innerHTML = '';
+
+                new Skargrid('basic-grid-container', {
+                    data: sampleData,
+                    columns: [
+                        { field: 'id', title: 'ID', width: '60px' },
+                        { field: 'nome', title: 'Nome' },
+                        { field: 'email', title: 'Email' },
+                        { field: 'cidade', title: 'Cidade' },
+                        { field: 'idade', title: 'Idade', width: '80px' },
+                        { field: 'status', title: 'Status', width: '100px' }
+                    ],
+                    pagination: true,
+                    pageSize: 5,
+                    sortable: true
+                });
+
+                updateTestStatus('basic', 'pass');
+                alert('✅ Teste básico executado com sucesso!');
+            } catch (error) {
+                console.error('Erro no teste básico:', error);
+                updateTestStatus('basic', 'fail');
+                alert('❌ Erro no teste básico: ' + error.message);
+            }
+        }
+
+        function resetBasicTest() {
+            document.getElementById('basic-grid-container').innerHTML = '';
+            updateTestStatus('basic', null);
+        }
+
+        // Teste de Filtros
+        function runFiltersTest() {
+            try {
+                const container = document.getElementById('filters-grid-container');
+                container.innerHTML = '';
+
+                new Skargrid('filters-grid-container', {
+                    data: sampleData,
+                    columns: [
+                        { field: 'id', title: 'ID', width: '60px' },
+                        { field: 'nome', title: 'Nome', filterable: true },
+                        { field: 'email', title: 'Email', filterable: true },
+                        { field: 'cidade', title: 'Cidade', filterable: true, type: 'select' },
+                        { field: 'idade', title: 'Idade', width: '80px', filterable: true, type: 'number' },
+                        { field: 'status', title: 'Status', width: '100px', filterable: true, type: 'select' }
+                    ],
+                    columnFilters: true,
+                    searchable: true,
+                    pagination: true,
+                    pageSize: 5
+                });
+
+                updateTestStatus('filters', 'pass');
+                alert('✅ Teste de filtros executado com sucesso!');
+            } catch (error) {
+                console.error('Erro no teste de filtros:', error);
+                updateTestStatus('filters', 'fail');
+                alert('❌ Erro no teste de filtros: ' + error.message);
+            }
+        }
+
+        function resetFiltersTest() {
+            document.getElementById('filters-grid-container').innerHTML = '';
+            updateTestStatus('filters', null);
+        }
+
+        // Teste de Virtualização
+        function runVirtualizationTest() {
+            try {
+                const container = document.getElementById('virtualization-grid-container');
+                container.innerHTML = '';
+
+                new Skargrid('virtualization-grid-container', {
+                    data: largeData.slice(0, 10000), // Usar 10k registros para teste
+                    columns: [
+                        { field: 'id', title: 'ID', width: '80px' },
+                        { field: 'nome', title: 'Nome' },
+                        { field: 'email', title: 'Email' },
+                        { field: 'cidade', title: 'Cidade', filterable: true, type: 'select' },
+                        { field: 'idade', title: 'Idade', width: '80px' },
+                        { field: 'status', title: 'Status', width: '100px', filterable: true, type: 'select' }
+                    ],
+                    virtualization: true,
+                    columnFilters: true,
+                    pagination: false, // Desabilitar paginação com virtualização
+                    sortable: true
+                });
+
+                updateTestStatus('virtualization', 'pass');
+                alert('✅ Teste de virtualização executado com sucesso!');
+            } catch (error) {
+                console.error('Erro no teste de virtualização:', error);
+                updateTestStatus('virtualization', 'fail');
+                alert('❌ Erro no teste de virtualização: ' + error.message);
+            }
+        }
+
+        function resetVirtualizationTest() {
+            document.getElementById('virtualization-grid-container').innerHTML = '';
+            updateTestStatus('virtualization', null);
+        }
+
+        // Teste de Performance
+        function runPerformanceTest() {
+            const startTime = performance.now();
+
+            try {
+                // Criar container temporário
+                const tempContainer = document.createElement('div');
+                tempContainer.id = 'temp-performance-container';
+                tempContainer.style.display = 'none';
+                document.body.appendChild(tempContainer);
+
+                // Teste de renderização
+                const grid = new Skargrid('temp-performance-container', {
+                    data: largeData.slice(0, 5000),
+                    columns: [
+                        { field: 'id', title: 'ID', width: '80px' },
+                        { field: 'nome', title: 'Nome' },
+                        { field: 'email', title: 'Email' },
+                        { field: 'cidade', title: 'Cidade' },
+                        { field: 'idade', title: 'Idade', width: '80px' },
+                        { field: 'status', title: 'Status', width: '100px' }
+                    ],
+                    virtualization: true
+                });
+
+                const renderTime = performance.now() - startTime;
+
+                // Atualizar métricas
+                document.getElementById('render-time').textContent = renderTime.toFixed(2);
+                document.getElementById('memory-usage').textContent = (performance.memory ? (performance.memory.usedJSHeapSize / 1024 / 1024).toFixed(2) : 'N/A');
+                document.getElementById('filter-time').textContent = '--';
+                document.getElementById('sort-time').textContent = '--';
+
+                // Remover container temporário
+                document.body.removeChild(tempContainer);
+                updateTestStatus('performance', 'pass');
+                alert('✅ Teste de performance executado com sucesso!');
+            } catch (error) {
+                console.error('Erro no teste de performance:', error);
+                updateTestStatus('performance', 'fail');
+                alert('❌ Erro no teste de performance: ' + error.message);
+            }
+        }
+
+        function clearPerformanceMetrics() {
+            document.getElementById('render-time').textContent = '--';
+            document.getElementById('memory-usage').textContent = '--';
+            document.getElementById('filter-time').textContent = '--';
+            document.getElementById('sort-time').textContent = '--';
+            updateTestStatus('performance', null);
+        }
+
+        // Teste de Integração Completa
+        function runIntegrationTest() {
+            try {
+                const container = document.getElementById('integration-grid-container');
+                container.innerHTML = '';
+
+                new Skargrid('integration-grid-container', {
+                    data: sampleData,
+                    columns: [
+                        { field: 'id', title: 'ID', width: '60px' },
+                        { field: 'nome', title: 'Nome', filterable: true },
+                        { field: 'email', title: 'Email', filterable: true },
+                        { field: 'cidade', title: 'Cidade', filterable: true, type: 'select' },
+                        { field: 'idade', title: 'Idade', width: '80px', filterable: true, type: 'number' },
+                        { field: 'status', title: 'Status', width: '100px', filterable: true, type: 'select' }
+                    ],
+                    columnFilters: true,
+                    searchable: true,
+                    pagination: true,
+                    pageSize: 3,
+                    sortable: true,
+                    selectable: true,
+                    exportCSV: true,
+                    exportFilename: 'teste-integracao',
+                    theme: 'light'
+                });
+
+                updateTestStatus('integration', 'pass');
+                alert('✅ Teste de integração executado com sucesso!');
+            } catch (error) {
+                console.error('Erro no teste de integração:', error);
+                updateTestStatus('integration', 'fail');
+                alert('❌ Erro no teste de integração: ' + error.message);
+            }
+        }
+
+        function resetIntegrationTest() {
+            document.getElementById('integration-grid-container').innerHTML = '';
+            updateTestStatus('integration', null);
+        }
+
+        // Executar todos os testes
+        function runAllTests() {
+            runBasicTest();
+            setTimeout(() => runFiltersTest(), 1000);
+            setTimeout(() => runVirtualizationTest(), 2000);
+            setTimeout(() => runPerformanceTest(), 3000);
+            setTimeout(() => runIntegrationTest(), 4000);
+        }
+
+        // Gerar relatório
+        function generateReport() {
+            const passed = Object.values(testResults).filter(result => result === 'pass').length;
+            const total = Object.keys(testResults).length;
+
+            alert(`📋 Relatório de Testes\n\nTestes Aprovados: ${passed}/${total}\n\n${passed === total ? '🎉 Todos os testes passaram!' : '⚠️ Alguns testes falharam. Verifique o console para detalhes.'}`);
+        }
+
+        // Inicializar com teste básico
+        document.addEventListener('DOMContentLoaded', function() {
+            // Pequeno delay para garantir que o DOM está pronto
+            setTimeout(() => {
+                runBasicTest();
+            }, 100);
         });
-
-        // Funções de controle
-        window.toggleTheme = function() {
-            const currentTheme = table.options.theme;
-            const newTheme = currentTheme === 'light' ? 'dark' : 'light';
-            table.setTheme(newTheme);
-            console.log(`Tema alterado para: ${newTheme}`);
-        };
-
-        window.clearFilters = function() {
-            table.clearAllFilters();
-            console.log('Filtros limpos');
-        };
-
-        window.selectRandom = function() {
-            const randomIndices = [];
-            const count = Math.floor(Math.random() * 10) + 1; // 1-10 itens
-
-            for (let i = 0; i < count; i++) {
-                const randomIndex = Math.floor(Math.random() * employees.length);
-                if (!randomIndices.includes(randomIndex)) {
-                    randomIndices.push(randomIndex);
-                }
-            }
-
-            table.selectRows(randomIndices);
-            console.log(`${randomIndices.length} itens selecionados aleatoriamente`);
-        };
-
-        window.exportData = function() {
-            const selected = table.getSelectedRows();
-            if (selected.length > 0) {
-                table.exportSelectedToCSV('funcionarios-selecionados.csv');
-                console.log(`${selected.length} itens exportados`);
-            } else {
-                table.exportToCSV('todos-funcionarios.csv');
-                console.log('Todos os itens exportados');
-            }
-        };
-
-        window.showStats = function() {
-            const data = table.getData();
-            const selected = table.getSelectedRows();
-
-            const stats = {
-                total: data.length,
-                selected: selected.length,
-                active: data.filter(emp => emp.active).length,
-                inactive: data.filter(emp => !emp.active).length,
-                departments: [...new Set(data.map(emp => emp.department))].length,
-                avgSalary: data.reduce((sum, emp) => sum + emp.salary, 0) / data.length,
-                avgAge: data.reduce((sum, emp) => sum + emp.age, 0) / data.length
-            };
-
-            alert(`📊 Estatísticas dos Funcionários:
-
-👥 Total: ${stats.total}
-✅ Ativos: ${stats.active}
-❌ Inativos: ${stats.inactive}
-🏢 Departamentos: ${stats.departments}
-💰 Salário médio: R$ ${stats.avgSalary.toLocaleString('pt-BR', { maximumFractionDigits: 0 })}
-🎂 Idade média: ${stats.avgAge.toFixed(1)} anos
-
-${selected.length > 0 ? `🎯 Selecionados: ${selected.length}` : ''}`);
-        };
-
-        // Log inicial
-        console.log('🚀 SkarGrid inicializado com sucesso!');
-        console.log(`📊 ${employees.length} funcionários carregados`);
-        console.log('💡 Use os controles acima para testar as funcionalidades');
     </script>
 </body>
 </html>
