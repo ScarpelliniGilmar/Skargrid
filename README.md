@@ -35,7 +35,7 @@
 - 🎨 **Column Configuration** - Drag & drop to reorder, show/hide columns with persistence
 - 🗄️ **Smart Persistence** - Saves user preferences in localStorage automatically
 - 🌓 **Theme Support** - Light/Dark theme with smooth transitions and custom variables
-- 🔄 **Smart Cascading Filters** - Excel-style filters showing only available options after filtering other columns
+- 🔄 **Smart Select Filters**: Improved select filters to show only available options when other columns are filtered, with intelligent search behavior that isolates selections during search
 - 🌍 **Accent-Insensitive Search** - Automatically handles accents (José = jose)
 - ↔️ **Horizontal Scroll** - Custom scrollbar for wide tables with fixed columns
 - 📦 **Single Bundle** - Only 2 files (JS + CSS) - **27.8KB compressed**
@@ -947,6 +947,30 @@ skargrid/
 └── package.json         # Project configuration
 ```
 
+### Architecture
+
+Skargrid uses a modular architecture where features are separated into individual modules for better maintainability and extensibility:
+
+#### Core Module (`src/core/skargrid.js`)
+- Main table rendering and UI logic
+- Feature integration and initialization
+- Base functionality (sorting, pagination, etc.)
+
+#### Feature Modules (`src/features/`)
+- **`filter.js`** - Core filtering logic and utilities
+- **`select-filter.js`** - Advanced select dropdown filters with search
+- **`pagination.js`** - Pagination controls and logic
+- **`sort.js`** - Column sorting functionality
+- **`selection.js`** - Row selection and management
+- **`export.js`** - CSV and XLSX export capabilities
+- **`columnConfig.js`** - Column visibility and reordering
+
+#### Feature Integration
+Features are loaded globally and checked with `typeof FeatureName !== 'undefined'` for graceful degradation. Each feature can be:
+- **Included** in the build for full functionality
+- **Excluded** for custom lightweight builds
+- **Extended** by developers for custom features
+
 ### Build Commands
 ```bash
 # Development build
@@ -975,7 +999,7 @@ npm run docs
 ### [v1.3.0] - 2025-11-15
 - **🌐 Website Launch**: Official website skargrid.com with comprehensive documentation, live examples, and performance benchmarks
 - **📊 Updated Performance Benchmarks**: Comprehensive testing results for v1.3.0 with optimizations for large datasets
-- **🔄 Smart Select Filters**: Improved select filters to show only available options when other columns are filtered, enhancing user experience
+- **🔄 Smart Select Filters**: Improved select filters to show only available options when other columns are filtered, with intelligent search behavior that isolates selections during search, enhancing user experience
 - **🔧 Minor Fixes and Improvements**: Various bug fixes and code quality enhancements
 
 ### [v1.2.0] - 2025-01-13

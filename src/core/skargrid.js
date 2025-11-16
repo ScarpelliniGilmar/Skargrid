@@ -813,13 +813,21 @@ class Skargrid {
    * Cria filtro com checkboxes e busca interna (valores disponíveis dinamicamente)
    */
   createCheckboxFilter(dropdown, column) {
-    // Pega valores DISPONÍVEIS considerando outros filtros ativos
-    const availableValues = this.getAvailableColumnValues(column.field);
-    
-    // Inicializa selected se não existir (com todos os valores disponíveis)
-    if (!this.columnFilterSelected[column.field]) {
-      this.columnFilterSelected[column.field] = [...availableValues];
+    if (typeof SelectFilterFeature !== 'undefined') {
+      SelectFilterFeature.createCheckboxFilter(this, dropdown, column);
+    } else {
+      // Fallback se SelectFilterFeature não disponível
+      console.warn('SelectFilterFeature not available, using basic filter');
+      this.createBasicCheckboxFilter(dropdown, column);
     }
+  }
+
+  /**
+   * Fallback básico para filtro checkbox quando SelectFilterFeature não está disponível
+   */
+  createBasicCheckboxFilter(dropdown, column) {
+    const allValues = this.getUniqueColumnValues(column.field);
+    const availableValues = this.getAvailableColumnValues(column.field);
 
     // Header do dropdown
     const header = document.createElement('div');
@@ -827,151 +835,65 @@ class Skargrid {
     header.innerHTML = `<strong>${this.labels.filterTitle.replace('{title}', column.title || column.field)}</strong>`;
     dropdown.appendChild(header);
 
-    // Campo de busca interno
-    const searchWrapper = document.createElement('div');
-    searchWrapper.className = 'filter-search-wrapper';
-    
-    const searchInput = document.createElement('input');
-    searchInput.type = 'text';
-    searchInput.className = 'filter-search-input';
-    searchInput.placeholder = this.labels.filterSearchPlaceholder;
-    
-    searchWrapper.appendChild(searchInput);
-    dropdown.appendChild(searchWrapper);
-
-    // Select All / Deselect All
-    const selectAllWrapper = document.createElement('div');
-    selectAllWrapper.className = 'filter-select-all';
-    
-    const selectAllCheckbox = document.createElement('input');
-    selectAllCheckbox.type = 'checkbox';
-    selectAllCheckbox.className = 'skargrid-checkbox';
-    selectAllCheckbox.id = `select-all-${column.field}`;
-    selectAllCheckbox.checked = this.columnFilterSelected[column.field].length === availableValues.length && availableValues.length > 0;
-    
-    const selectAllLabel = document.createElement('label');
-    selectAllLabel.htmlFor = `select-all-${column.field}`;
-    selectAllLabel.textContent = this.labels.selectAll;
-    
-    selectAllWrapper.appendChild(selectAllCheckbox);
-    selectAllWrapper.appendChild(selectAllLabel);
-    dropdown.appendChild(selectAllWrapper);
-
-    // Lista de checkboxes com scroll
+    // Lista básica de checkboxes
     const listWrapper = document.createElement('div');
     listWrapper.className = 'filter-list-wrapper';
-    
+
     const list = document.createElement('div');
     list.className = 'filter-list';
 
-    // Valores atualmente exibidos no dropdown (após busca interna)
-    let displayedValues = [...availableValues];
+    availableValues.forEach(value => {
+      const item = document.createElement('div');
+      item.className = 'filter-list-item';
 
-    const renderList = (filteredValues = availableValues) => {
-      // Atualiza quais valores estão sendo exibidos (mantém estado para Select All)
-      displayedValues = Array.isArray(filteredValues) ? filteredValues.slice() : [...availableValues];
-      list.innerHTML = '';
-      filteredValues.forEach(value => {
-        const item = document.createElement('div');
-        item.className = 'filter-list-item';
-        
-        const checkbox = document.createElement('input');
-        checkbox.type = 'checkbox';
-        checkbox.className = 'skargrid-checkbox';
-        checkbox.value = value;
-        // sanitize id (remove spaces/specials)
-        const safeVal = String(value).replace(/[^a-z0-9-_]/gi, '_');
-        checkbox.id = `filter-${column.field}-${safeVal}`;
-        checkbox.checked = this.columnFilterSelected[column.field].includes(value);
-        
-        const label = document.createElement('label');
-        label.htmlFor = `filter-${column.field}-${safeVal}`;
-        // Mostra texto amigável para o token de vazio
-        if (value === FilterFeature?.EMPTY_TOKEN || value === '__SG_EMPTY__') {
-          label.textContent = '(Em branco)';
-        } else {
-          label.textContent = value;
+      const checkbox = document.createElement('input');
+      checkbox.type = 'checkbox';
+      checkbox.className = 'skargrid-checkbox';
+      checkbox.value = value;
+      const safeVal = String(value).replace(/[^a-z0-9-_]/gi, '_');
+      checkbox.id = `filter-${column.field}-${safeVal}`;
+
+      const isSelected = (this.columnFilterSelected[column.field] || allValues).includes(value);
+      checkbox.checked = isSelected;
+
+      const label = document.createElement('label');
+      label.htmlFor = `filter-${column.field}-${safeVal}`;
+      label.textContent = value;
+
+      item.appendChild(checkbox);
+      item.appendChild(label);
+      list.appendChild(item);
+
+      checkbox.onchange = () => {
+        if (!this.columnFilterSelected[column.field]) {
+          this.columnFilterSelected[column.field] = [...allValues];
         }
-        
-        item.appendChild(checkbox);
-        item.appendChild(label);
-        list.appendChild(item);
-
-        // Toggle individual
-        checkbox.onchange = () => {
-          if (checkbox.checked) {
-            if (!this.columnFilterSelected[column.field].includes(value)) {
-              this.columnFilterSelected[column.field].push(value);
-            }
-          } else {
-            this.columnFilterSelected[column.field] = 
-              this.columnFilterSelected[column.field].filter(v => v !== value);
+        if (checkbox.checked) {
+          if (!this.columnFilterSelected[column.field].includes(value)) {
+            this.columnFilterSelected[column.field].push(value);
           }
-          // Atualiza o estado do Select All com base nos valores visíveis
-          selectAllCheckbox.checked = displayedValues.length > 0 && displayedValues.every(v => this.columnFilterSelected[column.field].includes(v));
-        };
-      });
-    };
+        } else {
+          this.columnFilterSelected[column.field] = this.columnFilterSelected[column.field].filter(v => v !== value);
+        }
+      };
+    });
 
-    renderList();
     listWrapper.appendChild(list);
     dropdown.appendChild(listWrapper);
 
-    // Busca interna (com normalização de acentos)
-    searchInput.oninput = (e) => {
-      const searchTerm = this.normalizeString(e.target.value);
-      const filtered = availableValues.filter(val => {
-        const display = (val === FilterFeature?.EMPTY_TOKEN || val === '__SG_EMPTY__') ? '(Em branco)' : String(val);
-        return this.normalizeString(display).includes(searchTerm);
-      });
-      renderList(filtered);
-    };
-
-    // Select/Deselect All - agora atua apenas sobre os valores atualmente exibidos (após busca)
-    selectAllCheckbox.onchange = () => {
-      // Apenas os valores exibidos devem ser afetados
-      const toChange = displayedValues.slice();
-
-      if (selectAllCheckbox.checked) {
-        // Adiciona os valores exibidos sem remover os já selecionados
-        const current = new Set(this.columnFilterSelected[column.field] || []);
-        toChange.forEach(v => current.add(v));
-        this.columnFilterSelected[column.field] = [...current];
-      } else {
-        // Remove apenas os valores exibidos da seleção
-        this.columnFilterSelected[column.field] = (this.columnFilterSelected[column.field] || []).filter(v => !toChange.includes(v));
-      }
-
-      // Re-renderiza mantendo a lista filtrada atual
-      renderList(displayedValues);
-    };
-
-    // Footer com botões
+    // Footer básico
     const footer = document.createElement('div');
     footer.className = 'filter-dropdown-footer';
-    
-    const clearBtn = document.createElement('button');
-    clearBtn.textContent = this.labels.clear;
-    clearBtn.className = 'filter-btn-clear';
-    clearBtn.onclick = () => {
-      this.columnFilterSelected[column.field] = [...availableValues];
-      this.handleColumnFilterCheckbox(column.field);
-      dropdown.remove();
-      this.removeScrollListeners();
-      this.openFilterDropdown = null;
-    };
-    
+
     const applyBtn = document.createElement('button');
     applyBtn.textContent = this.labels.apply;
     applyBtn.className = 'filter-btn-apply';
     applyBtn.onclick = () => {
       this.handleColumnFilterCheckbox(column.field);
       dropdown.remove();
-      this.removeScrollListeners();
       this.openFilterDropdown = null;
     };
-    
-    footer.appendChild(clearBtn);
+
     footer.appendChild(applyBtn);
     dropdown.appendChild(footer);
   }
