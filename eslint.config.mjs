@@ -18,6 +18,7 @@ export default [
         VirtualizationFeature: "readonly",
         SortFeature: "readonly",
         SelectionFeature: "readonly",
+        SearchFeature: "readonly",
         Skargrid: "readonly",
         initColumnConfig: "readonly"
       },
