@@ -20,6 +20,7 @@ export default [
         SelectionFeature: "readonly",
         SearchFeature: "readonly",
         TableHeaderFeature: "readonly",
+        TableBodyFeature: "readonly",
         Skargrid: "readonly",
         initColumnConfig: "readonly"
       },
