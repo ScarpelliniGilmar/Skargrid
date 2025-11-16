@@ -813,15 +813,12 @@ class Skargrid {
    * Cria filtro com checkboxes e busca interna (valores disponíveis dinamicamente)
    */
   createCheckboxFilter(dropdown, column) {
-    // Pega TODOS os valores que existem nos dados originais
-    const allUniqueValues = this.getUniqueColumnValues(column.field);
-    
     // Pega valores DISPONÍVEIS considerando outros filtros ativos
     const availableValues = this.getAvailableColumnValues(column.field);
     
-    // Inicializa selected se não existir (com todos os valores originais)
+    // Inicializa selected se não existir (com todos os valores disponíveis)
     if (!this.columnFilterSelected[column.field]) {
-      this.columnFilterSelected[column.field] = [...allUniqueValues];
+      this.columnFilterSelected[column.field] = [...availableValues];
     }
 
     // Header do dropdown
@@ -850,7 +847,7 @@ class Skargrid {
     selectAllCheckbox.type = 'checkbox';
     selectAllCheckbox.className = 'skargrid-checkbox';
     selectAllCheckbox.id = `select-all-${column.field}`;
-    selectAllCheckbox.checked = this.columnFilterSelected[column.field].length === allUniqueValues.length;
+    selectAllCheckbox.checked = this.columnFilterSelected[column.field].length === availableValues.length && availableValues.length > 0;
     
     const selectAllLabel = document.createElement('label');
     selectAllLabel.htmlFor = `select-all-${column.field}`;
@@ -868,22 +865,15 @@ class Skargrid {
     list.className = 'filter-list';
 
     // Valores atualmente exibidos no dropdown (após busca interna)
-    let displayedValues = [...allUniqueValues];
+    let displayedValues = [...availableValues];
 
-    const renderList = (filteredValues = allUniqueValues) => {
+    const renderList = (filteredValues = availableValues) => {
       // Atualiza quais valores estão sendo exibidos (mantém estado para Select All)
-      displayedValues = Array.isArray(filteredValues) ? filteredValues.slice() : [...allUniqueValues];
+      displayedValues = Array.isArray(filteredValues) ? filteredValues.slice() : [...availableValues];
       list.innerHTML = '';
       filteredValues.forEach(value => {
         const item = document.createElement('div');
         item.className = 'filter-list-item';
-        
-        // Verifica se o valor está disponível nos dados filtrados
-        const isAvailable = availableValues.includes(value);
-        if (!isAvailable) {
-          item.classList.add('filter-item-disabled');
-          item.title = 'Não disponível com os filtros atuais';
-        }
         
         const checkbox = document.createElement('input');
         checkbox.type = 'checkbox';
@@ -893,7 +883,6 @@ class Skargrid {
         const safeVal = String(value).replace(/[^a-z0-9-_]/gi, '_');
         checkbox.id = `filter-${column.field}-${safeVal}`;
         checkbox.checked = this.columnFilterSelected[column.field].includes(value);
-        checkbox.disabled = !isAvailable; // Desabilita se não disponível
         
         const label = document.createElement('label');
         label.htmlFor = `filter-${column.field}-${safeVal}`;
@@ -918,9 +907,8 @@ class Skargrid {
             this.columnFilterSelected[column.field] = 
               this.columnFilterSelected[column.field].filter(v => v !== value);
           }
-          // Atualiza o estado do Select All com base nos valores visíveis e disponíveis
-          const visibleAvailable = displayedValues.filter(v => availableValues.includes(v));
-          selectAllCheckbox.checked = visibleAvailable.length > 0 && visibleAvailable.every(v => this.columnFilterSelected[column.field].includes(v));
+          // Atualiza o estado do Select All com base nos valores visíveis
+          selectAllCheckbox.checked = displayedValues.length > 0 && displayedValues.every(v => this.columnFilterSelected[column.field].includes(v));
         };
       });
     };
@@ -932,7 +920,7 @@ class Skargrid {
     // Busca interna (com normalização de acentos)
     searchInput.oninput = (e) => {
       const searchTerm = this.normalizeString(e.target.value);
-      const filtered = allUniqueValues.filter(val => {
+      const filtered = availableValues.filter(val => {
         const display = (val === FilterFeature?.EMPTY_TOKEN || val === '__SG_EMPTY__') ? '(Em branco)' : String(val);
         return this.normalizeString(display).includes(searchTerm);
       });
@@ -945,11 +933,9 @@ class Skargrid {
       const toChange = displayedValues.slice();
 
       if (selectAllCheckbox.checked) {
-        // Adiciona os valores exibidos (somente os disponíveis) sem remover os já selecionados
+        // Adiciona os valores exibidos sem remover os já selecionados
         const current = new Set(this.columnFilterSelected[column.field] || []);
-        toChange.forEach(v => {
-          if (availableValues.includes(v)) {current.add(v);}
-        });
+        toChange.forEach(v => current.add(v));
         this.columnFilterSelected[column.field] = [...current];
       } else {
         // Remove apenas os valores exibidos da seleção
@@ -968,7 +954,7 @@ class Skargrid {
     clearBtn.textContent = this.labels.clear;
     clearBtn.className = 'filter-btn-clear';
     clearBtn.onclick = () => {
-      this.columnFilterSelected[column.field] = [...allUniqueValues];
+      this.columnFilterSelected[column.field] = [...availableValues];
       this.handleColumnFilterCheckbox(column.field);
       dropdown.remove();
       this.removeScrollListeners();

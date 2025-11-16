@@ -35,7 +35,7 @@
 - 🎨 **Column Configuration** - Drag & drop to reorder, show/hide columns with persistence
 - 🗄️ **Smart Persistence** - Saves user preferences in localStorage automatically
 - 🌓 **Theme Support** - Light/Dark theme with smooth transitions and custom variables
-- 🔄 **Cascading Filters** - Excel-style filters with unavailable values disabled
+- 🔄 **Smart Cascading Filters** - Excel-style filters showing only available options after filtering other columns
 - 🌍 **Accent-Insensitive Search** - Automatically handles accents (José = jose)
 - ↔️ **Horizontal Scroll** - Custom scrollbar for wide tables with fixed columns
 - 📦 **Single Bundle** - Only 2 files (JS + CSS) - **27.8KB compressed**
@@ -430,12 +430,23 @@ function toggleTheme() {
                 searchPlaceholder: 'Buscar em todas as colunas...',
                 clearFilters: 'Limpar Filtros',
                 exportCSV: 'Exportar CSV',
+                exportXLSX: 'Exportar XLSX',
                 filterTitle: 'Filtrar: {title}',
                 selectAll: 'Selecionar Todos',
+                filterSearchPlaceholder: 'Buscar...',
+                filterInputPlaceholder: 'Digite para filtrar...',
                 clear: 'Limpar',
                 apply: 'Aplicar',
                 showing: 'Mostrando {start} até {end} de {total} registros',
-                itemsPerPage: 'Itens por página:'
+                filteredOfTotal: 'filtrados de {total} total',
+                itemsPerPage: 'Itens por página:',
+                noRowsSelected: 'Nenhuma linha selecionada para exportar.',
+                columnConfigTitle: 'Configurar Colunas',
+                columnConfigDescription: 'Marque para exibir, arraste ou use setas para reordenar',
+                restore: 'Restaurar',
+                cancel: 'Cancelar',
+                noData: 'Nenhum dado disponível',
+                loading: 'Carregando...'
             }
         });
     </script>
@@ -609,15 +620,15 @@ function toggleTheme() {
 
 ### 📈 Test Results (v1.3.0)
 
-| Dataset Size | Render Time | Memory Usage | Status | Notes |
-|-------------|-------------|--------------|--------|-------|
-| 1.000 rows | ~26ms | < 5MB | ✅ Excellent | Instant rendering |
-| 5.000 rows | ~35ms | < 8MB | ✅ Excellent | Smooth performance |
-| 10.000 rows | ~31ms | < 12MB | ✅ Excellent | Virtual scrolling active |
-| 15.000 rows | ~17ms | < 15MB | ✅ Excellent | Optimized for scale |
-| 20.000 rows | ~36ms | < 18MB | ✅ Excellent | Production ready |
-| **50.000 rows** | ~45ms | < 25MB | ✅ Excellent | Server-side recommended |
-| **500.000 rows** | ~200ms | < 50MB | ⚠️ Extreme | Browser limits test |
+| Dataset Size     | Render Time | Memory Usage | Status      | Notes                    |
+| ---------------- | ----------- | ------------ | ----------- | ------------------------ |
+| 1.000 rows       | ~26ms       | < 5MB        | ✅ Excellent | Instant rendering        |
+| 5.000 rows       | ~35ms       | < 8MB        | ✅ Excellent | Smooth performance       |
+| 10.000 rows      | ~31ms       | < 12MB       | ✅ Excellent | Virtual scrolling active |
+| 15.000 rows      | ~17ms       | < 15MB       | ✅ Excellent | Optimized for scale      |
+| 20.000 rows      | ~36ms       | < 18MB       | ✅ Excellent | Production ready         |
+| **50.000 rows**  | ~45ms       | < 25MB       | ✅ Excellent | Server-side recommended  |
+| **500.000 rows** | ~200ms      | < 50MB       | ⚠️ Extreme   | Browser limits test      |
 
 ### 🎯 Performance Features
 
@@ -720,25 +731,25 @@ new Skargrid(containerId, options)
 
 ### Options
 
-| Option | Type | Default | Description |
-|--------|------|---------|-------------|
-| `data` | Array | `[]` | Array of data objects |
-| `columns` | Array | `[]` | Column configuration |
-| `pagination` | Boolean | `false` | Enable pagination |
-| `pageSize` | Number | `10` | Items per page |
-| `pageSizeOptions` | Array | `[10,25,50,100]` | Page size options |
-| `sortable` | Boolean | `false` | Enable global sorting |
-| `selectable` | Boolean | `false` | Enable multi-row selection |
-| `searchable` | Boolean | `false` | Enable global search |
-| `columnFilters` | Boolean | `false` | Enable column filters |
-| `columnConfig` | Boolean | `false` | Enable column config button |
-| `persistColumnConfig` | Boolean | `false` | Save column config in localStorage |
-| `storageKey` | String | `'skargrid-config-{id}'` | localStorage key |
-| `theme` | String | `'light'` | Visual theme: 'light' or 'dark' |
-| `className` | String | `'skargrid'` | Table CSS class |
-| `exportCSV` | Boolean | `false` | Enable CSV export button |
-| `exportXLSX` | Boolean | `false` | Enable XLSX export button |
-| `exportFilename` | String | `'skargrid-export'` | Base filename for exports |
+| Option                | Type    | Default                  | Description                        |
+| --------------------- | ------- | ------------------------ | ---------------------------------- |
+| `data`                | Array   | `[]`                     | Array of data objects              |
+| `columns`             | Array   | `[]`                     | Column configuration               |
+| `pagination`          | Boolean | `false`                  | Enable pagination                  |
+| `pageSize`            | Number  | `10`                     | Items per page                     |
+| `pageSizeOptions`     | Array   | `[10,25,50,100]`         | Page size options                  |
+| `sortable`            | Boolean | `false`                  | Enable global sorting              |
+| `selectable`          | Boolean | `false`                  | Enable multi-row selection         |
+| `searchable`          | Boolean | `false`                  | Enable global search               |
+| `columnFilters`       | Boolean | `false`                  | Enable column filters              |
+| `columnConfig`        | Boolean | `false`                  | Enable column config button        |
+| `persistColumnConfig` | Boolean | `false`                  | Save column config in localStorage |
+| `storageKey`          | String  | `'skargrid-config-{id}'` | localStorage key                   |
+| `theme`               | String  | `'light'`                | Visual theme: 'light' or 'dark'    |
+| `className`           | String  | `'skargrid'`             | Table CSS class                    |
+| `exportCSV`           | Boolean | `false`                  | Enable CSV export button           |
+| `exportXLSX`          | Boolean | `false`                  | Enable XLSX export button          |
+| `exportFilename`      | String  | `'skargrid-export'`      | Base filename for exports          |
 
 ### Column Configuration
 
@@ -960,6 +971,12 @@ npm run docs
 ---
 
 ## 📋 Changelog
+
+### [v1.3.0] - 2025-11-15
+- **🌐 Website Launch**: Official website skargrid.com with comprehensive documentation, live examples, and performance benchmarks
+- **📊 Updated Performance Benchmarks**: Comprehensive testing results for v1.3.0 with optimizations for large datasets
+- **🔄 Smart Select Filters**: Improved select filters to show only available options when other columns are filtered, enhancing user experience
+- **🔧 Minor Fixes and Improvements**: Various bug fixes and code quality enhancements
 
 ### [v1.2.0] - 2025-01-13
 - **📚 Enhanced Documentation**: Complete README rewrite with practical examples
