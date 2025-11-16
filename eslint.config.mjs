@@ -19,6 +19,7 @@ export default [
         SortFeature: "readonly",
         SelectionFeature: "readonly",
         SearchFeature: "readonly",
+        TableHeaderFeature: "readonly",
         Skargrid: "readonly",
         initColumnConfig: "readonly"
       },
