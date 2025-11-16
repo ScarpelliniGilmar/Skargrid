@@ -44,6 +44,7 @@ $sort = Get-Content "$src\features\sort.js" -Raw -Encoding UTF8
 $selection = Get-Content "$src\features\selection.js" -Raw -Encoding UTF8
 $filter = Get-Content "$src\features\filter.js" -Raw -Encoding UTF8
 $selectFilter = Get-Content "$src\features\select-filter.js" -Raw -Encoding UTF8
+$inputFilter = Get-Content "$src\features\input-filter.js" -Raw -Encoding UTF8
 $virtualization = Get-Content "$src\features\virtualization.js" -Raw -Encoding UTF8
 $columnConfig = Get-Content "$src\features\columnConfig.js" -Raw -Encoding UTF8
 $export = Get-Content "$src\features\export.js" -Raw -Encoding UTF8
@@ -55,6 +56,7 @@ $sort = $sort -replace "(?s)if \(typeof window.*?$", ""
 $selection = $selection -replace "(?s)if \(typeof window.*?$", ""
 $filter = $filter -replace "(?s)if \(typeof window.*?$", ""
 $selectFilter = $selectFilter -replace "(?s)if \(typeof window.*?$", ""
+$inputFilter = $inputFilter -replace "(?s)if \(typeof window.*?$", ""
 $virtualization = $virtualization -replace "(?s)if \(typeof window.*?$", ""
 $columnConfig = $columnConfig -replace "export function initColumnConfig.*?\{", "function initColumnConfig(grid) {"
 $columnConfig = $columnConfig -replace "(?s)if \(typeof window.*?$", ""
@@ -73,6 +75,7 @@ $sort
 $selection
 $filter
 $selectFilter
+$inputFilter
 $virtualization
 $columnConfig
 $export
@@ -95,6 +98,7 @@ $sort
 $selection
 $filter
 $selectFilter
+$inputFilter
 $virtualization
 $columnConfig
 $export

@@ -784,7 +784,12 @@ class Skargrid {
       this.createCheckboxFilter(dropdown, column);
     } else {
       // Input simples para text, number, date
-      this.createInputFilter(dropdown, column, filterType);
+      if (typeof InputFilterFeature !== 'undefined') {
+        InputFilterFeature.createInputFilter(this, dropdown, column, filterType);
+      } else {
+        // Fallback se InputFilterFeature não disponível
+        this.createBasicInputFilter(dropdown, column, filterType);
+      }
     }
 
     return dropdown;
@@ -883,6 +888,18 @@ class Skargrid {
    * Cria filtro com input simples
    */
   createInputFilter(dropdown, column, filterType) {
+    if (typeof InputFilterFeature !== 'undefined') {
+      InputFilterFeature.createInputFilter(this, dropdown, column, filterType);
+    } else {
+      // Fallback se InputFilterFeature não disponível
+      this.createBasicInputFilter(dropdown, column, filterType);
+    }
+  }
+
+  /**
+   * Fallback básico para filtro input quando InputFilterFeature não está disponível
+   */
+  createBasicInputFilter(dropdown, column, filterType) {
     const header = document.createElement('div');
     header.className = 'filter-dropdown-header';
     header.innerHTML = `<strong>${this.labels.filterTitle.replace('{title}', column.title || column.field)}</strong>`;
@@ -890,19 +907,19 @@ class Skargrid {
 
     const inputWrapper = document.createElement('div');
     inputWrapper.className = 'filter-input-wrapper';
-    
+
     const input = document.createElement('input');
     input.type = filterType === 'number' ? 'number' : filterType === 'date' ? 'date' : 'text';
     input.className = 'filter-dropdown-input';
     input.placeholder = this.labels.filterInputPlaceholder;
     input.value = this.columnFilterValues[column.field] || '';
-    
+
     inputWrapper.appendChild(input);
     dropdown.appendChild(inputWrapper);
 
     const footer = document.createElement('div');
     footer.className = 'filter-dropdown-footer';
-    
+
     const clearBtn = document.createElement('button');
     clearBtn.textContent = this.labels.clear;
     clearBtn.className = 'filter-btn-clear';
@@ -911,7 +928,7 @@ class Skargrid {
       dropdown.remove();
       this.openFilterDropdown = null;
     };
-    
+
     const applyBtn = document.createElement('button');
     applyBtn.textContent = this.labels.apply;
     applyBtn.className = 'filter-btn-apply';
@@ -920,7 +937,7 @@ class Skargrid {
       dropdown.remove();
       this.openFilterDropdown = null;
     };
-    
+
     footer.appendChild(clearBtn);
     footer.appendChild(applyBtn);
     dropdown.appendChild(footer);
