@@ -51,6 +51,7 @@ $export = Get-Content "$src\features\export.js" -Raw -Encoding UTF8
 $search = Get-Content "$src\features\search.js" -Raw -Encoding UTF8
 $tableHeader = Get-Content "$src\features\table-header.js" -Raw -Encoding UTF8
 $tableBody = Get-Content "$src\features\table-body.js" -Raw -Encoding UTF8
+$topBar = Get-Content "$src\features\top-bar.js" -Raw -Encoding UTF8
 $core = Get-Content "$src\core\skargrid.js" -Raw -Encoding UTF8
 
 # Remove exports dos features
@@ -67,6 +68,7 @@ $export = $export -replace "(?s)if \(typeof window.*?$", ""
 $search = $search -replace "(?s)if \(typeof window.*?$", ""
 $tableHeader = $tableHeader -replace "(?s)if \(typeof window.*?$", ""
 $tableBody = $tableBody -replace "(?s)if \(typeof window.*?$", ""
+$topBar = $topBar -replace "(?s)if \(typeof window.*?$", ""
 
  # Renomeia ScarGridCore para Skargrid no core
 $core = $core -replace "class ScarGridCore", "class Skargrid"
@@ -88,6 +90,7 @@ $export
 $search
 $tableHeader
 $tableBody
+$topBar
 
 return Skargrid;
 }));
@@ -115,6 +118,7 @@ $export
 $search
 $tableHeader
 $tableBody
+$topBar
 
 return Skargrid;
 }));

@@ -21,6 +21,7 @@ export default [
         SearchFeature: "readonly",
         TableHeaderFeature: "readonly",
         TableBodyFeature: "readonly",
+        TopBarFeature: "readonly",
         Skargrid: "readonly",
         initColumnConfig: "readonly"
       },
