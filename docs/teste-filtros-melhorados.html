@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SkarGrid - Teste de Filtros Select Melhorados</title>
+    <link rel="stylesheet" href="../dist/skargrid.min.css">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #2563eb;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .instructions {
+            background: #e0f2fe;
+            padding: 15px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            border-left: 4px solid #0284c7;
+        }
+        .instructions h3 {
+            margin-top: 0;
+            color: #0284c7;
+        }
+        .stats {
+            background: #f8fafc;
+            padding: 15px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            border-left: 4px solid #2563eb;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧪 Teste de Filtros Select Melhorados</h1>
+
+        <div class="instructions">
+            <h3>🎯 Como Testar a Melhoria</h3>
+            <ol>
+                <li><strong>Aplique um filtro</strong> na coluna "Cidade" (ex: selecione apenas "São Paulo")</li>
+                <li><strong>Abra o filtro</strong> da coluna "Cargo" - você verá apenas os cargos disponíveis para funcionários de São Paulo</li>
+                <li><strong>Compare</strong> com o comportamento anterior onde todas as opções apareciam (muitas desabilitadas)</li>
+                <li><strong>Teste a busca interna</strong> dentro dos filtros para encontrar opções específicas</li>
+            </ol>
+        </div>
+
+        <div class="stats" id="stats">
+            <strong>Estatísticas:</strong> Carregando...
+        </div>
+
+        <div id="employeeTable"></div>
+    </div>
+
+    <script src="../dist/skargrid.min.js"></script>
+    <script>
+        // Dados de exemplo com relacionamentos
+        const employees = [
+            { id: 1, nome: 'João Silva', idade: 28, cidade: 'São Paulo', cargo: 'Desenvolvedor', salario: 5500, departamento: 'TI' },
+            { id: 2, nome: 'Maria Santos', idade: 32, cidade: 'Rio de Janeiro', cargo: 'Designer', salario: 4800, departamento: 'Design' },
+            { id: 3, nome: 'Pedro Costa', idade: 25, cidade: 'São Paulo', cargo: 'Analista', salario: 4200, departamento: 'TI' },
+            { id: 4, nome: 'Ana Oliveira', idade: 29, cidade: 'Belo Horizonte', cargo: 'Gerente', salario: 6500, departamento: 'RH' },
+            { id: 5, nome: 'Carlos Lima', idade: 35, cidade: 'São Paulo', cargo: 'Desenvolvedor', salario: 6200, departamento: 'TI' },
+            { id: 6, nome: 'Fernanda Rocha', idade: 27, cidade: 'Rio de Janeiro', cargo: 'Designer', salario: 4500, departamento: 'Design' },
+            { id: 7, nome: 'Roberto Alves', idade: 41, cidade: 'São Paulo', cargo: 'Gerente', salario: 7500, departamento: 'Vendas' },
+            { id: 8, nome: 'Juliana Pereira', idade: 26, cidade: 'Belo Horizonte', cargo: 'Analista', salario: 3800, departamento: 'Financeiro' },
+            { id: 9, nome: 'Lucas Mendes', idade: 33, cidade: 'São Paulo', cargo: 'Designer', salario: 5200, departamento: 'Design' },
+            { id: 10, nome: 'Patricia Souza', idade: 30, cidade: 'Rio de Janeiro', cargo: 'Gerente', salario: 6800, departamento: 'RH' },
+            { id: 11, nome: 'Marcos Vieira', idade: 38, cidade: 'São Paulo', cargo: 'Analista', salario: 4900, departamento: 'Financeiro' },
+            { id: 12, nome: 'Camila Santos', idade: 24, cidade: 'Belo Horizonte', cargo: 'Desenvolvedor', salario: 4100, departamento: 'TI' },
+            { id: 13, nome: 'Rafael Costa', idade: 36, cidade: 'Rio de Janeiro', cargo: 'Analista', salario: 4600, departamento: 'Vendas' },
+            { id: 14, nome: 'Beatriz Lima', idade: 29, cidade: 'São Paulo', cargo: 'Gerente', salario: 7200, departamento: 'TI' },
+            { id: 15, nome: 'Thiago Rocha', idade: 31, cidade: 'São Paulo', cargo: 'Designer', salario: 5100, departamento: 'Design' },
+            { id: 16, nome: 'Gabriela Alves', idade: 28, cidade: 'Belo Horizonte', cargo: 'Designer', salario: 4400, departamento: 'Design' },
+            { id: 17, nome: 'Felipe Pereira', idade: 34, cidade: 'Rio de Janeiro', cargo: 'Desenvolvedor', salario: 5800, departamento: 'TI' },
+            { id: 18, nome: 'Amanda Mendes', idade: 26, cidade: 'São Paulo', cargo: 'Analista', salario: 4300, departamento: 'RH' },
+            { id: 19, nome: 'Diego Souza', idade: 39, cidade: 'São Paulo', cargo: 'Gerente', salario: 7800, departamento: 'Financeiro' },
+            { id: 20, nome: 'Carolina Vieira', idade: 27, cidade: 'Rio de Janeiro', cargo: 'Analista', salario: 4500, departamento: 'Financeiro' }
+        ];
+
+        const columns = [
+            { field: 'id', title: 'ID', width: '60px', sortable: true },
+            { field: 'nome', title: 'Nome', sortable: true },
+            { field: 'idade', title: 'Idade', width: '70px', sortable: true },
+            { field: 'cidade', title: 'Cidade', filterType: 'select', sortable: true },
+            { field: 'cargo', title: 'Cargo', filterType: 'select', sortable: true },
+            { field: 'departamento', title: 'Departamento', filterType: 'select', sortable: true },
+            { field: 'salario', title: 'Salário', sortable: true, render: v => `R$ ${v.toLocaleString('pt-BR')}` }
+        ];
+
+        // Inicializar tabela
+        const table = new Skargrid('employeeTable', {
+            data: employees,
+            columns: columns,
+            pagination: true,
+            pageSize: 10,
+            searchable: true,
+            columnFilters: true,
+            exportCSV: true,
+            exportXLSX: true,
+            labels: {
+                searchPlaceholder: 'Buscar funcionários...',
+                clearFilters: 'Limpar Filtros',
+                exportCSV: 'Exportar CSV',
+                exportXLSX: 'Exportar XLSX',
+                filterTitle: 'Filtrar: {title}',
+                selectAll: 'Selecionar Todos',
+                filterSearchPlaceholder: 'Buscar...',
+                filterInputPlaceholder: 'Digite para filtrar...',
+                clear: 'Limpar',
+                apply: 'Aplicar',
+                showing: 'Mostrando {start} até {end} de {total} funcionários',
+                filteredOfTotal: 'filtrados de {total} total',
+                itemsPerPage: 'Itens por página:',
+                noRowsSelected: 'Nenhuma linha selecionada para exportar.',
+                columnConfigTitle: 'Configurar Colunas',
+                columnConfigDescription: 'Marque para exibir, arraste ou use setas para reordenar',
+                restore: 'Restaurar',
+                cancel: 'Cancelar',
+                noData: 'Nenhum funcionário encontrado',
+                loading: 'Carregando...'
+            }
+        });
+
+        // Atualizar estatísticas
+        function updateStats() {
+            const total = employees.length;
+            const filtered = table.getData().length;
+            const statsDiv = document.getElementById('stats');
+            statsDiv.innerHTML = `
+                <strong>Estatísticas:</strong>
+                Total de funcionários: ${total} |
+                Após filtros: ${filtered} |
+                Eficiência: ${((filtered/total)*100).toFixed(1)}%
+            `;
+        }
+
+        // Atualizar stats quando filtros mudam
+        table.on('filterChange', updateStats);
+        updateStats();
+    </script>
+</body>
+</html>

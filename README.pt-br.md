@@ -16,26 +16,29 @@
 
 - [✨ Principais Recursos](#-principais-recursos)
 - [📸 Exemplos Visuais](#-exemplos-visuais)
+- [⚠️ Diretrizes de Performance e Limitações](#️-diretrizes-de-performance-e-limitações)
 - [🚀 Início Rápido](#-início-rápido)
 - [📖 Exemplos Completos](#-exemplos-completos)
 - [⚡ Benchmarks de Performance](#-benchmarks-de-performance)
+- [🌐 Internacionalização (i18n)](#-internacionalização-i18n)
 - [🎯 Referência da API](#-referência-da-api)
 - [🎨 Temas e Estilização](#-temas-e-estilização)
 - [🔧 Build e Desenvolvimento](#-build-e-desenvolvimento)
 - [📋 Changelog](#-changelog)
 - [🤝 Contribuição](#-contribuição)
 - [📄 Licença](#-licença)
+- [💝 Apoie o Projeto](#-apoie-o-projeto)
 
 ---
 
 ## ✨ Principais Recursos
 
-- 🌐 **Internacionalização (i18n)** - Labels padrão em inglês, totalmente personalizáveis para qualquer idioma
-- ⚡ **Rolagem Virtual** - Renderização de alta performance para datasets grandes (100k+ linhas)
+- 🌐 **Internacionalização (i18n)** ⭐ - Sistema profissional de labels, totalmente personalizável para qualquer idioma (português, espanhol, francês, etc.)
+- ⚡ **Rolagem Virtual** ⭐ - Renderização de alta performance para datasets grandes (10k-500k+ linhas) com rolagem suave
 - 🎨 **Configuração de Colunas** - Arrastar e soltar para reordenar, mostrar/ocultar colunas com persistência
 - 🗄️ **Persistência Inteligente** - Salva preferências do usuário no localStorage automaticamente
 - 🌓 **Suporte a Temas** - Tema claro/escuro com transições suaves e variáveis customizáveis
-- 🔄 **Filtros Cascata** - Filtros estilo Excel com valores indisponíveis desabilitados
+- 🔄 **Filtros Cascata Inteligentes** - Filtros estilo Excel mostrando apenas opções disponíveis após filtrar outras colunas
 - 🌍 **Busca Sem Acentos** - Trata acentos automaticamente (José = jose)
 - ↔️ **Rolagem Horizontal** - Barra de rolagem customizada para tabelas largas
 - 📦 **Bundle Único** - Apenas 2 arquivos (JS + CSS) - **27.8KB comprimido**
@@ -72,6 +75,56 @@ Abaixo exemplos visuais dos recursos do SkarGrid, em ordem de aprendizado recome
 #### Tema Escuro
 ![Tema Escuro](docs/img/theme-dark.png)
 <div align="center"><sub>Tema escuro integrado com transições suaves</sub></div>
+
+---
+
+## ⚠️ Diretrizes de Performance e Limitações
+
+### 🟢 Uso Recomendado (Performance Ótima)
+- **✅ Datasets**: 100 - 25.000 registros
+- **✅ Rolagem Virtual**: 10.000+ registros com `virtualization: true`
+- **✅ Filtragem Client-side**: Até 50.000 registros
+- **✅ Todos os Recursos**: Busca, ordenação, filtros, exportação funcionam perfeitamente
+
+### 🟡 Datasets Grandes (50K - 500K registros)
+- **⚠️ Rolagem Virtual Obrigatória**: Essencial para performance suave
+- **⚠️ Performance de Filtragem**: 200-1000ms para 500K registros (aceitável para demos)
+- **⚠️ Uso de Memória**: 50-200MB dependendo do navegador
+- **❌ Não Recomendado**: Para produção com 500K+ registros
+
+### 🔴 Datasets Enterprise (1M+ registros)
+- **❌ Apenas Client-side**: Não adequado para milhões de registros
+- **✅ Recomendado**: Paginação server-side + SkarGrid
+- **📋 Implementação**: Veja `docs/realistic-server-pagination.html`
+- **🚀 Performance**: < 50ms respostas, < 10MB uso de memória
+
+### 💡 Melhores Práticas
+
+**Para Datasets Grandes:**
+```javascript
+// ✅ Recomendado: Abordagem server-side
+const grid = new Skargrid('grid', {
+  data: pageData, // Apenas página atual (100 registros)
+  pagination: true,
+  // Servidor cuida: filtragem, ordenação, paginação
+});
+```
+
+**Para Datasets Pequenos:**
+```javascript
+// ✅ Perfeito: Tudo client-side
+const grid = new Skargrid('grid', {
+  data: fullDataset, // Até 25K registros
+  searchable: true,
+  sortable: true,
+  columnFilters: true,
+  // Todos os recursos funcionam instantaneamente
+});
+```
+
+**Veja Exemplos Reais:**
+- `docs/realistic-server-pagination.html` - 50K registros, server-side
+- `docs/massive-dataset-test.html` - 500K registros, limites client-side
 
 ---
 
@@ -279,11 +332,296 @@ function alternarTema() {
 }
 ```
 
+### 🚀 Exemplo de Rolagem Virtual
+
+```html
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exemplo de Rolagem Virtual</title>
+    <link rel="stylesheet" href="dist/skargrid.min.css">
+</head>
+<body>
+    <div id="virtualTable"></div>
+
+    <script src="dist/skargrid.min.js"></script>
+    <script>
+        // Gerar dataset grande para teste
+        function generateLargeDataset() {
+            const data = [];
+            const cities = ['São Paulo', 'Rio de Janeiro', 'Belo Horizonte', 'Salvador', 'Brasília'];
+            const departments = ['TI', 'RH', 'Vendas', 'Marketing', 'Financeiro'];
+
+            for (let i = 1; i <= 25000; i++) {
+                data.push({
+                    id: i,
+                    nome: `Pessoa ${i}`,
+                    idade: Math.floor(Math.random() * 50) + 18,
+                    cidade: cities[Math.floor(Math.random() * cities.length)],
+                    salario: Math.floor(Math.random() * 10000) + 2000,
+                    departamento: departments[Math.floor(Math.random() * departments.length)]
+                });
+            }
+            return data;
+        }
+
+        const columns = [
+            { field: 'id', title: 'ID', width: '60px', sortable: true },
+            { field: 'nome', title: 'Nome', sortable: true },
+            { field: 'idade', title: 'Idade', width: '70px', sortable: true },
+            { field: 'cidade', title: 'Cidade', sortable: true, filterType: 'select' },
+            { field: 'salario', title: 'Salário', sortable: true, render: v => `R$ ${v.toLocaleString('pt-BR')}` },
+            { field: 'departamento', title: 'Departamento', filterType: 'select' }
+        ];
+
+        // Inicializar com rolagem virtual
+        const table = new Skargrid('virtualTable', {
+            data: generateLargeDataset(),
+            columns: columns,
+            virtualization: true,  // Habilitar rolagem virtual
+            searchable: true,
+            sortable: true,
+            columnFilters: true,
+            height: '500px'        // Altura fixa para rolagem virtual
+        });
+    </script>
+</body>
+</html>
+```
+
+### 🌐 Exemplo de Internacionalização
+
+```html
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exemplo de i18n</title>
+    <link rel="stylesheet" href="dist/skargrid.min.css">
+</head>
+<body>
+    <div id="i18nTable"></div>
+
+    <script src="dist/skargrid.min.js"></script>
+    <script>
+        const data = [
+            { id: 1, nome: 'João Silva', idade: 28, cidade: 'São Paulo', salario: 3500 },
+            { id: 2, nome: 'Maria Santos', idade: 32, cidade: 'Rio de Janeiro', salario: 4200 },
+            { id: 3, nome: 'Pedro Costa', idade: 25, cidade: 'Belo Horizonte', salario: 2800 }
+        ];
+
+        const columns = [
+            { field: 'id', title: 'ID', width: '60px', sortable: true },
+            { field: 'nome', title: 'Nome', sortable: true },
+            { field: 'idade', title: 'Idade', width: '80px', sortable: true },
+            { field: 'cidade', title: 'Cidade', sortable: true },
+            { field: 'salario', title: 'Salário', sortable: true, render: v => `R$ ${v.toLocaleString('pt-BR')}` }
+        ];
+
+        // Inicializar com rótulos em português
+        const table = new Skargrid('i18nTable', {
+            data: data,
+            columns: columns,
+            pagination: true,
+            searchable: true,
+            columnFilters: true,
+            exportCSV: true,
+            labels: {
+                searchPlaceholder: 'Buscar em todas as colunas...',
+                clearFilters: 'Limpar Filtros',
+                exportCSV: 'Exportar CSV',
+                exportXLSX: 'Exportar XLSX',
+                filterTitle: 'Filtrar: {title}',
+                selectAll: 'Selecionar Todos',
+                filterSearchPlaceholder: 'Buscar...',
+                filterInputPlaceholder: 'Digite para filtrar...',
+                clear: 'Limpar',
+                apply: 'Aplicar',
+                showing: 'Mostrando {start} até {end} de {total} registros',
+                filteredOfTotal: 'filtrados de {total} total',
+                itemsPerPage: 'Itens por página:',
+                noRowsSelected: 'Nenhuma linha selecionada para exportar.',
+                columnConfigTitle: 'Configurar Colunas',
+                columnConfigDescription: 'Marque para exibir, arraste ou use setas para reordenar',
+                restore: 'Restaurar',
+                cancel: 'Cancelar',
+                noData: 'Nenhum dado disponível',
+                loading: 'Carregando...'
+            }
+        });
+    </script>
+</body>
+</html>
+```
+
+### 📊 Exemplo de Dataset Massivo (500K Registros)
+
+```html
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exemplo de Dataset Massivo</title>
+    <link rel="stylesheet" href="dist/skargrid.min.css">
+</head>
+<body>
+    <div id="massiveTable"></div>
+
+    <script src="dist/skargrid.min.js"></script>
+    <script>
+        // Gerar 500.000 registros para teste extremo
+        function generateMassiveDataset() {
+            const data = [];
+            const cities = ['São Paulo', 'Rio de Janeiro', 'Belo Horizonte', 'Porto Alegre', 'Curitiba'];
+            const companies = ['TechCorp', 'DataSys', 'InfoTech', 'WebSolutions', 'CloudNet'];
+            const ageGroups = ['18-25', '26-35', '36-45', '46-55', '55+'];
+
+            for (let i = 1; i <= 500000; i++) {
+                data.push({
+                    id: i,
+                    name: `Pessoa ${i}`,
+                    age: Math.floor(Math.random() * 50) + 18,
+                    ageGroup: ageGroups[Math.floor(Math.random() * ageGroups.length)],
+                    city: cities[Math.floor(Math.random() * cities.length)],
+                    company: companies[Math.floor(Math.random() * companies.length)],
+                    salary: Math.floor(Math.random() * 100000) + 30000
+                });
+            }
+            return data;
+        }
+
+        const columns = [
+            { field: 'id', title: 'ID', width: '80px', sortable: true },
+            { field: 'name', title: 'Nome', sortable: true },
+            { field: 'age', title: 'Idade', width: '70px', sortable: true },
+            { field: 'ageGroup', title: 'Faixa Etária', filterType: 'select' },
+            { field: 'city', title: 'Cidade', filterType: 'select' },
+            { field: 'company', title: 'Empresa', filterType: 'select' },
+            { field: 'salary', title: 'Salário', sortable: true, render: v => `R$ ${v.toLocaleString('pt-BR')}` }
+        ];
+
+        // Inicializar com filtros avançados
+        const table = new Skargrid('massiveTable', {
+            data: generateMassiveDataset(),
+            columns: columns,
+            virtualization: true,
+            searchable: true,
+            sortable: true,
+            columnFilters: true,
+            height: '600px',
+            pageSize: 50
+        });
+    </script>
+</body>
+</html>
+```
+
+### 🖥️ Exemplo de Paginação Server-Side
+
+```html
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exemplo de Paginação Server-Side</title>
+    <link rel="stylesheet" href="dist/skargrid.min.css">
+</head>
+<body>
+    <div id="serverTable"></div>
+
+    <script src="dist/skargrid.min.js"></script>
+    <script>
+        // Simular dados do servidor (50.000 registros total)
+        let currentPage = 1;
+        const pageSize = 100;
+        const totalRecords = 50000;
+
+        // API mock do servidor
+        function fetchPageData(page, filters = {}, sort = {}) {
+            return new Promise((resolve) => {
+                setTimeout(() => {
+                    const startIndex = (page - 1) * pageSize;
+                    const data = [];
+
+                    for (let i = 0; i < pageSize; i++) {
+                        const id = startIndex + i + 1;
+                        if (id > totalRecords) break;
+
+                        data.push({
+                            id: id,
+                            name: `Usuário ${id}`,
+                            email: `usuario${id}@exemplo.com`,
+                            role: ['Admin', 'Usuário', 'Gerente'][Math.floor(Math.random() * 3)],
+                            status: Math.random() > 0.5 ? 'Ativo' : 'Inativo',
+                            lastLogin: new Date(Date.now() - Math.random() * 365 * 24 * 60 * 60 * 1000).toLocaleDateString('pt-BR')
+                        });
+                    }
+
+                    resolve({
+                        data: data,
+                        total: totalRecords,
+                        page: page,
+                        pageSize: pageSize
+                    });
+                }, 200); // Simular delay de rede
+            });
+        }
+
+        const columns = [
+            { field: 'id', title: 'ID', width: '80px', sortable: true },
+            { field: 'name', title: 'Nome', sortable: true },
+            { field: 'email', title: 'Email', sortable: true },
+            { field: 'role', title: 'Função', filterType: 'select' },
+            { field: 'status', title: 'Status', filterType: 'select' },
+            { field: 'lastLogin', title: 'Último Login', sortable: true }
+        ];
+
+        // Inicializar tabela
+        const table = new Skargrid('serverTable', {
+            data: [],
+            columns: columns,
+            pagination: true,
+            pageSize: pageSize,
+            searchable: true,
+            columnFilters: true,
+            serverSide: true,
+            totalRecords: totalRecords
+        });
+
+        // Carregar dados iniciais
+        fetchPageData(1).then(result => {
+            table.updateData(result.data);
+        });
+
+        // Manipular mudanças de página
+        table.on('pageChange', (page) => {
+            fetchPageData(page).then(result => {
+                table.updateData(result.data);
+            });
+        });
+
+        // Manipular mudanças de filtro
+        table.on('filterChange', (filters) => {
+            fetchPageData(1, filters).then(result => {
+                table.updateData(result.data);
+                table.setTotalRecords(result.total);
+            });
+        });
+    </script>
+</body>
+</html>
+```
+
 ---
 
 ## ⚡ Benchmarks de Performance
 
-### 📈 Resultados dos Testes (v1.2.0)
+### 📈 Resultados dos Testes (v1.3.0)
 
 | Tamanho do Dataset | Tempo de Renderização | Status | Observações |
 |-------------------|----------------------|--------|-------------|
@@ -544,8 +882,6 @@ table.setTheme('dark');
 
 ---
 
-## 🔧 Build e Desenvolvimento
-
 ### Pré-requisitos
 - Node.js 16+
 - PowerShell (Windows) ou Bash (Linux/Mac)
@@ -609,6 +945,12 @@ npm run docs
 ---
 
 ## 📋 Changelog
+
+### [v1.3.0] - 2025-11-15
+- **🌐 Lançamento do Site**: Site oficial skargrid.com com documentação completa, exemplos ao vivo e benchmarks de performance
+- **📊 Benchmarks de Performance Atualizados**: Resultados abrangentes de testes para v1.3.0 com otimizações para datasets grandes
+- **🔄 Filtros Select Inteligentes**: Filtros select aprimorados para mostrar apenas opções disponíveis quando outras colunas estão filtradas, melhorando a experiência do usuário
+- **🔧 Correções Menores e Melhorias**: Várias correções de bugs e aprimoramentos de qualidade de código
 
 ### [v1.2.0] - 2025-01-13
 - **📚 Documentação Aprimorada**: Reescrita completa do README com exemplos práticos
