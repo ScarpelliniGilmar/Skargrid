@@ -41,7 +41,7 @@
 - 🔄 **Filtros Select Inteligentes** - Filtros select aprimorados para mostrar apenas opções disponíveis quando outras colunas estão filtradas, com comportamento de busca inteligente que isola seleções durante a pesquisa
 - 🌍 **Busca Sem Acentos** - Trata acentos automaticamente (José = jose)
 - ↔️ **Rolagem Horizontal** - Barra de rolagem customizada para tabelas largas
-- 📦 **Bundle Único** - Apenas 2 arquivos (JS + CSS) - **27.8KB comprimido**
+- 📦 **Bundle Único** - Apenas 2 arquivos (JS + CSS) - **63.85KB comprimido**
 - 🎯 **Zero Dependências** - JavaScript puro Vanilla, agnóstico a frameworks
 - 🧪 **Testes Automatizados** - 21 testes abrangentes cobrindo todas as funcionalidades
 - 📊 **Suporte a Exportação** - Exportação CSV e XLSX nativa sem dependências externas
@@ -909,41 +909,76 @@ npm run build
 ```
 skargrid/
 ├── dist/                 # Arquivos compilados
-│   ├── skargrid.min.js   # JavaScript minificado (27.8KB)
+│   ├── skargrid.min.js   # JavaScript minificado (63.85KB)
 │   ├── skargrid.min.css  # CSS minificado
 │   └── themes/           # Arquivos de tema
 ├── src/                  # Código fonte
-│   ├── core/            # Biblioteca principal
-│   ├── features/        # Módulos de funcionalidades
-│   └── css/             # Folhas de estilo
-├── tests/               # Arquivos de teste
+│   ├── core/            # Módulo de coordenação principal
+│   │   └── skargrid.js  # Lógica central da tabela e integração de features
+│   ├── features/        # Sistema modular de features (13 módulos)
+│   │   ├── search.js           # Funcionalidade de busca global
+│   │   ├── input-filter.js     # Filtros de entrada de texto por coluna
+│   │   ├── select-filter.js    # Filtros dropdown inteligentes por coluna
+│   │   ├── virtualization.js   # Rolagem virtual para datasets grandes
+│   │   ├── table-header.js     # Renderização do cabeçalho da tabela
+│   │   ├── table-body.js       # Renderização do corpo da tabela
+│   │   ├── top-bar.js          # Barra superior com busca e botões de ação
+│   │   ├── pagination.js       # Controles e lógica de paginação
+│   │   ├── sort.js             # Funcionalidade de ordenação de colunas
+│   │   ├── selection.js        # Seleção e gerenciamento de linhas
+│   │   ├── filter.js           # Coordenação central de filtros
+│   │   ├── export.js           # Capacidades de exportação CSV e XLSX
+│   │   └── columnConfig.js     # Visibilidade e reordenação de colunas
+│   └── css/             # Folhas de estilo e temas
+├── tests/               # Arquivos de teste (Jest)
 ├── docs/                # Documentação e exemplos
 └── package.json         # Configuração do projeto
 ```
 
 ### Arquitetura
 
-O Skargrid utiliza uma arquitetura modular onde as funcionalidades são separadas em módulos individuais para melhor manutenção e extensibilidade:
+O Skargrid utiliza uma **arquitetura modular** onde as funcionalidades são separadas em módulos individuais para melhor manutenção, extensibilidade e otimização de performance:
 
 #### Módulo Core (`src/core/skargrid.js`)
-- Renderização principal da tabela e lógica de UI
-- Integração e inicialização de funcionalidades
-- Funcionalidades base (ordenação, paginação, etc.)
+- **Camada de Coordenação**: Lógica principal da tabela e integração de features
+- **Gerenciamento de Estado**: Estado dos dados, configuração e coordenação da UI
+- **Delegação de Features**: Encaminha chamadas para os módulos apropriados
+- **Suporte a Fallbacks**: Degradação graciosa quando features não estão disponíveis
 
-#### Módulos de Funcionalidades (`src/features/`)
-- **`filter.js`** - Lógica de filtragem e utilitários
-- **`select-filter.js`** - Filtros avançados de seleção com busca
-- **`pagination.js`** - Controles e lógica de paginação
-- **`sort.js`** - Funcionalidade de ordenação de colunas
-- **`selection.js`** - Seleção e gerenciamento de linhas
-- **`export.js`** - Capacidades de exportação CSV e XLSX
-- **`columnConfig.js`** - Visibilidade e reordenação de colunas
+#### Módulos de Features (`src/features/` - 13 Módulos Especializados)
 
-#### Integração de Funcionalidades
-As funcionalidades são carregadas globalmente e verificadas com `typeof NomeFuncionalidade !== 'undefined'` para degradação graciosa. Cada funcionalidade pode ser:
+**🔍 Busca e Filtragem (4 módulos):**
+- **`search.js`** - Busca global com correspondência insensível a acentos
+- **`input-filter.js`** - Filtros de entrada de texto por coluna
+- **`select-filter.js`** - Filtros dropdown inteligentes com opções disponíveis
+- **`filter.js`** - Coordenação central de filtragem e utilitários
+
+**📊 Apresentação de Dados (4 módulos):**
+- **`table-header.js`** - Renderização do cabeçalho com indicadores de ordenação
+- **`table-body.js`** - Renderização do corpo com formatadores de células
+- **`top-bar.js`** - Barra superior com entrada de busca e botões de ação
+- **`virtualization.js`** - Rolagem virtual para datasets grandes (10k-500k+ linhas)
+
+**⚙️ Funcionalidades (5 módulos):**
+- **`pagination.js`** - Controles de paginação e navegação
+- **`sort.js`** - Ordenação de colunas com múltiplos tipos de dados
+- **`selection.js`** - Seleção de linhas e operações em lote
+- **`export.js`** - Capacidades de exportação CSV e XLSX nativa
+- **`columnConfig.js`** - Visibilidade, reordenação e persistência de colunas
+
+#### Sistema de Integração de Features
+As features são carregadas globalmente e verificadas com `typeof NomeFeature !== 'undefined'` para degradação graciosa. Cada feature pode ser:
 - **Incluída** no build para funcionalidade completa
 - **Excluída** para builds leves personalizados
-- **Extendida** por desenvolvedores para funcionalidades customizadas
+- **Extendida** por desenvolvedores para features customizadas
+- **Testada** independentemente com suítes de teste dedicadas
+
+#### Benefícios da Arquitetura Modular
+- 🚀 **Performance**: Inclusão seletiva de features para bundles otimizados
+- 🔧 **Manutenibilidade**: Mudanças isoladas de código e correções de bugs
+- 🧪 **Testabilidade**: Cada feature testada independentemente
+- 📦 **Extensibilidade**: Adição fácil de novas features
+- 🎯 **Customização**: Construção de versões adaptadas para casos específicos de uso
 
 ### Comandos de Build
 ```bash
@@ -969,6 +1004,19 @@ npm run docs
 ---
 
 ## 📋 Changelog
+
+### [v1.4.0] - 2025-11-16
+- **🏗️ Refatoração Completa da Arquitetura Modular**: Reestruturação arquitetural majoritária com 13 módulos especializados de features
+- **📦 Redução do Core**: Módulo core reduzido em 25% (~450 linhas) através de extração sistemática de features
+- **🔧 Módulos de Features**: Separação completa de responsabilidades com módulos dedicados para:
+  - Busca e Filtragem: `search.js`, `input-filter.js`, `select-filter.js`, `filter.js`
+  - Apresentação de Dados: `table-header.js`, `table-body.js`, `top-bar.js`, `virtualization.js`
+  - Funcionalidades: `pagination.js`, `sort.js`, `selection.js`, `export.js`, `columnConfig.js`
+- **⚡ Performance Mantida**: Todos os 21 testes passando, sem degradação de performance
+- **🔄 Compatibilidade Backward**: Degradação graciosa com verificações de disponibilidade de features
+- **📊 Tamanho do Bundle**: Atualizado para 63.85KB comprimido (inclui todas as features)
+- **🧪 Testabilidade Aprimorada**: Cada módulo de feature pode ser testado independentemente
+- **🚀 Flexibilidade de Build**: Inclusão seletiva de features para builds leves customizados
 
 ### [v1.3.0] - 2025-11-15
 - **🌐 Lançamento do Site**: Site oficial skargrid.com com documentação completa, exemplos ao vivo e benchmarks de performance

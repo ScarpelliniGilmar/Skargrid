@@ -2,6 +2,38 @@
 
 Todas as mudanças notáveis neste projecto serão documentadas aqui.
 
+## [1.4.0] - 2025-11-16
+### Resumo
+Refatoração completa da arquitetura para sistema modular com 13 features especializadas, melhorando manutenibilidade, testabilidade e flexibilidade de build.
+
+### Alterações
+- **🏗️ Arquitetura Modular Completa**
+  - Refatoração sistemática do core para 13 módulos especializados
+  - Redução de 25% no código do core (~450 linhas)
+  - Separação clara de responsabilidades por feature
+
+- **📦 Módulos de Features (13 módulos)**
+  - **Busca e Filtros**: `search.js`, `input-filter.js`, `select-filter.js`, `filter.js`
+  - **Apresentação de Dados**: `table-header.js`, `table-body.js`, `top-bar.js`, `virtualization.js`
+  - **Funcionalidades**: `pagination.js`, `sort.js`, `selection.js`, `export.js`, `columnConfig.js`
+
+- **🔧 Melhorias Técnicas**
+  - Sistema de delegação com fallbacks para compatibilidade
+  - Verificação `typeof FeatureName !== 'undefined'` para degradação graciosa
+  - Build system atualizado para incluir todas as features
+  - ESLint configurado para todos os novos módulos
+
+- **⚡ Performance e Qualidade**
+  - Todos os 21 testes passando
+  - Performance mantida (63.85KB minificado)
+  - Compatibilidade backward total
+  - Testabilidade aprimorada com módulos isolados
+
+- **🚀 Flexibilidade de Build**
+  - Possibilidade de builds customizados excluindo features
+  - Carregamento seletivo de funcionalidades
+  - Extensibilidade para novas features
+
 ## [1.3.0] - 2025-11-15
 ### Resumo
 Implementação completa do sistema de internacionalização (i18n) profissional com suporte a múltiplos idiomas e labels totalmente customizáveis.
