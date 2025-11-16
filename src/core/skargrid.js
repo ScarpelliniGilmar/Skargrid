@@ -506,6 +506,19 @@ class Skargrid {
    * Renderiza o cabeçalho da tabela
    */
   renderHeader() {
+    if (typeof TableHeaderFeature !== 'undefined') {
+      return TableHeaderFeature.renderHeader(this);
+    } else {
+      // Fallback básico se TableHeaderFeature não disponível
+      console.warn('TableHeaderFeature not available, using basic header');
+      return this.createBasicHeader();
+    }
+  }
+
+  /**
+   * Fallback básico para cabeçalho quando TableHeaderFeature não está disponível
+   */
+  createBasicHeader() {
     const thead = document.createElement('thead');
     const tr = document.createElement('tr');
 
@@ -513,13 +526,13 @@ class Skargrid {
     if (this.options.selectable) {
       const th = document.createElement('th');
       th.className = 'skargrid-select-header';
-      
+
       const checkbox = document.createElement('input');
       checkbox.type = 'checkbox';
       checkbox.className = 'skargrid-checkbox';
       checkbox.checked = this.isAllSelected();
       checkbox.onchange = (e) => this.toggleSelectAll(e.target.checked);
-      
+
       th.appendChild(checkbox);
       tr.appendChild(th);
     }
@@ -528,80 +541,11 @@ class Skargrid {
       const th = document.createElement('th');
       th.dataset.field = column.field;
 
-      // Verifica se a coluna é ordenável
-      const isSortable = this.options.sortable && column.sortable !== false;
-      const isFilterable = this.options.columnFilters && column.filterable !== false;
-
-      if (isSortable) {
-        th.classList.add('sortable');
-      }
-
-      // Container para texto e ícones
-      const content = document.createElement('div');
-      content.className = 'th-content';
-      
-      // Container de texto + sort (clicável para ordenar)
-      const textSortContainer = document.createElement('div');
-      textSortContainer.className = 'th-text-sort';
-      if (isSortable) {
-        textSortContainer.style.cursor = 'pointer';
-        textSortContainer.onclick = () => this.handleSort(column.field);
-        
-        // Adiciona indicador de ordenação se esta coluna está ordenada
-        if (this.sortColumn === column.field) {
-          th.classList.add('sorted');
-          th.classList.add(this.sortDirection);
-        }
-      }
-      
       const text = document.createElement('span');
       text.className = 'th-text';
       text.textContent = column.title || column.field;
-      textSortContainer.appendChild(text);
+      th.appendChild(text);
 
-      // Adiciona ícone de ordenação se ordenável
-      if (isSortable) {
-        const sortIcon = document.createElement('span');
-        sortIcon.className = 'sort-icon';
-        
-        if (this.sortColumn === column.field) {
-          sortIcon.textContent = this.sortDirection === 'asc' ? '▲' : '▼';
-        } else {
-          sortIcon.textContent = '⇅';
-        }
-        
-        textSortContainer.appendChild(sortIcon);
-      }
-
-      content.appendChild(textSortContainer);
-
-      // Adiciona ícone de filtro se filtrável
-      if (isFilterable) {
-        const filterIconBtn = document.createElement('button');
-        filterIconBtn.className = 'th-filter-btn';
-        filterIconBtn.type = 'button';
-        
-        // Verifica se há filtro ativo nesta coluna
-        const hasFilter = this.hasActiveFilter(column.field);
-        if (hasFilter) {
-          filterIconBtn.classList.add('has-filter');
-        }
-        
-        filterIconBtn.innerHTML = `
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
-          </svg>
-        `;
-        
-        filterIconBtn.onclick = (e) => {
-          e.stopPropagation();
-          this.toggleFilterDropdown(column, filterIconBtn);
-        };
-        
-        content.appendChild(filterIconBtn);
-      }
-
-      th.appendChild(content);
       tr.appendChild(th);
     });
 

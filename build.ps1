@@ -49,6 +49,7 @@ $virtualization = Get-Content "$src\features\virtualization.js" -Raw -Encoding U
 $columnConfig = Get-Content "$src\features\columnConfig.js" -Raw -Encoding UTF8
 $export = Get-Content "$src\features\export.js" -Raw -Encoding UTF8
 $search = Get-Content "$src\features\search.js" -Raw -Encoding UTF8
+$tableHeader = Get-Content "$src\features\table-header.js" -Raw -Encoding UTF8
 $core = Get-Content "$src\core\skargrid.js" -Raw -Encoding UTF8
 
 # Remove exports dos features
@@ -63,6 +64,7 @@ $columnConfig = $columnConfig -replace "export function initColumnConfig.*?\{", 
 $columnConfig = $columnConfig -replace "(?s)if \(typeof window.*?$", ""
 $export = $export -replace "(?s)if \(typeof window.*?$", ""
 $search = $search -replace "(?s)if \(typeof window.*?$", ""
+$tableHeader = $tableHeader -replace "(?s)if \(typeof window.*?$", ""
 
  # Renomeia ScarGridCore para Skargrid no core
 $core = $core -replace "class ScarGridCore", "class Skargrid"
@@ -82,6 +84,7 @@ $virtualization
 $columnConfig
 $export
 $search
+$tableHeader
 
 return Skargrid;
 }));
@@ -106,6 +109,7 @@ $virtualization
 $columnConfig
 $export
 $search
+$tableHeader
 
 return Skargrid;
 }));
