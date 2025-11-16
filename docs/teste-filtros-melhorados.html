@@ -50,13 +50,16 @@
         <h1>🧪 Teste de Filtros Select Melhorados</h1>
 
         <div class="instructions">
-            <h3>🎯 Como Testar a Melhoria</h3>
+            <h3>🎯 Como Testar as Melhorias</h3>
             <ol>
                 <li><strong>Aplique um filtro</strong> na coluna "Cidade" (ex: selecione apenas "São Paulo")</li>
                 <li><strong>Abra o filtro</strong> da coluna "Cargo" - você verá apenas os cargos disponíveis para funcionários de São Paulo</li>
-                <li><strong>Compare</strong> com o comportamento anterior onde todas as opções apareciam (muitas desabilitadas)</li>
-                <li><strong>Teste a busca interna</strong> dentro dos filtros para encontrar opções específicas</li>
+                <li><strong>Teste a busca progressiva</strong>: No filtro de "Cargo", digite "de" - deve aparecer "Desenvolvedor" e "Designer"</li>
+                <li><strong>Continue digitando</strong> "dese" - deve aparecer apenas "Desenvolvedor" (Designer deve desaparecer)</li>
+                <li><strong>Selecione apenas "Desenvolvedor"</strong> e clique em "Aplicar" - apenas desenvolvedores serão mostrados</li>
+                <li><strong>Verifique</strong> que seleções anteriores não interferem quando você faz buscas mais específicas</li>
             </ol>
+            <p><strong>Comportamento esperado:</strong> Quando você faz uma busca e continua refinando (digitando mais letras), apenas as opções que correspondem ao termo atual devem aparecer, e seleções anteriores são automaticamente ajustadas.</p>
         </div>
 
         <div class="stats" id="stats">

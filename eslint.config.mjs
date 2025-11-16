@@ -13,6 +13,7 @@ export default [
         // Variáveis globais das features (definidas no build)
         PaginationFeature: "readonly",
         FilterFeature: "readonly",
+        SelectFilterFeature: "readonly",
         SortFeature: "readonly",
         SelectionFeature: "readonly",
         Skargrid: "readonly",

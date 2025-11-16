@@ -43,6 +43,7 @@ $pagination = Get-Content "$src\features\pagination.js" -Raw -Encoding UTF8
 $sort = Get-Content "$src\features\sort.js" -Raw -Encoding UTF8
 $selection = Get-Content "$src\features\selection.js" -Raw -Encoding UTF8
 $filter = Get-Content "$src\features\filter.js" -Raw -Encoding UTF8
+$selectFilter = Get-Content "$src\features\select-filter.js" -Raw -Encoding UTF8
 $columnConfig = Get-Content "$src\features\columnConfig.js" -Raw -Encoding UTF8
 $export = Get-Content "$src\features\export.js" -Raw -Encoding UTF8
 $core = Get-Content "$src\core\skargrid.js" -Raw -Encoding UTF8
@@ -52,6 +53,7 @@ $pagination = $pagination -replace "(?s)if \(typeof window.*?$", ""
 $sort = $sort -replace "(?s)if \(typeof window.*?$", ""
 $selection = $selection -replace "(?s)if \(typeof window.*?$", ""
 $filter = $filter -replace "(?s)if \(typeof window.*?$", ""
+$selectFilter = $selectFilter -replace "(?s)if \(typeof window.*?$", ""
 $columnConfig = $columnConfig -replace "export function initColumnConfig.*?\{", "function initColumnConfig(grid) {"
 $columnConfig = $columnConfig -replace "(?s)if \(typeof window.*?$", ""
 $export = $export -replace "(?s)if \(typeof window.*?$", ""
@@ -68,6 +70,7 @@ $pagination
 $sort
 $selection
 $filter
+$selectFilter
 $columnConfig
 $export
 
@@ -88,6 +91,7 @@ $pagination
 $sort
 $selection
 $filter
+$selectFilter
 $columnConfig
 $export
 

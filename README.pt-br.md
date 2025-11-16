@@ -38,7 +38,7 @@
 - 🎨 **Configuração de Colunas** - Arrastar e soltar para reordenar, mostrar/ocultar colunas com persistência
 - 🗄️ **Persistência Inteligente** - Salva preferências do usuário no localStorage automaticamente
 - 🌓 **Suporte a Temas** - Tema claro/escuro com transições suaves e variáveis customizáveis
-- 🔄 **Filtros Cascata Inteligentes** - Filtros estilo Excel mostrando apenas opções disponíveis após filtrar outras colunas
+- 🔄 **Filtros Select Inteligentes** - Filtros select aprimorados para mostrar apenas opções disponíveis quando outras colunas estão filtradas, com comportamento de busca inteligente que isola seleções durante a pesquisa
 - 🌍 **Busca Sem Acentos** - Trata acentos automaticamente (José = jose)
 - ↔️ **Rolagem Horizontal** - Barra de rolagem customizada para tabelas largas
 - 📦 **Bundle Único** - Apenas 2 arquivos (JS + CSS) - **27.8KB comprimido**
@@ -921,6 +921,30 @@ skargrid/
 └── package.json         # Configuração do projeto
 ```
 
+### Arquitetura
+
+O Skargrid utiliza uma arquitetura modular onde as funcionalidades são separadas em módulos individuais para melhor manutenção e extensibilidade:
+
+#### Módulo Core (`src/core/skargrid.js`)
+- Renderização principal da tabela e lógica de UI
+- Integração e inicialização de funcionalidades
+- Funcionalidades base (ordenação, paginação, etc.)
+
+#### Módulos de Funcionalidades (`src/features/`)
+- **`filter.js`** - Lógica de filtragem e utilitários
+- **`select-filter.js`** - Filtros avançados de seleção com busca
+- **`pagination.js`** - Controles e lógica de paginação
+- **`sort.js`** - Funcionalidade de ordenação de colunas
+- **`selection.js`** - Seleção e gerenciamento de linhas
+- **`export.js`** - Capacidades de exportação CSV e XLSX
+- **`columnConfig.js`** - Visibilidade e reordenação de colunas
+
+#### Integração de Funcionalidades
+As funcionalidades são carregadas globalmente e verificadas com `typeof NomeFuncionalidade !== 'undefined'` para degradação graciosa. Cada funcionalidade pode ser:
+- **Incluída** no build para funcionalidade completa
+- **Excluída** para builds leves personalizados
+- **Extendida** por desenvolvedores para funcionalidades customizadas
+
 ### Comandos de Build
 ```bash
 # Build de desenvolvimento
@@ -949,7 +973,7 @@ npm run docs
 ### [v1.3.0] - 2025-11-15
 - **🌐 Lançamento do Site**: Site oficial skargrid.com com documentação completa, exemplos ao vivo e benchmarks de performance
 - **📊 Benchmarks de Performance Atualizados**: Resultados abrangentes de testes para v1.3.0 com otimizações para datasets grandes
-- **🔄 Filtros Select Inteligentes**: Filtros select aprimorados para mostrar apenas opções disponíveis quando outras colunas estão filtradas, melhorando a experiência do usuário
+- **🔄 Filtros Select Inteligentes**: Filtros select aprimorados para mostrar apenas opções disponíveis quando outras colunas estão filtradas, com comportamento de busca inteligente que isola seleções durante a pesquisa, melhorando a experiência do usuário
 - **🔧 Correções Menores e Melhorias**: Várias correções de bugs e aprimoramentos de qualidade de código
 
 ### [v1.2.0] - 2025-01-13
