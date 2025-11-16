@@ -347,71 +347,12 @@ class Skargrid {
    * Renderiza barra superior com busca e botões de ação
    */
   renderTopBar() {
-    const hasSearch = this.options.searchable;
-    const hasColumnConfig = this.options.columnConfig && typeof this.renderColumnConfigButton === 'function';
-    const hasFilterClear = this.options.columnFilters;
-    const hasExportCSV = this.options.exportCSV && typeof this.renderExportCSVButton === 'function';
-    const hasExportXLSX = this.options.exportXLSX && typeof this.exportToXLSX === 'function' && typeof this.renderExportCSVButton === 'function';
-
-    // Se não tem nada para renderizar, retorna null
-    if (!hasSearch && !hasColumnConfig && !hasFilterClear && !hasExportCSV && !hasExportXLSX) {
-      return null;
+    if (typeof TopBarFeature !== 'undefined') {
+      return TopBarFeature.renderTopBar(this);
+    } else {
+      // Fallback básico se TopBarFeature não disponível
+      return this.createBasicTopBar();
     }
-
-    const searchContainer = document.createElement('div');
-    searchContainer.className = 'skargrid-search-container';
-
-    // Renderiza input de busca (se habilitado)
-    if (hasSearch) {
-      const searchWrapper = this.renderSearchInput();
-      searchContainer.appendChild(searchWrapper);
-    }
-
-    // Renderiza botões de ação (sempre que houver algum botão)
-    if (hasFilterClear || hasColumnConfig || hasExportCSV || hasExportXLSX) {
-      const actionsContainer = document.createElement('div');
-      actionsContainer.className = 'skargrid-search-actions';
-
-      // Botão "Limpar Filtros" (apenas se columnFilters estiver ativo)
-      if (hasFilterClear) {
-        const clearFiltersButton = this.renderClearFiltersButton();
-        actionsContainer.appendChild(clearFiltersButton);
-      }
-
-      // Botão "Configurar Colunas" (se o módulo estiver carregado)
-      if (hasColumnConfig) {
-        const columnConfigBtn = this.renderColumnConfigButton();
-        actionsContainer.appendChild(columnConfigBtn);
-      }
-
-      // Botão "Exportar CSV" (se o módulo estiver carregado)
-      if (hasExportCSV) {
-        const exportButton = this.renderExportCSVButton();
-        actionsContainer.appendChild(exportButton);
-      }
-
-      // Botão "Exportar Excel" (simples, sem dependências)
-      if (hasExportXLSX) {
-        // Button for real XLSX export (pure JS implementation)
-        const xlsxBtn = document.createElement('button');
-        xlsxBtn.className = 'skargrid-clear-filters-btn';
-        xlsxBtn.title = this.labels.exportXLSX;
-        xlsxBtn.innerHTML = `
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-            <polyline points="7 10 12 15 17 10"></polyline>
-            <line x1="12" y1="15" x2="12" y2="3"></line>
-          </svg>
-          <span style="margin-left:.35rem;font-size:12px">XLSX</span>
-        `;
-        xlsxBtn.onclick = () => this.exportToXLSX();
-        actionsContainer.appendChild(xlsxBtn);
-      }
-
-      searchContainer.appendChild(actionsContainer);
-    }
-
-    return searchContainer;
   }
 
   /**
@@ -458,48 +399,41 @@ class Skargrid {
    * Renderiza botão "Limpar Filtros"
    */
   renderClearFiltersButton() {
-    const clearFiltersButton = document.createElement('button');
-    clearFiltersButton.className = 'skargrid-clear-filters-btn';
-    clearFiltersButton.innerHTML = `
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
-        <line x1="18" y1="6" x2="6" y2="18"></line>
-      </svg>
-      <span class="filter-count-badge" style="display: none;">0</span>
-    `;
-    clearFiltersButton.title = this.labels.clearFilters;
-    clearFiltersButton.onclick = () => this.clearAllFilters();
-    
-    // Atualiza contador de filtros ativos
-    this.updateClearFiltersButton(clearFiltersButton);
-
-    return clearFiltersButton;
+    if (typeof TopBarFeature !== 'undefined') {
+      return TopBarFeature.renderClearFiltersButton(this);
+    }
+    return document.createElement('button');
   }
 
   /**
    * Renderiza botão "Exportar CSV"
    */
   renderExportCSVButton() {
-    const exportButton = document.createElement('button');
-    exportButton.className = 'skargrid-clear-filters-btn';
-    exportButton.innerHTML = `
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-        <polyline points="7 10 12 15 17 10"></polyline>
-        <line x1="12" y1="15" x2="12" y2="3"></line>
-      </svg>
-      <span style="margin-left:.35rem;font-size:12px">CSV</span>
-    `;
-    exportButton.title = this.labels.exportCSV;
-    exportButton.onclick = () => this.exportToCSV();
-    
-    return exportButton;
+    if (typeof TopBarFeature !== 'undefined') {
+      return TopBarFeature.renderExportCSVButton(this);
+    }
+    return document.createElement('button');
   }
 
-  renderSearchBox() {
-    // DEPRECATED: Mantido para compatibilidade com código antigo
-    // Use renderTopBar() no lugar
-    return this.renderTopBar();
+  /**
+   * Fallback básico para renderização da barra superior quando TopBarFeature não está disponível
+   */
+  createBasicTopBar() {
+    const hasSearch = this.options.searchable;
+
+    // Se não tem busca, retorna null
+    if (!hasSearch) {
+      return null;
+    }
+
+    const searchContainer = document.createElement('div');
+    searchContainer.className = 'skargrid-search-container';
+
+    // Renderiza input de busca básico
+    const searchWrapper = this.createBasicSearchInput();
+    searchContainer.appendChild(searchWrapper);
+
+    return searchContainer;
   }
 
   /**
@@ -1181,36 +1115,12 @@ class Skargrid {
   /**
    * Atualiza o botão de limpar filtros com contador de filtros ativos
    */
+  /**
+   * Atualiza o botão de limpar filtros com contador de filtros ativos
+   */
   updateClearFiltersButton(button = null) {
-    if (!button) {
-      button = this.container.querySelector('.skargrid-clear-filters-btn');
-    }
-    
-    if (!button) {return;}
-    
-    // Conta quantos filtros estão ativos
-    let activeCount = 0;
-    
-    // Conta busca global
-    if (this.searchText) {activeCount++;}
-    
-    // Conta filtros de coluna
-    this.options.columns.forEach(column => {
-      if (column.filterable !== false) {
-        if (this.hasActiveFilter(column.field)) {
-          activeCount++;
-        }
-      }
-    });
-    
-    const badge = button.querySelector('.filter-count-badge');
-    if (activeCount > 0) {
-      badge.textContent = activeCount;
-      badge.style.display = 'flex';
-      button.classList.add('has-filters');
-    } else {
-      badge.style.display = 'none';
-      button.classList.remove('has-filters');
+    if (typeof TopBarFeature !== 'undefined') {
+      TopBarFeature.updateClearFiltersButton(this, button);
     }
   }
 
