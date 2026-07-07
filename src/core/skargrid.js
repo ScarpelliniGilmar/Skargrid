@@ -92,43 +92,56 @@ class Skargrid {
       // but avoid throwing during construction
       if (console && console.warn) {console.warn('Skargrid: error normalizing pageSizeOptions', e);}
     }
-    // Estado da paginação
-    this.currentPage = 1;
-    this.totalPages = 1;
+    // Fonte central de estado: toda propriedade mutável de runtime vive aqui.
+    // As chaves ficam acessíveis como this.currentPage, this.sortColumn etc.
+    // via os getters/setters definidos em Skargrid.prototype (ver STATE_KEYS
+    // no fim deste arquivo) — mantém compatibilidade com o código existente
+    // enquanto garante uma única fonte de verdade.
+    this.state = {
+      // Paginação
+      currentPage: 1,
+      totalPages: 1,
 
-    // Estado da ordenação
-    this.sortColumn = null;
-    this.sortDirection = null; // 'asc' ou 'desc'
+      // Ordenação
+      sortColumn: null,
+      sortDirection: null, // 'asc' ou 'desc'
 
-    // Dados originais (não ordenados)
-    this.originalData = [...this.options.data];
+      // Dados originais (não ordenados) e filtrados/pesquisados
+      originalData: [...this.options.data],
+      filteredData: [...this.options.data],
 
-    // Estado da seleção - armazena índices das linhas selecionadas
-    this.selectedRows = new Set();
+      // Seleção - índices das linhas selecionadas
+      selectedRows: new Set(),
 
-    // Estado da busca
-    this.searchText = '';
-    this.filteredData = [...this.options.data];
-    this.searchTimeout = null;
+      // Busca
+      searchText: '',
+      searchTimeout: null,
 
-    // Estado dos filtros por coluna
-    this.columnFilterValues = {}; // { field: value }
-    this.columnFilterSelected = {}; // { field: [selectedValues] } para checkboxes
+      // Filtros por coluna
+      columnFilterValues: {}, // { field: value }
+      columnFilterSelected: {}, // { field: [selectedValues] } para checkboxes
 
-    // Estado de loading
-    this.isLoading = false;
+      // Loading
+      isLoading: false,
 
-    // Referência para dropdown aberto
-    this.openFilterDropdown = null;
+      // Dropdown de filtro aberto e seu listener de scroll
+      openFilterDropdown: null,
+      scrollHandler: null,
 
-    // Estado de visibilidade e ordem das colunas
-    // Respeita a propriedade visible (padrão: true)
-    this.visibleColumns = new Set(
-      this.options.columns
-        .filter(col => col.visible !== false)
-        .map(col => col.field),
-    );
-    this.columnOrder = this.options.columns.map(col => col.field);
+      // Visibilidade e ordem das colunas (respeita a propriedade `visible`, padrão true)
+      visibleColumns: new Set(
+        this.options.columns
+          .filter(col => col.visible !== false)
+          .map(col => col.field),
+      ),
+      columnOrder: this.options.columns.map(col => col.field),
+
+      // Virtualização (preenchido por VirtualizationFeature.initVirtualization abaixo)
+      virtualScrollTop: 0,
+      virtualRowHeight: 40,
+      virtualVisibleRows: 20,
+      virtualBufferSize: 5,
+    };
 
     // Estado da virtualização
     VirtualizationFeature.initVirtualization(this);
@@ -968,5 +981,35 @@ class Skargrid {
     }
   }
 }
+
+// Cada chave abaixo vive de fato em `this.state` (ver constructor). Os
+// getters/setters expõem `grid.currentPage`, `grid.sortColumn` etc. como
+// atalhos, para que core e features continuem lendo/escrevendo dessa forma
+// sem apontar para 20 propriedades soltas na instância.
+const STATE_KEYS = [
+  'currentPage', 'totalPages',
+  'sortColumn', 'sortDirection',
+  'originalData', 'filteredData',
+  'selectedRows',
+  'searchText', 'searchTimeout',
+  'columnFilterValues', 'columnFilterSelected',
+  'isLoading',
+  'openFilterDropdown', 'scrollHandler',
+  'visibleColumns', 'columnOrder',
+  'virtualScrollTop', 'virtualRowHeight', 'virtualVisibleRows', 'virtualBufferSize',
+];
+
+STATE_KEYS.forEach(key => {
+  Object.defineProperty(Skargrid.prototype, key, {
+    get() {
+      return this.state[key];
+    },
+    set(value) {
+      this.state[key] = value;
+    },
+    enumerable: true,
+    configurable: true,
+  });
+});
 
 export default Skargrid;

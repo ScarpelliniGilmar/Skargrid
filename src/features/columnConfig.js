@@ -620,14 +620,4 @@ export function initColumnConfig(grid) {
     this.columnOrder = newOrder;
     this.render();
   };
-
-  /**
-   * Obtém as colunas ordenadas e visíveis
-   */
-  grid.getOrderedVisibleColumns = function() {
-    return this.columnOrder
-      .filter(field => this.visibleColumns.has(field))
-      .map(field => this.options.columns.find(col => col.field === field))
-      .filter(col => col !== undefined);
-  };
 }

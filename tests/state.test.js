@@ -33,6 +33,36 @@ describe('SkarGrid - estado serializável', () => {
     }
   });
 
+  test('this.state é a fonte única de verdade: propriedades soltas são atalhos, não cópias', () => {
+    const grid = new window.Skargrid('state-test-container', {
+      data,
+      columns,
+      pagination: true,
+      pageSize: 2,
+      sortable: true,
+      selectable: true,
+    });
+
+    // grid.state existe e concentra as chaves de runtime
+    expect(grid.state).toBeInstanceOf(Object);
+    expect(grid.state.selectedRows).toBeInstanceOf(Set);
+
+    // escrever via grid.<prop> (atalho) reflete em grid.state
+    grid.handleSort('nome');
+    expect(grid.state.sortColumn).toBe('nome');
+
+    grid.goToPage(1);
+    expect(grid.state.currentPage).toBe(1);
+
+    // escrever direto em grid.state também reflete no atalho (mesma referência,
+    // não uma cópia sincronizada por evento)
+    grid.state.searchText = 'ana';
+    expect(grid.searchText).toBe('ana');
+
+    grid.state.currentPage = 2;
+    expect(grid.currentPage).toBe(2);
+  });
+
   test('getState() reflete página, ordenação, filtros, busca, seleção e tema atuais', () => {
     const grid = new window.Skargrid('state-test-container', {
       data,
