@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>SkarGrid Community 2.0 — Playground local</title>
+<link rel="stylesheet" href="../dist/skargrid.css" />
+<style>
+  body {
+    font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 24px;
+    color: #1a1a1a;
+    background: #fafafa;
+  }
+  header {
+    margin-bottom: 24px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid #ddd;
+  }
+  header h1 { margin: 0 0 4px; font-size: 1.4rem; }
+  header p { margin: 0; color: #555; font-size: 0.9rem; }
+  .badge {
+    display: inline-block;
+    font-size: 0.75rem;
+    padding: 2px 8px;
+    border-radius: 999px;
+    background: #eef2ff;
+    color: #3730a3;
+    margin-left: 8px;
+  }
+  .toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-items: center;
+    margin-bottom: 12px;
+    font-size: 0.85rem;
+  }
+  .toolbar button {
+    cursor: pointer;
+    padding: 6px 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    background: white;
+  }
+  .toolbar button:hover { background: #f0f0f0; }
+  section { margin-bottom: 40px; }
+  section h2 { font-size: 1rem; margin-bottom: 4px; }
+  section p.hint { margin: 0 0 12px; font-size: 0.8rem; color: #666; }
+  #status { font-size: 0.8rem; color: #555; }
+  #api-log {
+    background: #111;
+    color: #d4f4dd;
+    font-family: 'Cascadia Code', Consolas, monospace;
+    font-size: 0.78rem;
+    padding: 12px;
+    border-radius: 8px;
+    height: 180px;
+    overflow-y: auto;
+    white-space: pre-wrap;
+  }
+  #virtual-grid { height: 420px; }
+</style>
+</head>
+<body>
+  <header>
+    <h1>SkarGrid Community 2.0 <span class="badge">local dev build</span></h1>
+    <p>
+      Carrega diretamente de <code>dist/skargrid.min.js</code> e <code>dist/skargrid.css</code> —
+      não usa CDN nem npm publicado. Rode <code>npm run watch</code> (rebuild automático a cada
+      alteração em <code>src/</code>) e apenas atualize esta aba para ver o resultado.
+    </p>
+    <p id="status"></p>
+  </header>
+
+  <div class="toolbar">
+    <button id="toggle-theme">Alternar tema</button>
+    <button id="reload-data">Recarregar dados (grid completo)</button>
+    <button id="destroy-recreate">destroy() + recriar (10x)</button>
+  </div>
+
+  <section>
+    <h2>1. Grid completo</h2>
+    <p class="hint">
+      sort, paginação, busca global, seleção, filtros por coluna (texto/select/número/data),
+      configuração de colunas, exportação CSV e XLSX.
+    </p>
+    <div id="grid"></div>
+  </section>
+
+  <section>
+    <h2>2. Virtualização</h2>
+    <p class="hint">
+      50.000 linhas, <code>virtualization: true</code>, sem paginação (a lib não combina os dois).
+      Role a lista para validar que não há long tasks nem vazamento de nós.
+    </p>
+    <div id="virtual-grid"></div>
+  </section>
+
+  <section>
+    <h2>3. Console da API pública</h2>
+    <p class="hint">Exercita os métodos expostos na instância do grid completo (seção 1).</p>
+    <div class="toolbar">
+      <button data-api="getData">getData()</button>
+      <button data-api="getSelectedRows">getSelectedRows()</button>
+      <button data-api="selectRows">selectRows([0,1,2])</button>
+      <button data-api="clearSelection">clearSelection()</button>
+      <button data-api="clearAllFilters">clearAllFilters()</button>
+      <button data-api="clearSearch">clearSearch()</button>
+      <button data-api="clearSort">clearSort()</button>
+      <button data-api="goToPage">goToPage(2)</button>
+      <button data-api="changePageSize">changePageSize(25)</button>
+      <button data-api="updateData">updateData(novo dataset)</button>
+      <button data-api="setThemeDark">setTheme('dark')</button>
+      <button data-api="setThemeLight">setTheme('light')</button>
+      <button data-api="showLoading">showLoading()</button>
+      <button data-api="hideLoading">hideLoading()</button>
+      <button data-api="getState">getState()</button>
+      <button data-api="saveState">salvar estado</button>
+      <button data-api="restoreState">setState(estado salvo)</button>
+    </div>
+    <pre id="api-log"></pre>
+  </section>
+
+  <script src="../dist/skargrid.min.js"></script>
+  <script>
+    const cidades = ['São Paulo', 'Rio de Janeiro', 'Belo Horizonte', 'Curitiba', 'Porto Alegre'];
+    const statusList = ['ativo', 'inativo', 'pendente'];
+
+    function pad(n) { return String(n).padStart(2, '0'); }
+
+    function generateData(count) {
+      const rows = [];
+      for (let i = 1; i <= count; i += 1) {
+        const month = (i % 12) + 1;
+        rows.push({
+          id: i,
+          nome: `Usuário ${i}`,
+          email: `usuario${i}@example.com`,
+          cidade: cidades[i % cidades.length],
+          idade: 18 + (i % 50),
+          status: statusList[i % statusList.length],
+          dataCadastro: `2024-${pad(month)}-${pad((i % 28) + 1)}`,
+        });
+      }
+      return rows;
+    }
+
+    let grid = null;
+    let virtualGrid = null;
+
+    const columns = [
+      { field: 'id', title: 'ID', width: '70px', sortable: true },
+      { field: 'nome', title: 'Nome', filterable: true, sortable: true },
+      { field: 'email', title: 'Email', filterable: true },
+      { field: 'cidade', title: 'Cidade', filterable: true, filterType: 'select', sortable: true },
+      { field: 'idade', title: 'Idade', width: '80px', filterable: true, filterType: 'number', sortable: true },
+      { field: 'status', title: 'Status', width: '110px', filterable: true, filterType: 'select' },
+      { field: 'dataCadastro', title: 'Cadastro', width: '120px', filterable: true, filterType: 'date', sortable: true },
+    ];
+
+    function mount() {
+      document.getElementById('grid').innerHTML = '';
+      grid = new window.Skargrid('grid', {
+        data: generateData(250),
+        columns,
+        sortable: true,
+        pagination: true,
+        pageSize: 10,
+        pageSizeOptions: [10, 25, 50, 100],
+        searchable: true,
+        selectable: true,
+        columnFilters: true,
+        columnConfig: true,
+        exportCSV: true,
+        exportXLSX: true,
+        exportFilename: 'skargrid-playground',
+      });
+
+      document.getElementById('status').textContent =
+        `Grid completo montado — build de ${new Date().toString()}`;
+    }
+
+    function mountVirtual() {
+      document.getElementById('virtual-grid').innerHTML = '';
+      virtualGrid = new window.Skargrid('virtual-grid', {
+        data: generateData(50000),
+        columns,
+        sortable: true,
+        virtualization: true,
+        pagination: false,
+      });
+    }
+
+    document.getElementById('toggle-theme').addEventListener('click', () => {
+      const next = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
+      document.documentElement.dataset.theme = next;
+      grid?.setTheme(next);
+      virtualGrid?.setTheme(next);
+    });
+
+    document.getElementById('reload-data').addEventListener('click', mount);
+
+    document.getElementById('destroy-recreate').addEventListener('click', () => {
+      for (let i = 0; i < 10; i += 1) {
+        grid?.destroy();
+        mount();
+      }
+      logApi('destroy-recreate', '10 ciclos de destroy()+recriação concluídos sem erro');
+    });
+
+    const apiLog = document.getElementById('api-log');
+    function logApi(action, result) {
+      const line = `[${new Date().toLocaleTimeString()}] ${action} -> ${result}`;
+      apiLog.textContent = `${line}\n${apiLog.textContent}`;
+    }
+
+    let savedState = null;
+
+    const apiActions = {
+      getData: () => JSON.stringify(grid.getData().slice(0, 2)) + ' (2 primeiras linhas)',
+      getSelectedRows: () => JSON.stringify(grid.getSelectedRows()),
+      selectRows: () => { grid.selectRows([0, 1, 2]); return 'ok'; },
+      clearSelection: () => { grid.clearSelection(); return 'ok'; },
+      clearAllFilters: () => { grid.clearAllFilters(); return 'ok'; },
+      clearSearch: () => { grid.clearSearch(); return 'ok'; },
+      clearSort: () => { grid.clearSort(); return 'ok'; },
+      goToPage: () => { grid.goToPage(2); return 'ok'; },
+      changePageSize: () => { grid.changePageSize(25); return 'ok'; },
+      updateData: () => { grid.updateData(generateData(30)); return '30 novas linhas'; },
+      setThemeDark: () => { grid.setTheme('dark'); return 'ok'; },
+      setThemeLight: () => { grid.setTheme('light'); return 'ok'; },
+      showLoading: () => { grid.showLoading(); return 'ok'; },
+      hideLoading: () => { grid.hideLoading(); return 'ok'; },
+      getState: () => JSON.stringify(grid.getState()),
+      saveState: () => { savedState = grid.getState(); return 'estado salvo em memória'; },
+      restoreState: () => {
+        if (!savedState) { return 'nenhum estado salvo ainda — clique em "salvar estado" primeiro'; }
+        grid.setState(savedState);
+        return 'estado restaurado';
+      },
+    };
+
+    document.querySelectorAll('[data-api]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const action = btn.dataset.api;
+        try {
+          const result = apiActions[action]();
+          logApi(action, result);
+        } catch (err) {
+          logApi(action, `ERRO: ${err.message}`);
+        }
+      });
+    });
+
+    mount();
+    mountVirtual();
+  </script>
+</body>
+</html>
