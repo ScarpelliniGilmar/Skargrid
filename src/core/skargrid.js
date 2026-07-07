@@ -50,6 +50,7 @@ class Skargrid {
       exportCSV: options.exportCSV !== undefined ? options.exportCSV : false, // Exportar CSV desabilitado por padrão
       exportFilename: options.exportFilename || 'skargrid-export', // Nome base para arquivos exportados
       virtualization: options.virtualization !== undefined ? options.virtualization : false, // Virtualização desabilitada por padrão
+      allowUnsafeHtml: options.allowUnsafeHtml !== undefined ? options.allowUnsafeHtml : false, // render()/formatter() tratados como texto por padrão; HTML é opt-in
       ...options,
     };
 
