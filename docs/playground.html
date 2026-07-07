@@ -126,7 +126,20 @@
   </section>
 
   <section>
-    <h2>3. Persistência de estado (persistState)</h2>
+    <h2>3. Server-side processing (serverSide)</h2>
+    <p class="hint">
+      <code>serverSide: true</code>: <code>data</code> é sempre exatamente a página atual — o grid não
+      pagina, ordena, filtra ou busca no cliente. Um "servidor" fake (<code>setTimeout</code> de ~400ms)
+      simula a latência real. Ordene, pesquise ou mude de página para ver a requisição disparar.
+    </p>
+    <div class="toolbar">
+      <span id="server-status" style="font-size: 0.8rem; color: #666;"></span>
+    </div>
+    <div id="server-grid"></div>
+  </section>
+
+  <section>
+    <h2>4. Persistência de estado (persistState)</h2>
     <p class="hint">
       Ordene, filtre, selecione linhas ou mude de página aqui e clique em "recarregar (simula F5)"
       — o estado volta do <code>localStorage</code> via <code>getState()</code>/<code>setState()</code>,
@@ -140,7 +153,7 @@
   </section>
 
   <section>
-    <h2>4. Console da API pública</h2>
+    <h2>5. Console da API pública</h2>
     <p class="hint">Exercita os métodos expostos na instância do grid completo (seção 1).</p>
     <div class="toolbar">
       <button data-api="getData">getData()</button>
@@ -165,7 +178,7 @@
   </section>
 
   <section>
-    <h2>5. Log de eventos (event bus)</h2>
+    <h2>6. Log de eventos (event bus)</h2>
     <p class="hint">
       Registrado via <code>grid.on(...)</code> no grid completo (seção 1): <code>sort</code>,
       <code>pageChange</code>, <code>selectionChange</code>, <code>filterChange</code> e
@@ -201,6 +214,7 @@
 
     let grid = null;
     let virtualGrid = null;
+    let serverGrid = null;
     let persistGrid = null;
 
     const columns = [
@@ -276,6 +290,81 @@
       });
     }
 
+    // "Servidor" fake: aplica busca/filtro/ordenação/paginação sobre um dataset
+    // completo em memória e devolve só a página pedida, como uma API real faria.
+    const serverFullDataset = generateData(237);
+    function fakeServerFetch({ page, pageSize, sortColumn, sortDirection, searchText, columnFilterValues }) {
+      return new Promise(resolve => {
+        setTimeout(() => {
+          let rows = [...serverFullDataset];
+
+          if (searchText) {
+            const term = searchText.toLowerCase();
+            rows = rows.filter(r => Object.values(r).some(v => String(v).toLowerCase().includes(term)));
+          }
+          Object.entries(columnFilterValues || {}).forEach(([field, value]) => {
+            if (!value) {return;}
+            if (Array.isArray(value)) {
+              rows = rows.filter(r => value.includes(r[field]));
+            } else {
+              rows = rows.filter(r => String(r[field]).toLowerCase().includes(String(value).toLowerCase()));
+            }
+          });
+          if (sortColumn) {
+            rows.sort((a, b) => {
+              const cmp = String(a[sortColumn]).localeCompare(String(b[sortColumn]), undefined, { numeric: true });
+              return sortDirection === 'desc' ? -cmp : cmp;
+            });
+          }
+
+          const total = rows.length;
+          const start = (page - 1) * pageSize;
+          resolve({ data: rows.slice(start, start + pageSize), total });
+        }, 400);
+      });
+    }
+
+    function requestServerPage() {
+      const serverStatus = document.getElementById('server-status');
+      serverStatus.textContent = 'buscando...';
+      serverGrid.showLoading();
+      serverGrid.render(false);
+
+      fakeServerFetch({
+        page: serverGrid.currentPage,
+        pageSize: serverGrid.options.pageSize,
+        sortColumn: serverGrid.sortColumn,
+        sortDirection: serverGrid.sortDirection,
+        searchText: serverGrid.searchText,
+        columnFilterValues: serverGrid.columnFilterValues,
+      }).then(result => {
+        serverGrid.hideLoading();
+        serverGrid.updateData(result.data);
+        serverGrid.setTotalRecords(result.total);
+        serverStatus.textContent = `${result.total} registros no "servidor"`;
+      });
+    }
+
+    function mountServer() {
+      document.getElementById('server-grid').innerHTML = '';
+      serverGrid = new window.Skargrid('server-grid', {
+        data: [],
+        columns,
+        sortable: true,
+        pagination: true,
+        pageSize: 10,
+        searchable: true,
+        columnFilters: true,
+        serverSide: true,
+      });
+
+      serverGrid.on('pageChange', requestServerPage);
+      serverGrid.on('sortChange', requestServerPage);
+      serverGrid.on('filterChange', requestServerPage);
+
+      requestServerPage(); // carga inicial (página 1)
+    }
+
     function mountPersist() {
       document.getElementById('persist-grid').innerHTML = '';
       persistGrid = new window.Skargrid('persist-grid', {
@@ -296,6 +385,7 @@
       document.documentElement.dataset.theme = next;
       grid?.setTheme(next);
       virtualGrid?.setTheme(next);
+      serverGrid?.setTheme(next);
       persistGrid?.setTheme(next);
     });
 
@@ -364,6 +454,7 @@
 
     mount();
     mountVirtual();
+    mountServer();
     mountPersist();
   </script>
 </body>

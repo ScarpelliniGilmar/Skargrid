@@ -71,6 +71,16 @@ export interface SkargridOptions<Row extends Record<string, unknown> = Record<st
   stateVersion?: number | string;
   /** Exibe um rodapé (`<tfoot>`) com os valores de `column.aggregate` (padrão: false). */
   footerAggregates?: boolean;
+  /**
+   * Delega paginação/ordenação/filtro/busca ao servidor (padrão: false).
+   * `data` passa a ser sempre exatamente a página atual — o cliente não
+   * pagina, ordena nem filtra localmente. Use os eventos `pageChange`,
+   * `sortChange` e `filterChange` (ou as opções `onXChange`) para buscar a
+   * página certa e chame `updateData()` + `setTotalRecords()` com o resultado.
+   */
+  serverSide?: boolean;
+  /** Total de registros no servidor, usado para calcular o total de páginas. Atualize com `setTotalRecords()`. */
+  totalRecords?: number;
   labels?: Partial<SkargridLabels>;
   onRowClick?: (row: Row, index: number) => void;
   onSelectionChange?: (rows: Row[]) => void;
@@ -118,6 +128,8 @@ export default class Skargrid<Row extends Record<string, unknown> = Record<strin
   clearSort(): void;
   goToPage(page: number): void;
   changePageSize(size: number): void;
+  /** Atualiza o total de registros no modo `serverSide` e recalcula a paginação. */
+  setTotalRecords(total: number): void;
   getState(): SkargridState;
   setState(state: Partial<SkargridState>): void;
   clearPersistedState(): void;

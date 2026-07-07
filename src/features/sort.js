@@ -27,7 +27,11 @@ const SortFeature = {
         // Terceiro clique remove a ordenação
         grid.sortColumn = null;
         grid.sortDirection = null;
-        grid.options.data = [...grid.originalData];
+        // Modo server-side: não há "ordem original" no cliente para
+        // restaurar — quem decide a ordem sem sortColumn é o servidor.
+        if (!grid.options.serverSide) {
+          grid.options.data = [...grid.originalData];
+        }
       }
     } else {
       // Nova coluna, começa com ascendente
@@ -50,8 +54,13 @@ const SortFeature = {
    * Ordena os dados pela coluna e direção atuais
    */
   sortData(grid) {
+    // Modo server-side: os dados já chegam ordenados pelo servidor.
+    if (grid.options.serverSide) {
+      return;
+    }
+
     const column = grid.options.columns.find(col => col.field === grid.sortColumn);
-    
+
     grid.options.data.sort((a, b) => {
       let valueA = this.getSortValue(grid, a, column);
       let valueB = this.getSortValue(grid, b, column);

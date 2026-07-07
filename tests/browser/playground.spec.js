@@ -17,6 +17,30 @@ test('grid completo monta com paginação, ordenação e filtros', async ({ page
   await expect(page.locator('#grid thead input, #grid thead select')).not.toHaveCount(0);
 });
 
+test('serverSide: carga inicial busca do "servidor" fake e preenche totalRecords', async ({ page }) => {
+  await expect(page.locator('#server-status')).toHaveText('237 registros no "servidor"');
+  await expect(page.locator('#server-grid tbody tr')).toHaveCount(10);
+});
+
+test('serverSide: mudar de página, ordenar e pesquisar disparam nova requisição', async ({ page }) => {
+  await expect(page.locator('#server-status')).toHaveText('237 registros no "servidor"');
+
+  const firstIdBefore = await page.locator('#server-grid tbody tr:first-child td[data-field="id"]').textContent();
+
+  await page.click('#server-grid .skargrid-pagination-btn:has-text("›")');
+  // A busca fake demora ~400ms — dá tempo de a página realmente mudar antes
+  // de conferir o resultado (não afirmamos o estado "buscando..." em si,
+  // que é transitório demais para um teste estável).
+  await expect(page.locator('#server-grid tbody tr:first-child td[data-field="id"]')).not.toHaveText(firstIdBefore, { timeout: 2000 });
+  await expect(page.locator('#server-status')).toHaveText('237 registros no "servidor"');
+
+  await page.fill('#server-grid .skargrid-search-input', 'usuário 1');
+  await page.waitForTimeout(600); // debounce de busca (300ms) + latência fake (400ms)
+  // "usuário 1" casa com 1, 10-19, 100-199 = 111 registros num total de 237
+  await expect(page.locator('#server-status')).toHaveText('111 registros no "servidor"');
+  await expect(page.locator('#server-grid tbody tr')).not.toHaveCount(0);
+});
+
 test('colunas congeladas (ID e Nome) permanecem visíveis após scroll horizontal', async ({ page }) => {
   const idHeader = page.locator('#grid thead th[data-field="id"]');
   const nomeHeader = page.locator('#grid thead th[data-field="nome"]');
