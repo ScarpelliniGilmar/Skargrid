@@ -1109,6 +1109,14 @@ npm run docs
 
 ## 📋 Changelog
 
+### [v2.0.0] - 2026-07-07
+- **🏛️ Edição Community**: edições Free e Pro consolidadas em um único pacote MIT — sem verificação de licença, sem plano pago
+- **⚠️ Incompatível**: strings retornadas por `render()`/`formatter()` agora são texto puro por padrão (proteção XSS). Retorne um `Node` ou habilite `allowUnsafeHtml: true` — veja o [guia de migração](https://skargrid.com/migration/1x-to-community)
+- **🆕 Da Pro, agora grátis**: server-side processing, persistência de estado, colunas congeladas, agregações no rodapé
+- **🆕 API**: `getState()`/`setState()`, event bus (`on`/`off`/`emit`), `destroy()` confiável
+- **📚 Documentação nova**: https://skargrid.com — com `llms.txt` e JSON Schemas para agentes de IA
+- Detalhes completos no [CHANGELOG.md](CHANGELOG.md)
+
 ### [v1.4.0] - 2025-11-16
 - **🏗️ Refatoração Completa da Arquitetura Modular**: Reestruturação arquitetural majoritária com 13 módulos especializados de features
 - **📦 Redução do Core**: Módulo core reduzido em 25% (~450 linhas) através de extração sistemática de features

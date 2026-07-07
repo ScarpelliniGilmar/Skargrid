@@ -2,6 +2,39 @@
 
 Todas as mudanças notáveis neste projecto serão documentadas aqui.
 
+## [2.0.0] - 2026-07-07
+
+### Resumo
+Consolidação das edições Free e Pro em uma única edição **Community** (MIT), com core refatorado (estado central, event bus, renderer seguro por padrão), 4 features migradas da Pro e nova documentação em https://skargrid.com. Guia de migração: https://skargrid.com/migration/1x-to-community
+
+### ⚠️ Mudança incompatível
+- **`render()`/`formatter()` não injetam mais HTML por padrão.** Uma string retornada é tratada como texto puro (`textContent`); tags HTML não são interpretadas — proteção contra XSS com dados não confiáveis. Para HTML/DOM real: retorne um `Node` (sempre seguro) ou habilite `allowUnsafeHtml: true` (global ou por coluna). Este é o único ajuste necessário para quem migra da 1.x.
+
+### Novas funcionalidades (migradas da Pro, agora MIT)
+- **Server-side processing** — `serverSide: true` + `totalRecords`/`setTotalRecords()`: paginação/ordenação/filtro/busca delegadas ao seu backend via eventos.
+- **Persistência de estado** — `persistState`/`stateStorageKey`/`stateVersion`: estado salvo e restaurado do `localStorage`, com versionamento.
+- **Colunas congeladas** — `column.frozen: true`: prefixo contíguo fixado à esquerda no scroll horizontal.
+- **Agregações no rodapé** — `footerAggregates` + `column.aggregate` (`sum`/`avg`/`count`/`min`/`max` ou função customizada), calculadas sobre os dados filtrados.
+
+### Novidades da API
+- **Estado serializável** — `getState()`/`setState()` cobrindo página, ordenação, filtros, busca, seleção, colunas e tema.
+- **Event bus** — `on()`/`off()`/`emit()` com `sortChange`, `pageChange`, `selectionChange`, `filterChange` e `rowClick`. As opções `onSortChange`/`onPageChange`/`onSelectionChange`/`onFilterChange`/`onRowClick` (declaradas nos tipos desde a 1.x mas nunca implementadas) agora funcionam.
+- **`destroy()` confiável** — remove listeners de scroll, timers e dropdowns órfãos (vazamentos corrigidos).
+- **`getData()`** agora retorna uma cópia (mutar o retorno não corrompe mais o estado interno).
+
+### Infraestrutura
+- Módulos ES reais entre core e features (fim da concatenação global e dos checks `typeof XFeature !== 'undefined'`).
+- Build Vite em library mode: ESM, CJS, IIFE/CDN, CSS, source maps e tipos TypeScript (`exports` no package.json).
+- CI (GitHub Actions): lint, typecheck, Jest, Playwright em Chromium/Firefox/WebKit, auditoria e build de docs.
+- 70 testes Jest + 42 testes Playwright (14 cenários × 3 navegadores).
+- Documentação nova (VitePress) em https://skargrid.com, com `llms.txt` e JSON Schemas de `options`/`state` para agentes de IA.
+
+### Correções notáveis
+- Filtro de coluna com `render()` retornando `Node` colapsava valores em `[object HTMLSpanElement]`.
+- Botões de paginação e "selecionar todos" não emitiam `pageChange`/`selectionChange` em cliques reais.
+- `Number(null) === 0` distorcia `avg`/`min`/`max` nas agregações.
+- Exportação quebrava com `TypeError` quando filtros zeravam os dados.
+
 ## [1.4.0] - 2025-11-16
 ### Resumo
 Refatoração completa da arquitetura para sistema modular com 13 features especializadas, melhorando manutenibilidade, testabilidade e flexibilidade de build.
