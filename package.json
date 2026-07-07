@@ -33,7 +33,10 @@
     "lint:fix": "eslint src/ tests/ --fix",
     "watch": "vite build --watch",
     "serve:docs": "node scripts/dev-server.mjs",
-    "dev": "node scripts/dev.mjs"
+    "dev": "node scripts/dev.mjs",
+    "docs:dev": "vitepress dev docs",
+    "docs:build": "vitepress build docs",
+    "docs:preview": "vitepress preview docs"
   },
   "keywords": [
     "table",
@@ -79,7 +82,8 @@
     "jsdom": "^27.2.0",
     "terser": "^5.44.1",
     "typescript": "^6.0.3",
-    "vite": "^8.1.3"
+    "vite": "^8.1.3",
+    "vitepress": "^1.6.4"
   },
   "jest": {
     "testEnvironment": "jsdom",
