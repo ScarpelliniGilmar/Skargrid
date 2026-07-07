@@ -62,5 +62,8 @@ debug/
 # Test output
 docs/teste.html
 docs/index_teste.html
+test-results/
+playwright-report/
+blob-report/
 
 FEATURES_ANALYSIS.md
