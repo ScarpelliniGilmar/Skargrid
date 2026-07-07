@@ -3,6 +3,50 @@
  * Gerencia a renderização do corpo da tabela com células e seleção
  */
 
+/**
+ * Renderiza o conteúdo de uma célula com política segura por padrão:
+ * - Um Node retornado pelo renderer é anexado diretamente (forma preferida).
+ * - Uma string só vira HTML se `allowUnsafeHtml` estiver habilitado (na coluna
+ *   ou no grid); caso contrário é tratada como texto puro via `textContent`.
+ * - Sem renderer, o valor bruto também vai por `textContent`.
+ */
+function renderCellContent(td, grid, column, value, row, globalIndex) {
+  const cellRenderer = (column.formatter && typeof column.formatter === 'function')
+    ? column.formatter
+    : (column.render && typeof column.render === 'function')
+      ? column.render
+      : null;
+
+  if (!cellRenderer) {
+    td.textContent = value !== undefined && value !== null ? value : '';
+    return;
+  }
+
+  let result;
+  try {
+    result = cellRenderer(value, row, globalIndex);
+  } catch (e) {
+    td.textContent = value !== undefined && value !== null ? String(value) : '';
+    if (console && console.warn) {console.warn('Skargrid: erro ao executar renderer para coluna', column.field, e);}
+    return;
+  }
+
+  if (result instanceof Node) {
+    td.appendChild(result);
+    return;
+  }
+
+  const allowUnsafeHtml = column.allowUnsafeHtml !== undefined
+    ? column.allowUnsafeHtml
+    : grid.options.allowUnsafeHtml;
+
+  if (allowUnsafeHtml) {
+    td.innerHTML = result;
+  } else {
+    td.textContent = result !== undefined && result !== null ? result : '';
+  }
+}
+
 const TableBodyFeature = {
   /**
    * Renderiza o corpo da tabela
@@ -84,27 +128,7 @@ const TableBodyFeature = {
       const td = document.createElement('td');
       const value = row[column.field];
 
-      // Permite formatação customizada
-      // Suporta ambas as propriedades `formatter` (antiga) e `render` (exemplo/docs)
-      const cellRenderer = (column.formatter && typeof column.formatter === 'function')
-        ? column.formatter
-        : (column.render && typeof column.render === 'function')
-          ? column.render
-          : null;
-
-      if (cellRenderer) {
-        // renderer pode retornar HTML ou texto
-        try {
-          td.innerHTML = cellRenderer(value, row, globalIndex);
-        } catch (e) {
-          // Falha ao executar renderer — fallback para texto simples
-          td.textContent = value !== undefined && value !== null ? String(value) : '';
-          // Log para debug em consoles do dev
-          if (console && console.warn) {console.warn('Skargrid: erro ao executar renderer para coluna', column.field, e);}
-        }
-      } else {
-        td.textContent = value !== undefined && value !== null ? value : '';
-      }
+      renderCellContent(td, grid, column, value, row, globalIndex);
 
       td.dataset.field = column.field;
       tr.appendChild(td);

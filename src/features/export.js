@@ -164,7 +164,25 @@ function escapeXml(s) {
   return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 }
 
-function buildXLSXFromTable(columns, rows, stripHTML) {
+function stripHTMLText(html) {
+  const tmp = document.createElement('div');
+  tmp.innerHTML = html;
+  return tmp.textContent || tmp.innerText || '';
+}
+
+// Extrai texto puro do retorno de um render()/formatter(): um Node usa seu
+// textContent diretamente; uma string HTML é convertida via stripHTMLText.
+function extractRenderedText(rendered) {
+  if (rendered instanceof Node) {
+    return rendered.textContent || '';
+  }
+  if (rendered === null || rendered === undefined) {
+    return '';
+  }
+  return stripHTMLText(String(rendered));
+}
+
+function buildXLSXFromTable(columns, rows) {
   const shared = [];
   const sMap = new Map();
 
@@ -189,10 +207,7 @@ function buildXLSXFromTable(columns, rows, stripHTML) {
       let v = row[c.field];
       const renderer = (c.render && typeof c.render === 'function') ? c.render : (c.formatter && typeof c.formatter === 'function') ? c.formatter : null;
       if (renderer) {
-        try { v = renderer(v, row); } catch { /* ignore */ }
-      }
-      if (stripHTML && typeof stripHTML === 'function') {
-        v = stripHTML(v);
+        try { v = extractRenderedText(renderer(v, row)); } catch { /* ignore */ }
       }
       if (v === null || v === undefined) { v = ''; }
       if (typeof v === 'number') {
@@ -252,9 +267,7 @@ const ExportFeature = {
    * Remove tags HTML de uma string
    */
   stripHTML(html) {
-    const tmp = document.createElement('div');
-    tmp.innerHTML = html;
-    return tmp.textContent || tmp.innerText || '';
+    return stripHTMLText(html);
   },
 
   /**
@@ -280,7 +293,7 @@ const ExportFeature = {
         if (exportRenderer) {
           try {
             const rendered = exportRenderer(value, row);
-            value = this.stripHTML(rendered);
+            value = extractRenderedText(rendered);
           } catch (e) {
             if (console && console.warn) { console.warn('Skargrid export: erro ao executar renderer para coluna', col.field, e); }
           }
@@ -335,7 +348,7 @@ const ExportFeature = {
         if (exportRenderer) {
           try {
             const rendered = exportRenderer(value, row);
-            value = this.stripHTML(rendered);
+            value = extractRenderedText(rendered);
           } catch (e) {
             if (console && console.warn) { console.warn('Skargrid exportToExcel: renderer error for', col.field, e); }
           }
@@ -401,7 +414,7 @@ const ExportFeature = {
     filename = filename || (grid.options.exportFilename + '.xlsx');
 
     const visibleColumns = getVisibleColumnsInOrder(grid);
-    const zipBuf = buildXLSXFromTable(visibleColumns, grid.filteredData, this.stripHTML);
+    const zipBuf = buildXLSXFromTable(visibleColumns, grid.filteredData);
 
     const blob = new Blob([zipBuf], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
     downloadBlob(blob, filename);

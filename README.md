@@ -763,9 +763,19 @@ new Skargrid(containerId, options)
     sortType: 'string',      // Sort type: 'string', 'number', 'date'
     filterable: true,        // Show filter icon (default: false)
     filterType: 'text',      // Type: 'text', 'number', 'date', 'select'
-    render: (value, row) => { // Custom formatting
-        return `<span style="color: blue;">${value}</span>`;
+    render: (value, row) => { // Custom formatting — returned text is safe by default (textContent)
+        return value.toUpperCase();
     }
+    // Need actual HTML/DOM (badges, icons)? Prefer returning a Node — always treated as safe:
+    // render: (value) => {
+    //     const span = document.createElement('span');
+    //     span.style.color = 'blue';
+    //     span.textContent = value;
+    //     return span;
+    // }
+    // Returning an HTML string instead of a Node requires an explicit opt-in,
+    // since it's your responsibility to keep it free of untrusted input:
+    // allowUnsafeHtml: true
 }
 ```
 

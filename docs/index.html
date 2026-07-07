@@ -606,7 +606,12 @@ new Skargrid('myTable', { data, columns: cols, searchable:true, pagination:true,
                         { field: 'produto', title: 'Produto' },
                         { field: 'preco', title: 'Preço', render: v => `R$ ${v.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}` },
                         { field: 'estoque', title: 'Estoque' },
-                        { field: 'destaque', title: 'Destaque', render: v => v ? '<span class="badge bg-success">Sim</span>' : '<span class="badge bg-secondary">Não</span>' }
+                        { field: 'destaque', title: 'Destaque', render: v => {
+                            const span = document.createElement('span');
+                            span.className = v ? 'badge bg-success' : 'badge bg-secondary';
+                            span.textContent = v ? 'Sim' : 'Não';
+                            return span;
+                        } }
                     ],
                     options: { searchable: true, pagination: false }
                 },
@@ -1122,12 +1127,21 @@ const expData = [
     { id: 2, nome: 'Bruno', email: 'bruno@email.com', cidade: 'RJ', idade: 35, status: 'Inativo' }
 ];
 
+function badge(className, text) {
+    const span = document.createElement('span');
+    span.className = className;
+    span.textContent = text;
+    return span; // renderers que retornam um Node são sempre tratados como HTML seguro
+}
+
 const expCols = [
     { field: 'id', title: 'ID' },
     { field: 'nome', title: 'Nome' },
     { field: 'email', title: 'E-mail' },
-    { field: 'cidade', title: 'Cidade', render: v => `<span class="badge bg-primary">${v}</span>` },
-    { field: 'status', title: 'Status', render: v => v === 'Ativo' ? '<span class="badge bg-success">✓ Ativo</span>' : '<span class="badge bg-danger">✗ Inativo</span>' }
+    { field: 'cidade', title: 'Cidade', render: v => badge('badge bg-primary', v) },
+    { field: 'status', title: 'Status', render: v => v === 'Ativo'
+        ? badge('badge bg-success', '✓ Ativo')
+        : badge('badge bg-danger', '✗ Inativo') }
 ];
 
 new Skargrid('exportTable', { data: expData, columns: expCols, exportCSV: true });
@@ -1195,12 +1209,19 @@ const customData = [
     { id: 2, produto: 'Camiseta', preco: 59.9, estoque: 40, destaque: false }
 ];
 
+function badge(className, text) {
+    const span = document.createElement('span');
+    span.className = className;
+    span.textContent = text;
+    return span; // renderers que retornam um Node são sempre tratados como HTML seguro
+}
+
 const customCols = [
     { field: 'id', title: 'ID' },
     { field: 'produto', title: 'Produto' },
     { field: 'preco', title: 'Preço', render: v => `R$ ${v.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}` },
     { field: 'estoque', title: 'Estoque' },
-    { field: 'destaque', title: 'Destaque', render: v => v ? '<span class="badge bg-success">Sim</span>' : '<span class="badge bg-secondary">Não</span>' }
+    { field: 'destaque', title: 'Destaque', render: v => v ? badge('badge bg-success', 'Sim') : badge('badge bg-secondary', 'Não') }
 ];
 
 new Skargrid('customTable', { data: customData, columns: customCols, searchable: true });

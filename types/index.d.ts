@@ -11,8 +11,14 @@ export interface SkargridColumn<Row extends Record<string, unknown> = Record<str
   sortType?: SkargridSortType;
   filterable?: boolean;
   filterType?: SkargridFilterType;
-  render?: (value: unknown, row: Row, index: number) => string;
-  formatter?: (value: unknown, row: Row, index: number) => string;
+  render?: (value: unknown, row: Row, index: number) => string | Node;
+  formatter?: (value: unknown, row: Row, index: number) => string | Node;
+  /**
+   * Se `render`/`formatter` retornar uma string, ela só é tratada como HTML
+   * quando esta opção (ou a equivalente no grid) estiver habilitada. Um Node
+   * retornado é sempre anexado com segurança, independente desta flag.
+   */
+  allowUnsafeHtml?: boolean;
 }
 
 export interface SkargridLabels {
@@ -39,6 +45,8 @@ export interface SkargridOptions<Row extends Record<string, unknown> = Record<st
   exportFilename?: string;
   virtualization?: boolean;
   height?: string;
+  /** Padrão global para colunas sem `allowUnsafeHtml` próprio (padrão: false). */
+  allowUnsafeHtml?: boolean;
   labels?: Partial<SkargridLabels>;
   onRowClick?: (row: Row, index: number) => void;
   onSelectionChange?: (rows: Row[]) => void;
