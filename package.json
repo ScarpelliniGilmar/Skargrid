@@ -30,7 +30,10 @@
     "test:watch": "jest --watch",
     "test:browser": "playwright test",
     "lint": "eslint src/ tests/",
-    "lint:fix": "eslint src/ tests/ --fix"
+    "lint:fix": "eslint src/ tests/ --fix",
+    "watch": "vite build --watch",
+    "serve:docs": "node scripts/dev-server.mjs",
+    "dev": "node scripts/dev.mjs"
   },
   "keywords": [
     "table",
