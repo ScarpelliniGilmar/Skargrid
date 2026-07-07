@@ -4,6 +4,7 @@
  */
 
 import FrozenColumnsFeature from './frozen-columns.js';
+import { applySafeContent } from './render-utils.js';
 
 /**
  * Renderiza o conteúdo de uma célula com política segura por padrão:
@@ -33,20 +34,11 @@ function renderCellContent(td, grid, column, value, row, globalIndex) {
     return;
   }
 
-  if (result instanceof Node) {
-    td.appendChild(result);
-    return;
-  }
-
   const allowUnsafeHtml = column.allowUnsafeHtml !== undefined
     ? column.allowUnsafeHtml
     : grid.options.allowUnsafeHtml;
 
-  if (allowUnsafeHtml) {
-    td.innerHTML = result;
-  } else {
-    td.textContent = result !== undefined && result !== null ? result : '';
-  }
+  applySafeContent(td, result, allowUnsafeHtml);
 }
 
 const TableBodyFeature = {

@@ -730,6 +730,7 @@ new Skargrid(containerId, options)
 | `persistState` | Boolean | `false` | Persiste/restaura `getState()`/`setState()` via localStorage |
 | `stateStorageKey` | String | `'skargrid-state-{id}'` | Chave do localStorage para `persistState` |
 | `stateVersion` | Number | `1` | Estado salvo com versão diferente é descartado |
+| `footerAggregates` | Boolean | `false` | Exibe um rodapé (`<tfoot>`) com o valor de `aggregate` de cada coluna |
 
 ### Configuração de Colunas
 
@@ -760,6 +761,11 @@ new Skargrid(containerId, options)
     // Retornar uma string HTML em vez de um Node exige opt-in explícito,
     // já que a responsabilidade de mantê-la livre de dados não confiáveis é sua:
     // allowUnsafeHtml: true
+    aggregate: 'sum',         // Valor no rodapé (exige options.footerAggregates: true).
+                              // Embutidos: 'sum' | 'avg' | 'count' | 'min' | 'max', ou uma
+                              // função customizada (rows, field) => valor. Calculado sobre
+                              // filteredData (respeita busca/filtros, não só a página atual).
+    aggregateFormatter: (value, rows) => `R$ ${value.toFixed(2)}`, // opcional, formata a célula do rodapé
 }
 ```
 

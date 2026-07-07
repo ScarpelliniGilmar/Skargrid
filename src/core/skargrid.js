@@ -18,6 +18,7 @@ import TableHeaderFeature from '../features/table-header.js';
 import TableBodyFeature from '../features/table-body.js';
 import TopBarFeature from '../features/top-bar.js';
 import PersistenceFeature from '../features/persistence.js';
+import FooterAggregatesFeature from '../features/footer-aggregates.js';
 
 // Mapeia as opções de callback (compatibilidade) para os eventos do event bus.
 const OPTION_EVENT_MAP = {
@@ -55,6 +56,7 @@ class Skargrid {
       persistState: options.persistState !== undefined ? options.persistState : false, // Persistência de estado via localStorage desabilitada por padrão
       stateStorageKey: options.stateStorageKey || null, // Se ausente, é derivada do id do container
       stateVersion: options.stateVersion !== undefined ? options.stateVersion : 1, // Estado salvo com versão diferente é descartado
+      footerAggregates: options.footerAggregates !== undefined ? options.footerAggregates : false, // Rodapé com agregações (soma/média/contagem/mín/máx) desabilitado por padrão
       ...options,
     };
 
@@ -296,6 +298,11 @@ class Skargrid {
       const tbody = this.renderBody();
       table.appendChild(tbody);
 
+      if (this.options.footerAggregates) {
+        const tfoot = this.renderFooter();
+        table.appendChild(tfoot);
+      }
+
       tableContainer.appendChild(table);
     }
     wrapper.appendChild(tableContainer);
@@ -361,6 +368,17 @@ class Skargrid {
       const newThead = this.renderHeader();
       if (oldThead) {
         table.replaceChild(newThead, oldThead);
+      }
+
+      // Atualiza rodapé de agregações
+      if (this.options.footerAggregates) {
+        const oldTfoot = table.querySelector('tfoot');
+        const newTfoot = this.renderFooter();
+        if (oldTfoot) {
+          table.replaceChild(newTfoot, oldTfoot);
+        } else {
+          table.appendChild(newTfoot);
+        }
       }
     }
 
@@ -620,6 +638,13 @@ class Skargrid {
    */
   renderPagination() {
     return PaginationFeature.renderPagination(this);
+  }
+
+  /**
+   * Renderiza o rodapé de agregações (soma/média/contagem/mín/máx por coluna)
+   */
+  renderFooter() {
+    return FooterAggregatesFeature.renderFooter(this);
   }
 
   /**
