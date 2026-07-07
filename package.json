@@ -1,6 +1,6 @@
 {
   "name": "skargrid",
-  "version": "1.4.0",
+  "version": "2.0.0",
   "type": "module",
   "description": "Modern JavaScript library for interactive data tables with cascading filters, accent-insensitive search, sorting and multi-row selection",
   "main": "./dist/skargrid.cjs",

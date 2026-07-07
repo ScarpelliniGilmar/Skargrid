@@ -37,7 +37,7 @@ export default defineConfig({
       { text: 'Migração', link: '/migration/' },
       { text: 'IA', link: '/ai/' },
       {
-        text: 'v1.4.0',
+        text: 'v2.0.0',
         items: [
           { text: 'Changelog', link: 'https://github.com/ScarpelliniGilmar/Skargrid/blob/community-v2/CHANGELOG.md' },
           { text: 'Playground local (docs/playground.html)', link: 'https://github.com/ScarpelliniGilmar/Skargrid/blob/community-v2/docs/playground.html' },
