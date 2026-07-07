@@ -123,7 +123,21 @@
   </section>
 
   <section>
-    <h2>3. Console da API pública</h2>
+    <h2>3. Persistência de estado (persistState)</h2>
+    <p class="hint">
+      Ordene, filtre, selecione linhas ou mude de página aqui e clique em "recarregar (simula F5)"
+      — o estado volta do <code>localStorage</code> via <code>getState()</code>/<code>setState()</code>,
+      sem precisar reimplementar nada manualmente.
+    </p>
+    <div class="toolbar">
+      <button id="persist-reload">Recarregar (simula F5)</button>
+      <button id="persist-clear">Limpar estado salvo</button>
+    </div>
+    <div id="persist-grid"></div>
+  </section>
+
+  <section>
+    <h2>4. Console da API pública</h2>
     <p class="hint">Exercita os métodos expostos na instância do grid completo (seção 1).</p>
     <div class="toolbar">
       <button data-api="getData">getData()</button>
@@ -148,7 +162,7 @@
   </section>
 
   <section>
-    <h2>4. Log de eventos (event bus)</h2>
+    <h2>5. Log de eventos (event bus)</h2>
     <p class="hint">
       Registrado via <code>grid.on(...)</code> no grid completo (seção 1): <code>sort</code>,
       <code>pageChange</code>, <code>selectionChange</code>, <code>filterChange</code> e
@@ -184,6 +198,7 @@
 
     let grid = null;
     let virtualGrid = null;
+    let persistGrid = null;
 
     const columns = [
       { field: 'id', title: 'ID', width: '70px', sortable: true },
@@ -250,11 +265,36 @@
       });
     }
 
+    function mountPersist() {
+      document.getElementById('persist-grid').innerHTML = '';
+      persistGrid = new window.Skargrid('persist-grid', {
+        data: generateData(30),
+        columns,
+        sortable: true,
+        pagination: true,
+        pageSize: 5,
+        selectable: true,
+        columnFilters: true,
+        persistState: true,
+        stateStorageKey: 'skargrid-playground-persist-demo',
+      });
+    }
+
     document.getElementById('toggle-theme').addEventListener('click', () => {
       const next = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
       document.documentElement.dataset.theme = next;
       grid?.setTheme(next);
       virtualGrid?.setTheme(next);
+      persistGrid?.setTheme(next);
+    });
+
+    document.getElementById('persist-reload').addEventListener('click', () => {
+      persistGrid?.destroy();
+      mountPersist();
+    });
+
+    document.getElementById('persist-clear').addEventListener('click', () => {
+      persistGrid?.clearPersistedState();
     });
 
     document.getElementById('reload-data').addEventListener('click', mount);
@@ -313,6 +353,7 @@
 
     mount();
     mountVirtual();
+    mountPersist();
   </script>
 </body>
 </html>

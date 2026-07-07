@@ -750,6 +750,10 @@ new Skargrid(containerId, options)
 | `exportCSV`           | Boolean | `false`                  | Enable CSV export button           |
 | `exportXLSX`          | Boolean | `false`                  | Enable XLSX export button          |
 | `exportFilename`      | String  | `'skargrid-export'`      | Base filename for exports          |
+| `allowUnsafeHtml`     | Boolean | `false`                  | Treat `render()`/`formatter()` string results as HTML instead of plain text (see [Security](#security)) |
+| `persistState`        | Boolean | `false`                  | Persist/restore `getState()`/`setState()` via localStorage |
+| `stateStorageKey`     | String  | `'skargrid-state-{id}'`  | localStorage key for `persistState` |
+| `stateVersion`        | Number  | `1`                      | Saved state with a different version is discarded |
 
 ### Column Configuration
 
@@ -777,6 +781,22 @@ new Skargrid(containerId, options)
     // since it's your responsibility to keep it free of untrusted input:
     // allowUnsafeHtml: true
 }
+```
+
+### Security
+
+`column.render()`/`column.formatter()` return values are treated as **plain text by default** (`textContent`) — HTML tags in the string are not interpreted, so untrusted data (user input, API responses) can't inject markup or scripts. There are two safe ways to render actual HTML/DOM:
+
+1. **Preferred:** return a `Node` (e.g. `document.createElement(...)`) — always attached safely, regardless of any flag.
+2. Return an HTML string and set `allowUnsafeHtml: true`, either globally (all columns) or on the specific column that needs it. Only do this for content you control — never for unescaped user input.
+
+```javascript
+columns: [
+  // Safe: Node, no flag needed
+  { field: 'status', render: v => { const s = document.createElement('span'); s.textContent = v; return s; } },
+  // Opt-in: HTML string, this column only
+  { field: 'note', render: v => `<b>${v}</b>`, allowUnsafeHtml: true },
+]
 ```
 
 ### Methods
@@ -814,6 +834,11 @@ table.exportSelectedToCSV('selected.csv');
 table.exportToXLSX('data.xlsx');
 table.exportSelectedToXLSX('selected.xlsx');
 
+// State (see options.persistState for automatic localStorage persistence)
+const state = table.getState();
+table.setState(state);
+table.clearPersistedState(); // only relevant when persistState: true
+
 // Cleanup
 table.destroy();
 ```
@@ -822,17 +847,31 @@ table.destroy();
 
 ```javascript
 // Listen to events
+table.on('sort', (column, direction) => {
+    console.log('Sorted by', column, direction); // direction: 'asc' | 'desc' | null
+});
+
+table.on('pageChange', (page) => {
+    console.log('Current page:', page);
+});
+
 table.on('selectionChange', (selectedRows) => {
     console.log('Selection changed:', selectedRows);
 });
 
-table.on('filterChange', (filteredData) => {
-    console.log('Data filtered:', filteredData.length, 'rows');
+table.on('filterChange', () => {
+    console.log('Filters changed. Current rows:', table.getData().length);
 });
 
-table.on('pageChange', (pageInfo) => {
-    console.log('Page changed:', pageInfo);
+table.on('rowClick', (row, index) => {
+    console.log('Row clicked:', row, index);
 });
+
+// Same events as `options.onSortChange` / `onPageChange` / `onSelectionChange` /
+// `onFilterChange` / `onRowClick` (constructor-time shortcut for on()).
+
+// off(event, handler?) removes a specific listener, or all listeners for that event
+table.off('sort', myHandler);
 ```
 
 ---
