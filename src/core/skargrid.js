@@ -1300,9 +1300,100 @@ class Skargrid {
   }
 
   /**
-   * Destroi a instância da tabela
+   * Obtém o estado serializável da tabela (paginação, ordenação, filtros,
+   * busca, seleção, visibilidade e ordem de colunas, tema).
+   * Útil para persistência e para automação por agentes.
+   */
+  getState() {
+    return {
+      currentPage: this.currentPage,
+      pageSize: this.options.pageSize,
+      sortColumn: this.sortColumn,
+      sortDirection: this.sortDirection,
+      searchText: this.searchText,
+      columnFilterValues: { ...this.columnFilterValues },
+      columnFilterSelected: Object.fromEntries(
+        Object.entries(this.columnFilterSelected).map(([field, values]) => [field, [...values]]),
+      ),
+      selectedIndices: this.getSelectedIndices(),
+      visibleColumns: Array.from(this.visibleColumns),
+      columnOrder: [...this.columnOrder],
+      theme: this.options.theme,
+    };
+  }
+
+  /**
+   * Restaura um estado previamente obtido via getState().
+   * Campos ausentes no objeto de estado são preservados como estão.
+   */
+  setState(state = {}) {
+    if (!state || typeof state !== 'object') {
+      return;
+    }
+
+    if (Array.isArray(state.columnOrder)) {
+      this.columnOrder = [...state.columnOrder];
+    }
+    if (Array.isArray(state.visibleColumns)) {
+      this.visibleColumns = new Set(state.visibleColumns);
+    }
+    if (state.columnFilterValues && typeof state.columnFilterValues === 'object') {
+      this.columnFilterValues = { ...state.columnFilterValues };
+    }
+    if (state.columnFilterSelected && typeof state.columnFilterSelected === 'object') {
+      this.columnFilterSelected = Object.fromEntries(
+        Object.entries(state.columnFilterSelected).map(([field, values]) => [field, [...values]]),
+      );
+    }
+    if (typeof state.searchText === 'string') {
+      this.searchText = state.searchText;
+    }
+    if (state.sortColumn !== undefined) {
+      this.sortColumn = state.sortColumn;
+    }
+    if (state.sortDirection !== undefined) {
+      this.sortDirection = state.sortDirection;
+    }
+    if (state.pageSize) {
+      this.options.pageSize = state.pageSize;
+    }
+    if (state.theme === 'light' || state.theme === 'dark') {
+      this.options.theme = state.theme;
+    }
+
+    if (this.sortColumn) {
+      this.sortData();
+    }
+    this.applyFilters();
+    this.calculatePagination();
+
+    if (state.currentPage) {
+      const maxPage = Math.max(1, this.totalPages || 1);
+      this.currentPage = Math.min(Math.max(1, state.currentPage), maxPage);
+    }
+    if (Array.isArray(state.selectedIndices)) {
+      this.selectedRows = new Set(state.selectedIndices);
+    }
+
+    this.render();
+  }
+
+  /**
+   * Destroi a instância da tabela, removendo listeners e timers residuais.
    */
   destroy() {
+    this.removeScrollListeners();
+
+    if (this.openFilterDropdown) {
+      this.openFilterDropdown.remove();
+      this.openFilterDropdown = null;
+    }
+
+    if (this.searchTimeout) {
+      clearTimeout(this.searchTimeout);
+      this.searchTimeout = null;
+    }
+
     this.container.innerHTML = '';
   }
 
