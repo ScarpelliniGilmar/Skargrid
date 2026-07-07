@@ -82,3 +82,14 @@ test('exportação CSV e XLSX funcionam de ponta a ponta', async ({ page }) => {
   ]);
   expect(xlsxDownload.suggestedFilename()).toContain('.xlsx');
 });
+
+test('event bus: sort, seleção e clique em linha aparecem no log de eventos', async ({ page }) => {
+  await page.click('#grid thead th[data-field="nome"]');
+  await expect(page.locator('#event-log')).toContainText('sort ->');
+
+  await page.click('#grid tbody tr:first-child input[type="checkbox"]');
+  await expect(page.locator('#event-log')).toContainText('selectionChange ->');
+
+  await page.click('#grid tbody tr:first-child');
+  await expect(page.locator('#event-log')).toContainText('rowClick ->');
+});

@@ -62,6 +62,14 @@ export interface SkargridState {
   theme: SkargridTheme;
 }
 
+export interface SkargridEventMap<Row extends Record<string, unknown> = Record<string, unknown>> {
+  sort: (column: string | null, direction: 'asc' | 'desc' | null) => void;
+  pageChange: (page: number) => void;
+  selectionChange: (rows: Row[]) => void;
+  filterChange: () => void;
+  rowClick: (row: Row, index: number) => void;
+}
+
 export default class Skargrid<Row extends Record<string, unknown> = Record<string, unknown>> {
   constructor(containerId: string, options?: SkargridOptions<Row>);
   options: SkargridOptions<Row>;
@@ -80,6 +88,9 @@ export default class Skargrid<Row extends Record<string, unknown> = Record<strin
   changePageSize(size: number): void;
   getState(): SkargridState;
   setState(state: Partial<SkargridState>): void;
+  on<E extends keyof SkargridEventMap<Row>>(event: E, handler: SkargridEventMap<Row>[E]): this;
+  off<E extends keyof SkargridEventMap<Row>>(event: E, handler?: SkargridEventMap<Row>[E]): this;
+  emit<E extends keyof SkargridEventMap<Row>>(event: E, ...args: Parameters<SkargridEventMap<Row>[E]>): void;
   refreshTable(): void;
   destroy(): void;
   setTheme(theme: SkargridTheme): void;
