@@ -19,6 +19,9 @@ hero:
       text: IA e agentes
       link: /ai/
     - theme: alt
+      text: npm
+      link: https://www.npmjs.com/package/skargrid
+    - theme: alt
       text: GitHub
       link: https://github.com/ScarpelliniGilmar/Skargrid
 
