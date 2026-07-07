@@ -110,6 +110,36 @@ describe('SkarGrid - renderização segura de células', () => {
     expect(badge.textContent).toBe('Ativo');
   });
 
+  test('filtro select numa coluna com render() retornando Node lista os valores reais, não "[object HTMLSpanElement]"', () => {
+    const grid = new window.Skargrid('render-test-container', {
+      data: [
+        { id: 1, status: 'ativo' },
+        { id: 2, status: 'inativo' },
+        { id: 3, status: 'ativo' },
+      ],
+      columns: [
+        { field: 'id', title: 'ID' },
+        {
+          field: 'status',
+          title: 'Status',
+          filterable: true,
+          filterType: 'select',
+          render: v => {
+            const span = document.createElement('span');
+            span.className = `status-${v}`;
+            span.textContent = v;
+            return span;
+          },
+        },
+      ],
+      columnFilters: true,
+    });
+
+    const uniqueValues = grid.getUniqueColumnValues('status');
+    expect(uniqueValues.sort()).toEqual(['ativo', 'inativo']);
+    expect(uniqueValues.join(',')).not.toContain('[object');
+  });
+
   test('erro no renderer cai para texto simples do valor original, sem quebrar a tabela', () => {
     new window.Skargrid('render-test-container', {
       data: [{ id: 1, nome: 'Ana' }],

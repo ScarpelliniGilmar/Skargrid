@@ -3,6 +3,8 @@
  * Gerencia busca global e filtros por coluna
  */
 
+import { extractRenderedText } from './render-utils.js';
+
 const FilterFeature = {
   // Token interno para representar valores vazios (null/undefined/'')
   EMPTY_TOKEN: '__SG_EMPTY__',
@@ -21,10 +23,10 @@ const FilterFeature = {
         : null;
 
     if (exportRenderer) {
-      // Renderiza e remove HTML tags
+      // Renderiza e extrai o texto puro (o renderer pode retornar HTML ou um Node)
       try {
         const rendered = exportRenderer(value, row);
-        value = grid.stripHTML(rendered);
+        value = extractRenderedText(rendered);
       } catch {
         // Mantém o valor original como fallback
       }

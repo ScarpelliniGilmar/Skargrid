@@ -83,6 +83,20 @@ test('exportação CSV e XLSX funcionam de ponta a ponta', async ({ page }) => {
   expect(xlsxDownload.suggestedFilename()).toContain('.xlsx');
 });
 
+test('filtro select da coluna Status (render retorna Node) lista os valores reais', async ({ page }) => {
+  await page.click('#grid thead th[data-field="status"] button.th-filter-btn');
+
+  const dropdown = page.locator('.skargrid-filter-dropdown');
+  await expect(dropdown).toBeVisible();
+
+  const labels = await dropdown.locator('.filter-list-item label').allTextContents();
+  expect(labels.length).toBeGreaterThan(0);
+  for (const label of labels) {
+    expect(label).not.toContain('[object');
+  }
+  expect(labels).toEqual(expect.arrayContaining(['ativo', 'inativo', 'pendente']));
+});
+
 test('event bus: sort, seleção e clique em linha aparecem no log de eventos', async ({ page }) => {
   await page.click('#grid thead th[data-field="nome"]');
   await expect(page.locator('#event-log')).toContainText('sort ->');
