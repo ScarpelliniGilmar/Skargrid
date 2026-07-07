@@ -48,6 +48,20 @@ export interface SkargridOptions<Row extends Record<string, unknown> = Record<st
   [key: string]: unknown;
 }
 
+export interface SkargridState {
+  currentPage: number;
+  pageSize: number;
+  sortColumn: string | null;
+  sortDirection: 'asc' | 'desc' | null;
+  searchText: string;
+  columnFilterValues: Record<string, unknown>;
+  columnFilterSelected: Record<string, unknown[]>;
+  selectedIndices: number[];
+  visibleColumns: string[];
+  columnOrder: string[];
+  theme: SkargridTheme;
+}
+
 export default class Skargrid<Row extends Record<string, unknown> = Record<string, unknown>> {
   constructor(containerId: string, options?: SkargridOptions<Row>);
   options: SkargridOptions<Row>;
@@ -55,7 +69,17 @@ export default class Skargrid<Row extends Record<string, unknown> = Record<strin
   updateData(data: Row[]): void;
   getData(): Row[];
   getSelectedRows(): Row[];
+  getSelectedIndices(): number[];
+  selectRows(indices: number[]): void;
+  deselectRows(indices: number[]): void;
+  clearSelection(): void;
   clearAllFilters(): void;
+  clearSearch(): void;
+  clearSort(): void;
+  goToPage(page: number): void;
+  changePageSize(size: number): void;
+  getState(): SkargridState;
+  setState(state: Partial<SkargridState>): void;
   refreshTable(): void;
   destroy(): void;
   setTheme(theme: SkargridTheme): void;

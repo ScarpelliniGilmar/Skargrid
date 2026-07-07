@@ -1,1 +1,1 @@
-{"version":3,"file":"skargrid.js","names":[],"sources":["../src/index.js"],"sourcesContent":["import Skargrid from 'virtual:skargrid-implementation';\n\nexport default Skargrid;\n"],"mappings":"us/DAEA,EAAe"}
+{"version":3,"file":"skargrid.js","names":[],"sources":["../src/index.js"],"sourcesContent":["import Skargrid from 'virtual:skargrid-implementation';\n\nexport default Skargrid;\n"],"mappings":"s4iEAEA,EAAe"}
