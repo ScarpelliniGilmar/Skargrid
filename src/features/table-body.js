@@ -3,6 +3,8 @@
  * Gerencia a renderização do corpo da tabela com células e seleção
  */
 
+import FrozenColumnsFeature from './frozen-columns.js';
+
 /**
  * Renderiza o conteúdo de uma célula com política segura por padrão:
  * - Um Node retornado pelo renderer é anexado diretamente (forma preferida).
@@ -53,6 +55,7 @@ const TableBodyFeature = {
    */
   renderBody(grid) {
     const tbody = document.createElement('tbody');
+    const frozenInfo = FrozenColumnsFeature.getOffsets(grid);
 
     if (grid.options.virtualization) {
       // Virtualização: renderiza apenas linhas visíveis
@@ -63,7 +66,7 @@ const TableBodyFeature = {
       // Renderiza apenas as linhas visíveis
       for (let i = startIndex; i < endIndex; i++) {
         const row = grid.filteredData[i];
-        const tr = this.createTableRow(grid, row, i);
+        const tr = this.createTableRow(grid, row, i, frozenInfo);
         tbody.appendChild(tr);
       }
     } else {
@@ -76,7 +79,7 @@ const TableBodyFeature = {
           ? (grid.currentPage - 1) * grid.options.pageSize + pageIndex
           : pageIndex;
 
-        const tr = this.createTableRow(grid, row, globalIndex);
+        const tr = this.createTableRow(grid, row, globalIndex, frozenInfo);
         tbody.appendChild(tr);
       });
     }
@@ -85,9 +88,11 @@ const TableBodyFeature = {
   },
 
   /**
-   * Cria uma linha da tabela (usado tanto para virtualização quanto paginação normal)
+   * Cria uma linha da tabela (usado tanto para virtualização quanto paginação normal).
+   * `frozenInfo` é opcional — se ausente, é calculado (uma renderBody() já o
+   * calcula uma vez e repassa para todas as linhas, evitando custo repetido).
    */
-  createTableRow(grid, row, globalIndex) {
+  createTableRow(grid, row, globalIndex, frozenInfo = FrozenColumnsFeature.getOffsets(grid)) {
     const tr = document.createElement('tr');
     tr.dataset.index = globalIndex;
 
@@ -100,6 +105,7 @@ const TableBodyFeature = {
     if (grid.options.selectable) {
       const td = document.createElement('td');
       td.className = 'skargrid-select-cell';
+      FrozenColumnsFeature.applyToCheckboxCell(td, frozenInfo);
 
       const checkbox = document.createElement('input');
       checkbox.type = 'checkbox';
@@ -129,6 +135,7 @@ const TableBodyFeature = {
       const value = row[column.field];
 
       renderCellContent(td, grid, column, value, row, globalIndex);
+      FrozenColumnsFeature.applyToCell(td, column.field, frozenInfo);
 
       td.dataset.field = column.field;
       tr.appendChild(td);

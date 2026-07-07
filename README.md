@@ -767,6 +767,10 @@ new Skargrid(containerId, options)
     sortType: 'string',      // Sort type: 'string', 'number', 'date'
     filterable: true,        // Show filter icon (default: false)
     filterType: 'text',      // Type: 'text', 'number', 'date', 'select'
+    frozen: true,            // Sticks the column to the left during horizontal scroll (default: false).
+                              // Must form a contiguous prefix (from the first data column, after the
+                              // selection checkbox, if any) — a frozen column after a non-frozen one is
+                              // ignored with a console.warn instead of applied incorrectly.
     render: (value, row) => { // Custom formatting — returned text is safe by default (textContent)
         return value.toUpperCase();
     }
