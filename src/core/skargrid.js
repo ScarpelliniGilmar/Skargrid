@@ -57,6 +57,8 @@ class Skargrid {
       stateStorageKey: options.stateStorageKey || null, // Se ausente, é derivada do id do container
       stateVersion: options.stateVersion !== undefined ? options.stateVersion : 1, // Estado salvo com versão diferente é descartado
       footerAggregates: options.footerAggregates !== undefined ? options.footerAggregates : false, // Rodapé com agregações (soma/média/contagem/mín/máx) desabilitado por padrão
+      serverSide: options.serverSide !== undefined ? options.serverSide : false, // Paginação/ordenação/filtro/busca são responsabilidade do servidor; options.data é sempre exatamente a página atual
+      totalRecords: options.totalRecords !== undefined ? options.totalRecords : 0, // Total de registros no servidor (para calcular totalPages); atualize com setTotalRecords()
       ...options,
     };
 
@@ -669,18 +671,33 @@ class Skargrid {
   updateData(newData) {
     this.options.data = newData;
     this.originalData = [...newData];
-    this.currentPage = 1;
-    this.sortColumn = null;
-    this.sortDirection = null;
     this.selectedRows.clear();  // Limpa seleções ao atualizar dados
-    this.searchText = '';
 
-    // Reseta scroll virtual
-    this.virtualScrollTop = 0;
+    // Modo server-side: isto é "chegou a página pedida", não "novo dataset"
+    // — currentPage/sort/busca continuam sendo a consulta que o consumidor
+    // acabou de fazer ao servidor, resetá-los aqui desfaria a navegação
+    // que originou a chamada.
+    if (!this.options.serverSide) {
+      this.currentPage = 1;
+      this.sortColumn = null;
+      this.sortDirection = null;
+      this.searchText = '';
+      this.virtualScrollTop = 0;
+    }
 
     this.applyFilters();
     this.calculatePagination();
     this.render();
+  }
+
+  /**
+   * Atualiza o total de registros no modo server-side (options.serverSide)
+   * e recalcula a paginação. Chame após obter o total real do servidor.
+   */
+  setTotalRecords(total) {
+    this.options.totalRecords = Number(total) || 0;
+    this.calculatePagination();
+    this.render(false);
   }
 
   /**

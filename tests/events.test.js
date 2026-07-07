@@ -58,6 +58,35 @@ describe('SkarGrid - event bus', () => {
     expect(pages).toEqual([2, 1]);
   });
 
+  test('clicar nos controles de paginação (não só chamar goToPage/changePageSize) também emite "pageChange"', () => {
+    // Regressão: os botões de paginação chamavam PaginationFeature.goToPage()
+    // diretamente, pulando o grid.goToPage() que dispara o evento — clique
+    // real na UI nunca emitia pageChange, só chamada programática.
+    const grid = new window.Skargrid('events-test-container', {
+      data, columns, pagination: true, pageSize: 1,
+    });
+    const pages = [];
+    grid.on('pageChange', page => pages.push(page));
+
+    const nextBtn = Array.from(container.querySelectorAll('.skargrid-pagination-btn')).find(b => b.textContent === '›');
+    nextBtn.click();
+    expect(pages).toEqual([2]);
+
+    const pageSizeSelect = container.querySelector('.skargrid-page-size-select');
+    pageSizeSelect.value = '2';
+    pageSizeSelect.dispatchEvent(new Event('change'));
+    expect(pages).toEqual([2, 1]);
+  });
+
+  test('clicar no checkbox "selecionar todos" no cabeçalho emite "selectionChange"', () => {
+    const grid = new window.Skargrid('events-test-container', { data, columns, selectable: true });
+    const calls = [];
+    grid.on('selectionChange', rows => calls.push(rows.length));
+
+    container.querySelector('thead th.skargrid-select-header input[type="checkbox"]').click();
+    expect(calls).toEqual([3]);
+  });
+
   test('emite "selectionChange" com as linhas selecionadas', () => {
     const grid = new window.Skargrid('events-test-container', { data, columns, selectable: true });
     const calls = [];

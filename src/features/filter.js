@@ -60,6 +60,15 @@ const FilterFeature = {
    * Aplica todos os filtros (busca + filtros de coluna)
    */
   applyFilters(grid) {
+    // Modo server-side: busca/filtros já foram aplicados pelo servidor antes
+    // de options.data chegar aqui — filtrar de novo no cliente cortaria
+    // linhas que o servidor já decidiu incluir (ele não reenvia as
+    // excluídas). filteredData é só um espelho de options.data.
+    if (grid.options.serverSide) {
+      grid.filteredData = [...grid.options.data];
+      return;
+    }
+
     let filtered = [...grid.options.data];
 
     // Aplica busca global se houver texto

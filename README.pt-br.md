@@ -731,6 +731,8 @@ new Skargrid(containerId, options)
 | `stateStorageKey` | String | `'skargrid-state-{id}'` | Chave do localStorage para `persistState` |
 | `stateVersion` | Number | `1` | Estado salvo com versão diferente é descartado |
 | `footerAggregates` | Boolean | `false` | Exibe um rodapé (`<tfoot>`) com o valor de `aggregate` de cada coluna |
+| `serverSide` | Boolean | `false` | Delega paginação/ordenação/filtro/busca ao servidor (ver [Server-Side Processing](#server-side-processing)) |
+| `totalRecords` | Number | `0` | Total de registros no servidor; atualize com `setTotalRecords()` |
 
 ### Configuração de Colunas
 
@@ -859,6 +861,49 @@ table.on('rowClick', (linha, indice) => {
 // off(evento, handler?) remove um listener específico, ou todos os listeners do evento
 table.off('sortChange', meuHandler);
 ```
+
+### Server-Side Processing
+
+Com `serverSide: true`, o grid para de paginar/ordenar/filtrar/buscar localmente: `data` é sempre entendido como exatamente a página atual, já ordenada e filtrada pelo seu servidor. O grid não é dono da requisição — você escuta os mesmos eventos `pageChange`/`sortChange`/`filterChange`, faz a requisição do seu jeito (qualquer cliente HTTP, qualquer biblioteca) e devolve o resultado com `updateData()` + `setTotalRecords()`:
+
+```javascript
+const table = new Skargrid('minhaTabela', {
+    data: [],
+    columns: [
+        { field: 'id', title: 'ID' },
+        { field: 'nome', title: 'Nome', sortable: true },
+        { field: 'cidade', title: 'Cidade', filterable: true },
+    ],
+    pagination: true,
+    pageSize: 20,
+    sortable: true,
+    searchable: true,
+    columnFilters: true,
+    serverSide: true,
+});
+
+async function buscarPagina() {
+    table.showLoading();
+    table.render(false);
+
+    const resposta = await fetch(`/api/usuarios?page=${table.currentPage}&pageSize=${table.options.pageSize}` +
+        `&sort=${table.sortColumn ?? ''}&dir=${table.sortDirection ?? ''}&q=${table.searchText}`);
+    const { data, total } = await resposta.json();
+
+    table.hideLoading();
+    table.updateData(data);       // as linhas da página atual — não reseta página/ordenação/busca em modo server
+    table.setTotalRecords(total); // recalcula o total de páginas
+}
+
+table.on('pageChange', buscarPagina);
+table.on('sortChange', buscarPagina);
+table.on('filterChange', buscarPagina); // cobre busca e filtros de coluna
+buscarPagina(); // carga inicial
+```
+
+**Limitações conhecidas:**
+- Filtros de coluna do tipo select (`filterType: 'select'`) calculam a lista de checkboxes a partir de `data` — em modo server-side isso é só a página atual, não o conjunto completo de valores distintos. Busque os valores distintos no seu próprio endpoint se precisar da lista completa.
+- Seleção de linhas usa índices relativos à página; selecionar através de várias páginas do servidor não é rastreado automaticamente.
 
 ---
 

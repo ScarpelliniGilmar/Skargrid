@@ -755,6 +755,8 @@ new Skargrid(containerId, options)
 | `stateStorageKey`     | String  | `'skargrid-state-{id}'`  | localStorage key for `persistState` |
 | `stateVersion`        | Number  | `1`                      | Saved state with a different version is discarded |
 | `footerAggregates`    | Boolean | `false`                  | Show a `<tfoot>` row with each column's `aggregate` value |
+| `serverSide`          | Boolean | `false`                  | Delegate pagination/sorting/filtering/search to the server (see [Server-Side Processing](#server-side-processing)) |
+| `totalRecords`        | Number  | `0`                      | Total row count on the server; update it with `setTotalRecords()` |
 
 ### Column Configuration
 
@@ -883,6 +885,49 @@ table.on('rowClick', (row, index) => {
 // off(event, handler?) removes a specific listener, or all listeners for that event
 table.off('sortChange', myHandler);
 ```
+
+### Server-Side Processing
+
+With `serverSide: true`, the grid stops paginating/sorting/filtering/searching locally: `data` is always assumed to be exactly the current page, already sorted and filtered by your server. The grid doesn't own the fetch — you listen to the same `pageChange`/`sortChange`/`filterChange` events, make the request yourself (any HTTP client, any library), and hand the result back with `updateData()` + `setTotalRecords()`:
+
+```javascript
+const table = new Skargrid('myTable', {
+    data: [],
+    columns: [
+        { field: 'id', title: 'ID' },
+        { field: 'name', title: 'Name', sortable: true },
+        { field: 'city', title: 'City', filterable: true },
+    ],
+    pagination: true,
+    pageSize: 20,
+    sortable: true,
+    searchable: true,
+    columnFilters: true,
+    serverSide: true,
+});
+
+async function fetchPage() {
+    table.showLoading();
+    table.render(false);
+
+    const response = await fetch(`/api/users?page=${table.currentPage}&pageSize=${table.options.pageSize}` +
+        `&sort=${table.sortColumn ?? ''}&dir=${table.sortDirection ?? ''}&q=${table.searchText}`);
+    const { data, total } = await response.json();
+
+    table.hideLoading();
+    table.updateData(data);      // the current page's rows — does NOT reset page/sort/search in server mode
+    table.setTotalRecords(total); // recalculates total pages
+}
+
+table.on('pageChange', fetchPage);
+table.on('sortChange', fetchPage);
+table.on('filterChange', fetchPage); // covers search and column filters
+fetchPage(); // initial load
+```
+
+**Known limitations:**
+- Select-type column filters (`filterType: 'select'`) compute their checkbox list from `data` — in server-side mode that's only the current page, not the full distinct set of values. Fetch distinct values from your own endpoint if you need the complete list.
+- Row selection uses page-relative indices; selecting across multiple server pages isn't tracked automatically.
 
 ---
 
