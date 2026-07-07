@@ -17,6 +17,7 @@ import SearchFeature from '../features/search.js';
 import TableHeaderFeature from '../features/table-header.js';
 import TableBodyFeature from '../features/table-body.js';
 import TopBarFeature from '../features/top-bar.js';
+import PersistenceFeature from '../features/persistence.js';
 
 // Mapeia as opções de callback (compatibilidade) para os eventos do event bus.
 const OPTION_EVENT_MAP = {
@@ -51,6 +52,9 @@ class Skargrid {
       exportFilename: options.exportFilename || 'skargrid-export', // Nome base para arquivos exportados
       virtualization: options.virtualization !== undefined ? options.virtualization : false, // Virtualização desabilitada por padrão
       allowUnsafeHtml: options.allowUnsafeHtml !== undefined ? options.allowUnsafeHtml : false, // render()/formatter() tratados como texto por padrão; HTML é opt-in
+      persistState: options.persistState !== undefined ? options.persistState : false, // Persistência de estado via localStorage desabilitada por padrão
+      stateStorageKey: options.stateStorageKey || null, // Se ausente, é derivada do id do container
+      stateVersion: options.stateVersion !== undefined ? options.stateVersion : 1, // Estado salvo com versão diferente é descartado
       ...options,
     };
 
@@ -171,6 +175,15 @@ class Skargrid {
     initColumnConfig(this);
 
     this.init();
+
+    // Restaura estado persistido (se habilitado e a versão salva bater).
+    // Feito após o init() inicial para reaproveitar setState(), já testado.
+    if (this.options.persistState) {
+      const savedState = PersistenceFeature.load(this);
+      if (savedState) {
+        this.setState(savedState);
+      }
+    }
   }
 
   /**
@@ -215,6 +228,8 @@ class Skargrid {
    * Renderiza a tabela completa
    */
   render(fullRender = true) {
+    this._schedulePersist();
+
     // Se já existe uma tabela e não precisa de render completo, faz update rápido
     if (!fullRender && this.container.querySelector('.skargrid-wrapper')) {
       this.updateTableContent();
@@ -945,6 +960,29 @@ class Skargrid {
   }
 
   /**
+   * Agenda a persistência do estado atual (debounced), se `persistState`
+   * estiver habilitado. Chamado a cada render() para cobrir qualquer
+   * mudança de estado, sem precisar instrumentar cada feature individualmente.
+   */
+  _schedulePersist() {
+    if (!this.options.persistState) {
+      return;
+    }
+    clearTimeout(this._persistTimeout);
+    this._persistTimeout = setTimeout(() => {
+      this._persistTimeout = null;
+      PersistenceFeature.save(this);
+    }, 150);
+  }
+
+  /**
+   * Remove o estado persistido desta instância do localStorage.
+   */
+  clearPersistedState() {
+    PersistenceFeature.clear(this);
+  }
+
+  /**
    * Obtém o estado serializável da tabela (paginação, ordenação, filtros,
    * busca, seleção, visibilidade e ordem de colunas, tema).
    * Útil para persistência e para automação por agentes.
@@ -1037,6 +1075,16 @@ class Skargrid {
     if (this.searchTimeout) {
       clearTimeout(this.searchTimeout);
       this.searchTimeout = null;
+    }
+
+    // Se havia um salvamento agendado (debounced), finaliza agora em vez de
+    // simplesmente descartar a última mudança de estado.
+    if (this._persistTimeout) {
+      clearTimeout(this._persistTimeout);
+      this._persistTimeout = null;
+      if (this.options.persistState) {
+        PersistenceFeature.save(this);
+      }
     }
 
     this._listeners.clear();

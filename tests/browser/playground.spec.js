@@ -83,6 +83,26 @@ test('exportação CSV e XLSX funcionam de ponta a ponta', async ({ page }) => {
   expect(xlsxDownload.suggestedFilename()).toContain('.xlsx');
 });
 
+test('persistState: ordenação e seleção sobrevivem a destroy()+recriação (simulando F5)', async ({ page }) => {
+  await page.click('#persist-grid thead th[data-field="nome"]');
+  await expect(page.locator('#persist-grid thead th[data-field="nome"]')).toHaveClass(/sorted/);
+
+  await page.click('#persist-grid tbody tr:first-child input[type="checkbox"]');
+
+  await page.click('#persist-reload');
+
+  await expect(page.locator('#persist-grid thead th[data-field="nome"]')).toHaveClass(/sorted/);
+  await expect(page.locator('#persist-grid tbody tr:first-child input[type="checkbox"]')).toBeChecked();
+
+  // Espera o debounce de persistência (150ms) assentar antes de limpar — destroy()
+  // finaliza mudanças pendentes por design, então limpar+recriar sem esperar
+  // ressuscitaria a última mudança em vez de respeitar a limpeza.
+  await page.waitForTimeout(200);
+  await page.click('#persist-clear');
+  await page.click('#persist-reload');
+  await expect(page.locator('#persist-grid thead th[data-field="nome"]')).not.toHaveClass(/sorted/);
+});
+
 test('filtro select da coluna Status (render retorna Node) lista os valores reais', async ({ page }) => {
   await page.click('#grid thead th[data-field="status"] button.th-filter-btn');
 

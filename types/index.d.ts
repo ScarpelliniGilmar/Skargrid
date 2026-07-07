@@ -47,6 +47,12 @@ export interface SkargridOptions<Row extends Record<string, unknown> = Record<st
   height?: string;
   /** Padrão global para colunas sem `allowUnsafeHtml` próprio (padrão: false). */
   allowUnsafeHtml?: boolean;
+  /** Persiste e restaura getState()/setState() via localStorage (padrão: false). */
+  persistState?: boolean;
+  /** Chave do localStorage. Se ausente, é derivada do id do container. */
+  stateStorageKey?: string;
+  /** Estado salvo com versão diferente da atual é descartado (padrão: 1). */
+  stateVersion?: number | string;
   labels?: Partial<SkargridLabels>;
   onRowClick?: (row: Row, index: number) => void;
   onSelectionChange?: (rows: Row[]) => void;
@@ -96,6 +102,7 @@ export default class Skargrid<Row extends Record<string, unknown> = Record<strin
   changePageSize(size: number): void;
   getState(): SkargridState;
   setState(state: Partial<SkargridState>): void;
+  clearPersistedState(): void;
   on<E extends keyof SkargridEventMap<Row>>(event: E, handler: SkargridEventMap<Row>[E]): this;
   off<E extends keyof SkargridEventMap<Row>>(event: E, handler?: SkargridEventMap<Row>[E]): this;
   emit<E extends keyof SkargridEventMap<Row>>(event: E, ...args: Parameters<SkargridEventMap<Row>[E]>): void;

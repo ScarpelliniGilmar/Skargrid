@@ -726,6 +726,10 @@ new Skargrid(containerId, options)
 | `exportCSV` | Boolean | `false` | Habilita botão de exportação CSV |
 | `exportXLSX` | Boolean | `false` | Habilita botão de exportação XLSX |
 | `exportFilename` | String | `'skargrid-export'` | Nome base para arquivos exportados |
+| `allowUnsafeHtml` | Boolean | `false` | Trata o retorno em string de `render()`/`formatter()` como HTML em vez de texto puro (ver [Segurança](#segurança)) |
+| `persistState` | Boolean | `false` | Persiste/restaura `getState()`/`setState()` via localStorage |
+| `stateStorageKey` | String | `'skargrid-state-{id}'` | Chave do localStorage para `persistState` |
+| `stateVersion` | Number | `1` | Estado salvo com versão diferente é descartado |
 
 ### Configuração de Colunas
 
@@ -753,6 +757,22 @@ new Skargrid(containerId, options)
     // já que a responsabilidade de mantê-la livre de dados não confiáveis é sua:
     // allowUnsafeHtml: true
 }
+```
+
+### Segurança
+
+O retorno de `column.render()`/`column.formatter()` é tratado como **texto puro por padrão** (`textContent`) — tags HTML na string não são interpretadas, então dado não confiável (entrada do usuário, resposta de API) não consegue injetar marcação ou script. Há duas formas seguras de renderizar HTML/DOM de verdade:
+
+1. **Preferível:** retornar um `Node` (ex.: `document.createElement(...)`) — sempre anexado com segurança, independente de qualquer flag.
+2. Retornar uma string HTML e habilitar `allowUnsafeHtml: true`, globalmente (todas as colunas) ou só na coluna que precisa. Faça isso apenas para conteúdo que você controla — nunca para entrada de usuário sem escapar.
+
+```javascript
+columns: [
+  // Seguro: Node, sem precisar de flag
+  { field: 'status', render: v => { const s = document.createElement('span'); s.textContent = v; return s; } },
+  // Opt-in: string HTML, só nesta coluna
+  { field: 'nota', render: v => `<b>${v}</b>`, allowUnsafeHtml: true },
+]
 ```
 
 ### Métodos
@@ -790,6 +810,11 @@ table.exportSelectedToCSV('selecionados.csv');
 table.exportToXLSX('dados.xlsx');
 table.exportSelectedToXLSX('selecionados.xlsx');
 
+// Estado (ver options.persistState para persistência automática via localStorage)
+const estado = table.getState();
+table.setState(estado);
+table.clearPersistedState(); // relevante só quando persistState: true
+
 // Limpeza
 table.destroy();
 ```
@@ -798,17 +823,31 @@ table.destroy();
 
 ```javascript
 // Escutar eventos
+table.on('sort', (coluna, direcao) => {
+    console.log('Ordenado por', coluna, direcao); // direcao: 'asc' | 'desc' | null
+});
+
+table.on('pageChange', (pagina) => {
+    console.log('Página atual:', pagina);
+});
+
 table.on('selectionChange', (linhasSelecionadas) => {
     console.log('Seleção alterada:', linhasSelecionadas);
 });
 
-table.on('filterChange', (dadosFiltrados) => {
-    console.log('Dados filtrados:', dadosFiltrados.length, 'linhas');
+table.on('filterChange', () => {
+    console.log('Filtros alterados. Linhas atuais:', table.getData().length);
 });
 
-table.on('pageChange', (infoPagina) => {
-    console.log('Página alterada:', infoPagina);
+table.on('rowClick', (linha, indice) => {
+    console.log('Linha clicada:', linha, indice);
 });
+
+// Mesmos eventos que options.onSortChange / onPageChange / onSelectionChange /
+// onFilterChange / onRowClick (atalho no construtor para on()).
+
+// off(evento, handler?) remove um listener específico, ou todos os listeners do evento
+table.off('sort', meuHandler);
 ```
 
 ---
