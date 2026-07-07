@@ -3,6 +3,8 @@
  * Módulo de exportação de dados (CSV, Excel legado e XLSX)
  */
 
+import { stripHTMLText, extractRenderedText } from './render-utils.js';
+
 function getVisibleColumnsInOrder(grid) {
   const visibleColumns = grid.columnOrder
     .filter(field => grid.visibleColumns.has(field))
@@ -162,24 +164,6 @@ function colIndexToName(n) {
 
 function escapeXml(s) {
   return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-}
-
-function stripHTMLText(html) {
-  const tmp = document.createElement('div');
-  tmp.innerHTML = html;
-  return tmp.textContent || tmp.innerText || '';
-}
-
-// Extrai texto puro do retorno de um render()/formatter(): um Node usa seu
-// textContent diretamente; uma string HTML é convertida via stripHTMLText.
-function extractRenderedText(rendered) {
-  if (rendered instanceof Node) {
-    return rendered.textContent || '';
-  }
-  if (rendered === null || rendered === undefined) {
-    return '';
-  }
-  return stripHTMLText(String(rendered));
 }
 
 function buildXLSXFromTable(columns, rows) {
