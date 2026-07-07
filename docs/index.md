@@ -16,6 +16,9 @@ hero:
       text: Referência da API
       link: /api/
     - theme: alt
+      text: IA e agentes
+      link: /ai/
+    - theme: alt
       text: GitHub
       link: https://github.com/ScarpelliniGilmar/Skargrid
 
