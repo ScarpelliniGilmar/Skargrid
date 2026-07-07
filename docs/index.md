@@ -6,8 +6,8 @@ hero:
   text: Data grid completo para Vanilla JavaScript
   tagline: Sem dependências em runtime, sem framework acoplado, com estado serializável — pronto para gente e para agentes de IA.
   image:
-    light: /img/logos/skargrid-logo-light.svg
-    dark: /img/logos/skargrid-logo-dark.svg
+    src: /img/logos/skargrid-icon.svg
+    alt: SkarGrid
   actions:
     - theme: brand
       text: Começar
@@ -27,7 +27,7 @@ hero:
 
 features:
   - title: Zero dependências
-    details: Pure Vanilla JavaScript. Um <script>/<link>, ou import via npm — sem cadeia de dependências de runtime para auditar.
+    details: Pure Vanilla JavaScript. Uma tag de script ou um import via npm — sem cadeia de dependências de runtime para auditar.
   - title: API pequena e coerente
     details: Construtor, opções e um punhado de métodos. Tipos TypeScript completos publicados junto do pacote.
   - title: Estado serializável

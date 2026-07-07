@@ -21,9 +21,13 @@ export default defineConfig({
   ],
 
   themeConfig: {
+    // Os arquivos são nomeados pelo fundo em que ficam legíveis, o inverso
+    // da chave que o VitePress espera aqui: skargrid-logo-dark.svg é colorido
+    // (visível em fundo claro) e skargrid-logo-light.svg é branco (visível
+    // em fundo escuro).
     logo: {
-      light: '/img/logos/skargrid-logo-light.svg',
-      dark: '/img/logos/skargrid-logo-dark.svg',
+      light: '/img/logos/skargrid-logo-dark.svg',
+      dark: '/img/logos/skargrid-logo-light.svg',
     },
 
     nav: [
