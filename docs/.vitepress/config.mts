@@ -1,14 +1,23 @@
 import { defineConfig } from 'vitepress';
 
+// skargrid.com (Hostinger) serve na raiz; o mirror no GitHub Pages
+// (scarpellinigilmar.github.io/Skargrid/) precisa do path como base.
+// DOCS_BASE é setado apenas no workflow de deploy do GitHub Pages.
+const base = process.env.DOCS_BASE || '/';
+
 export default defineConfig({
   title: 'SkarGrid Community',
   description: 'Data grid completo, sem dependências em runtime, para Vanilla JavaScript e agentes de IA.',
   lang: 'pt-BR',
+  base,
   cleanUrls: true,
   lastUpdated: true,
 
   head: [
-    ['link', { rel: 'icon', href: '/img/logos/favicon.ico' }],
+    // entradas em `head` não são reescritas com `base` automaticamente,
+    // ao contrário de themeConfig.logo e links markdown — por isso o
+    // prefixo manual aqui.
+    ['link', { rel: 'icon', href: `${base}img/logos/favicon.ico` }],
   ],
 
   themeConfig: {
