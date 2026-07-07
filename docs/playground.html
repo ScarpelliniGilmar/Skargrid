@@ -108,9 +108,10 @@
       sort, paginação, busca global, seleção, filtros por coluna (texto/select/número/data),
       configuração de colunas, exportação CSV e XLSX. A coluna "Status" usa um <code>render</code>
       que retorna um <code>Node</code> (badge colorido) — sempre tratado como seguro, sem precisar
-      de <code>allowUnsafeHtml</code>.
+      de <code>allowUnsafeHtml</code>. As colunas "ID" e "Nome" são <code>frozen: true</code> — role
+      a tabela horizontalmente para ver as duas coladas à esquerda.
     </p>
-    <div id="grid"></div>
+    <div id="grid" style="max-width: 700px; overflow-x: auto;"></div>
   </section>
 
   <section>
@@ -201,8 +202,8 @@
     let persistGrid = null;
 
     const columns = [
-      { field: 'id', title: 'ID', width: '70px', sortable: true },
-      { field: 'nome', title: 'Nome', filterable: true, sortable: true },
+      { field: 'id', title: 'ID', width: '70px', sortable: true, frozen: true },
+      { field: 'nome', title: 'Nome', filterable: true, sortable: true, frozen: true },
       { field: 'email', title: 'Email', filterable: true },
       { field: 'cidade', title: 'Cidade', filterable: true, filterType: 'select', sortable: true },
       { field: 'idade', title: 'Idade', width: '80px', filterable: true, filterType: 'number', sortable: true },

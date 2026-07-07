@@ -17,6 +17,33 @@ test('grid completo monta com paginação, ordenação e filtros', async ({ page
   await expect(page.locator('#grid thead input, #grid thead select')).not.toHaveCount(0);
 });
 
+test('colunas congeladas (ID e Nome) permanecem visíveis após scroll horizontal', async ({ page }) => {
+  const idHeader = page.locator('#grid thead th[data-field="id"]');
+  const nomeHeader = page.locator('#grid thead th[data-field="nome"]');
+  const emailHeader = page.locator('#grid thead th[data-field="email"]'); // não congelada
+
+  await expect(idHeader).toHaveClass(/skargrid-frozen-cell/);
+  await expect(nomeHeader).toHaveClass(/skargrid-frozen-cell/);
+
+  const idBoxBefore = await idHeader.boundingBox();
+  const emailBoxBefore = await emailHeader.boundingBox();
+
+  await page.locator('#grid .skargrid-table-container').evaluate(el => { el.scrollLeft = 300; });
+  await page.waitForTimeout(100);
+
+  const idBoxAfter = await idHeader.boundingBox();
+  const emailBoxAfter = await emailHeader.boundingBox();
+
+  // A coluna congelada não deve deslocar quase nada; a não-congelada, sim.
+  const idShift = Math.abs(idBoxAfter.x - idBoxBefore.x);
+  const emailShift = Math.abs(emailBoxAfter.x - emailBoxBefore.x);
+  expect(idShift).toBeLessThan(emailShift);
+  expect(emailShift).toBeGreaterThan(200);
+
+  await expect(idHeader).toBeVisible();
+  await expect(nomeHeader).toBeVisible();
+});
+
 test('virtualização monta 50k linhas sem paginação', async ({ page }) => {
   await expect(page.locator('#virtual-grid table')).toBeVisible();
   const rowCount = await page.locator('#virtual-grid tbody tr').count();

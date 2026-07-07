@@ -19,6 +19,13 @@ export interface SkargridColumn<Row extends Record<string, unknown> = Record<str
    * retornado é sempre anexado com segurança, independente desta flag.
    */
   allowUnsafeHtml?: boolean;
+  /**
+   * Fixa a coluna à esquerda durante o scroll horizontal (position: sticky).
+   * Precisa formar um prefixo contíguo a partir da primeira coluna de dados
+   * (após a coluna de seleção, se houver) — uma coluna frozen depois de uma
+   * não-frozen é ignorada com um aviso em vez de aplicada incorretamente.
+   */
+  frozen?: boolean;
 }
 
 export interface SkargridLabels {
