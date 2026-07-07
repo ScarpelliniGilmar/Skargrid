@@ -163,11 +163,4 @@ const TopBarFeature = {
   },
 };
 
-// Exporta para uso global
-if (typeof window !== 'undefined') {
-  window.TopBarFeature = TopBarFeature;
-}
-
-if (typeof module !== 'undefined' && module.exports) {
-  module.exports = TopBarFeature;
-}
+export default TopBarFeature;

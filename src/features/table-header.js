@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 /**
  * Skargrid - Módulo de Cabeçalho da Tabela
  * Gerencia a renderização do cabeçalho com sort e filtros por coluna
@@ -112,3 +111,5 @@ const TableHeaderFeature = {
     return thead;
   },
 };
+
+export default TableHeaderFeature;

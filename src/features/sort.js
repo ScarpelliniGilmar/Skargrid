@@ -129,12 +129,4 @@ const SortFeature = {
   },
 };
 
-// Exporta para uso global
-if (typeof window !== 'undefined') {
-  window.SortFeature = SortFeature;
-}
-
-// Suporte para módulos ES6
-if (typeof module !== 'undefined' && module.exports) {
-  module.exports = SortFeature;
-}
+export default SortFeature;

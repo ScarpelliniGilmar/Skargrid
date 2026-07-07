@@ -114,12 +114,4 @@ const SelectionFeature = {
   },
 };
 
-// Exporta para uso global
-if (typeof window !== 'undefined') {
-  window.SelectionFeature = SelectionFeature;
-}
-
-// Suporte para módulos ES6
-if (typeof module !== 'undefined' && module.exports) {
-  module.exports = SelectionFeature;
-}
+export default SelectionFeature;
