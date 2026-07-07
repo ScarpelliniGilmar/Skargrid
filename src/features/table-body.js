@@ -110,6 +110,10 @@ const TableBodyFeature = {
       tr.appendChild(td);
     });
 
+    tr.addEventListener('click', () => {
+      grid.emit('rowClick', row, globalIndex);
+    });
+
     return tr;
   },
 };

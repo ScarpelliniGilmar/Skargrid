@@ -18,6 +18,15 @@ import TableHeaderFeature from '../features/table-header.js';
 import TableBodyFeature from '../features/table-body.js';
 import TopBarFeature from '../features/top-bar.js';
 
+// Mapeia as opções de callback (compatibilidade) para os eventos do event bus.
+const OPTION_EVENT_MAP = {
+  onSortChange: 'sort',
+  onPageChange: 'pageChange',
+  onSelectionChange: 'selectionChange',
+  onFilterChange: 'filterChange',
+  onRowClick: 'rowClick',
+};
+
 class Skargrid {
   constructor(containerId, options = {}) {
     this.container = document.getElementById(containerId);
@@ -68,6 +77,17 @@ class Skargrid {
       loading: 'Loading...',
       ...options.labels,
     };
+
+    // Event bus: listeners registrados via on()/off(), disparados via emit().
+    this._listeners = new Map();
+
+    // Atalho de conveniência: options.onSortChange/onPageChange/etc. equivalem
+    // a chamar this.on(<evento>, callback) uma vez na construção.
+    Object.entries(OPTION_EVENT_MAP).forEach(([optionName, eventName]) => {
+      if (typeof this.options[optionName] === 'function') {
+        this.on(eventName, this.options[optionName]);
+      }
+    });
 
     // Ensure current pageSize is present in pageSizeOptions. If the user set
     // `options.pageSize` but didn't include it in `options.pageSizeOptions`,
@@ -555,6 +575,7 @@ class Skargrid {
     this.calculatePagination();
     this.render(false);
     this.updateClearFiltersButton();
+    this.emit('filterChange');
   }
 
   /**
@@ -590,6 +611,7 @@ class Skargrid {
    */
   goToPage(pageNumber) {
     PaginationFeature.goToPage(this, pageNumber);
+    this.emit('pageChange', this.currentPage);
   }
 
   /**
@@ -597,6 +619,7 @@ class Skargrid {
    */
   changePageSize(newSize) {
     PaginationFeature.changePageSize(this, newSize);
+    this.emit('pageChange', this.currentPage);
   }
 
   /**
@@ -624,6 +647,7 @@ class Skargrid {
    */
   handleSearch(searchText) {
     FilterFeature.handleSearch(this, searchText);
+    this.emit('filterChange');
   }
 
   /**
@@ -631,6 +655,7 @@ class Skargrid {
    */
   handleColumnFilter(field, value) {
     FilterFeature.handleColumnFilter(this, field, value);
+    this.emit('filterChange');
   }
 
   /**
@@ -638,6 +663,7 @@ class Skargrid {
    */
   clearColumnFilters() {
     FilterFeature.clearColumnFilters(this);
+    this.emit('filterChange');
   }
 
   /**
@@ -645,6 +671,7 @@ class Skargrid {
    */
   clearAllFilters() {
     FilterFeature.clearAllFilters(this);
+    this.emit('filterChange');
   }
 
   /**
@@ -696,6 +723,7 @@ class Skargrid {
    */
   clearSearch() {
     FilterFeature.clearSearch(this);
+    this.emit('filterChange');
   }
 
   /**
@@ -703,6 +731,7 @@ class Skargrid {
    */
   handleSort(field) {
     SortFeature.handleSort(this, field);
+    this.emit('sort', this.sortColumn, this.sortDirection);
   }
 
   /**
@@ -723,6 +752,7 @@ class Skargrid {
     this.applyFilters();
     this.calculatePagination();
     this.render();
+    this.emit('sort', this.sortColumn, this.sortDirection);
   }
 
   /**
@@ -737,6 +767,7 @@ class Skargrid {
    */
   toggleSelectRow(index, selected) {
     SelectionFeature.toggleSelectRow(this, index, selected);
+    this.emit('selectionChange', this.getSelectedRows());
   }
 
   /**
@@ -744,6 +775,7 @@ class Skargrid {
    */
   toggleSelectAll(selected) {
     SelectionFeature.toggleSelectAll(this, selected);
+    this.emit('selectionChange', this.getSelectedRows());
   }
 
   /**
@@ -758,6 +790,7 @@ class Skargrid {
    */
   selectRows(indices) {
     SelectionFeature.selectRows(this, indices);
+    this.emit('selectionChange', this.getSelectedRows());
   }
 
   /**
@@ -765,6 +798,7 @@ class Skargrid {
    */
   deselectRows(indices) {
     SelectionFeature.deselectRows(this, indices);
+    this.emit('selectionChange', this.getSelectedRows());
   }
 
   /**
@@ -772,6 +806,7 @@ class Skargrid {
    */
   clearSelection() {
     SelectionFeature.clearSelection(this);
+    this.emit('selectionChange', this.getSelectedRows());
   }
 
   /**
@@ -856,6 +891,56 @@ class Skargrid {
    */
   stripHTML(html) {
     return ExportFeature.stripHTML(html);
+  }
+
+  /**
+   * Registra um listener para um evento ('sort', 'pageChange', 'selectionChange',
+   * 'filterChange' ou 'rowClick'). Retorna a própria instância (encadeável).
+   */
+  on(event, handler) {
+    if (typeof handler !== 'function') {
+      return this;
+    }
+    if (!this._listeners.has(event)) {
+      this._listeners.set(event, new Set());
+    }
+    this._listeners.get(event).add(handler);
+    return this;
+  }
+
+  /**
+   * Remove um listener previamente registrado com on(). Sem `handler`,
+   * remove todos os listeners do evento.
+   */
+  off(event, handler) {
+    const handlers = this._listeners.get(event);
+    if (!handlers) {
+      return this;
+    }
+    if (handler) {
+      handlers.delete(handler);
+    } else {
+      handlers.clear();
+    }
+    return this;
+  }
+
+  /**
+   * Dispara um evento, chamando cada listener registrado com os argumentos
+   * fornecidos. Um listener que lança erro não interrompe os demais.
+   */
+  emit(event, ...args) {
+    const handlers = this._listeners.get(event);
+    if (!handlers) {
+      return;
+    }
+    handlers.forEach(handler => {
+      try {
+        handler(...args);
+      } catch (e) {
+        if (console && console.warn) {console.warn(`Skargrid: erro no listener do evento "${event}"`, e);}
+      }
+    });
   }
 
   /**
@@ -953,6 +1038,7 @@ class Skargrid {
       this.searchTimeout = null;
     }
 
+    this._listeners.clear();
     this.container.innerHTML = '';
   }
 
