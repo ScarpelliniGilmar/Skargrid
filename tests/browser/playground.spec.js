@@ -44,6 +44,20 @@ test('colunas congeladas (ID e Nome) permanecem visíveis após scroll horizonta
   await expect(nomeHeader).toBeVisible();
 });
 
+test('rodapé de agregações mostra contagem e média, recalculadas ao filtrar', async ({ page }) => {
+  const idFooter = page.locator('#grid tfoot td[data-field="id"]');
+  const idadeFooter = page.locator('#grid tfoot td[data-field="idade"]');
+
+  await expect(idFooter).toHaveText('250 linhas');
+  await expect(idadeFooter).toContainText('média:');
+
+  // Filtra via API (o dropdown de filtro em si já é coberto por outro teste)
+  // e confirma que o rodapé recalcula sobre os dados filtrados.
+  await page.evaluate(() => window.__skargridPlaygroundGrid?.handleColumnFilter('nome', 'Usuário 1'));
+
+  await expect(idFooter).not.toHaveText('250 linhas');
+});
+
 test('virtualização monta 50k linhas sem paginação', async ({ page }) => {
   await expect(page.locator('#virtual-grid table')).toBeVisible();
   const rowCount = await page.locator('#virtual-grid tbody tr').count();

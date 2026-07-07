@@ -754,6 +754,7 @@ new Skargrid(containerId, options)
 | `persistState`        | Boolean | `false`                  | Persist/restore `getState()`/`setState()` via localStorage |
 | `stateStorageKey`     | String  | `'skargrid-state-{id}'`  | localStorage key for `persistState` |
 | `stateVersion`        | Number  | `1`                      | Saved state with a different version is discarded |
+| `footerAggregates`    | Boolean | `false`                  | Show a `<tfoot>` row with each column's `aggregate` value |
 
 ### Column Configuration
 
@@ -784,6 +785,11 @@ new Skargrid(containerId, options)
     // Returning an HTML string instead of a Node requires an explicit opt-in,
     // since it's your responsibility to keep it free of untrusted input:
     // allowUnsafeHtml: true
+    aggregate: 'sum',         // Footer value (requires options.footerAggregates: true).
+                              // Built-in: 'sum' | 'avg' | 'count' | 'min' | 'max', or a
+                              // custom function (rows, field) => value. Computed over
+                              // filteredData (respects search/filters, not just the current page).
+    aggregateFormatter: (value, rows) => `$${value.toFixed(2)}`, // optional, formats the footer cell
 }
 ```
 

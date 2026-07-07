@@ -1,6 +1,7 @@
 export type SkargridTheme = 'light' | 'dark';
 export type SkargridSortType = 'string' | 'number' | 'date';
 export type SkargridFilterType = 'text' | 'number' | 'date' | 'select';
+export type SkargridAggregate = 'sum' | 'avg' | 'count' | 'min' | 'max' | ((rows: unknown[], field: string) => unknown);
 
 export interface SkargridColumn<Row extends Record<string, unknown> = Record<string, unknown>> {
   field: keyof Row & string;
@@ -26,6 +27,14 @@ export interface SkargridColumn<Row extends Record<string, unknown> = Record<str
    * não-frozen é ignorada com um aviso em vez de aplicada incorretamente.
    */
   frozen?: boolean;
+  /**
+   * Calcula um valor agregado exibido no rodapé (requer `options.footerAggregates: true`).
+   * Aceita as chaves embutidas ('sum', 'avg', 'count', 'min', 'max') ou uma
+   * função `(rows, field) => valor` para agregações customizadas.
+   */
+  aggregate?: SkargridAggregate;
+  /** Formata o valor calculado por `aggregate` antes de exibi-lo no rodapé. */
+  aggregateFormatter?: (value: unknown, rows: Row[]) => string | Node;
 }
 
 export interface SkargridLabels {
@@ -60,6 +69,8 @@ export interface SkargridOptions<Row extends Record<string, unknown> = Record<st
   stateStorageKey?: string;
   /** Estado salvo com versão diferente da atual é descartado (padrão: 1). */
   stateVersion?: number | string;
+  /** Exibe um rodapé (`<tfoot>`) com os valores de `column.aggregate` (padrão: false). */
+  footerAggregates?: boolean;
   labels?: Partial<SkargridLabels>;
   onRowClick?: (row: Row, index: number) => void;
   onSelectionChange?: (rows: Row[]) => void;

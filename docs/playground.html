@@ -109,7 +109,9 @@
       configuração de colunas, exportação CSV e XLSX. A coluna "Status" usa um <code>render</code>
       que retorna um <code>Node</code> (badge colorido) — sempre tratado como seguro, sem precisar
       de <code>allowUnsafeHtml</code>. As colunas "ID" e "Nome" são <code>frozen: true</code> — role
-      a tabela horizontalmente para ver as duas coladas à esquerda.
+      a tabela horizontalmente para ver as duas coladas à esquerda. O rodapé mostra agregações
+      (<code>footerAggregates</code>): contagem de linhas e média de idade, recalculadas ao
+      filtrar/pesquisar.
     </p>
     <div id="grid" style="max-width: 700px; overflow-x: auto;"></div>
   </section>
@@ -202,11 +204,17 @@
     let persistGrid = null;
 
     const columns = [
-      { field: 'id', title: 'ID', width: '70px', sortable: true, frozen: true },
+      { field: 'id', title: 'ID', width: '70px', sortable: true, frozen: true, aggregate: 'count', aggregateFormatter: v => `${v} linhas` },
       { field: 'nome', title: 'Nome', filterable: true, sortable: true, frozen: true },
       { field: 'email', title: 'Email', filterable: true },
       { field: 'cidade', title: 'Cidade', filterable: true, filterType: 'select', sortable: true },
-      { field: 'idade', title: 'Idade', width: '80px', filterable: true, filterType: 'number', sortable: true },
+      {
+        field: 'idade', title: 'Idade', width: '80px', filterable: true, filterType: 'number', sortable: true,
+        // Rodapé de agregações (options.footerAggregates): média de idade,
+        // recalculada sobre os dados filtrados/pesquisados atuais.
+        aggregate: 'avg',
+        aggregateFormatter: v => `média: ${v.toFixed(1)}`,
+      },
       {
         field: 'status', title: 'Status', width: '110px', filterable: true, filterType: 'select',
         // Renderer seguro por padrão: retornar um Node é sempre tratado como
@@ -243,7 +251,9 @@
         exportCSV: true,
         exportXLSX: true,
         exportFilename: 'skargrid-playground',
+        footerAggregates: true,
       });
+      window.__skargridPlaygroundGrid = grid; // exposto só para os testes automatizados
 
       grid.on('sort', (column, direction) => logEvent('sort', `${column ?? '(nenhuma)'} / ${direction ?? '(nenhuma)'}`));
       grid.on('pageChange', page => logEvent('pageChange', `página ${page}`));
