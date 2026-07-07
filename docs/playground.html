@@ -255,7 +255,7 @@
       });
       window.__skargridPlaygroundGrid = grid; // exposto só para os testes automatizados
 
-      grid.on('sort', (column, direction) => logEvent('sort', `${column ?? '(nenhuma)'} / ${direction ?? '(nenhuma)'}`));
+      grid.on('sortChange', (column, direction) => logEvent('sort', `${column ?? '(nenhuma)'} / ${direction ?? '(nenhuma)'}`));
       grid.on('pageChange', page => logEvent('pageChange', `página ${page}`));
       grid.on('selectionChange', rows => logEvent('selectionChange', `${rows.length} linha(s) selecionada(s)`));
       grid.on('filterChange', () => logEvent('filterChange'));

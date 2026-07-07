@@ -34,7 +34,7 @@ describe('SkarGrid - event bus', () => {
   test('emite "sort" com coluna e direção ao ordenar e ao limpar ordenação', () => {
     const grid = new window.Skargrid('events-test-container', { data, columns, sortable: true });
     const events = [];
-    grid.on('sort', (column, direction) => events.push({ column, direction }));
+    grid.on('sortChange', (column, direction) => events.push({ column, direction }));
 
     grid.handleSort('nome');
     grid.clearSort();
@@ -97,10 +97,10 @@ describe('SkarGrid - event bus', () => {
     const grid = new window.Skargrid('events-test-container', { data, columns, sortable: true });
     const a = jest.fn();
     const b = jest.fn();
-    grid.on('sort', a);
-    grid.on('sort', b);
+    grid.on('sortChange', a);
+    grid.on('sortChange', b);
 
-    grid.off('sort', a);
+    grid.off('sortChange', a);
     grid.handleSort('nome');
 
     expect(a).not.toHaveBeenCalled();
@@ -110,8 +110,8 @@ describe('SkarGrid - event bus', () => {
   test('um listener que lança erro não impede os demais nem quebra a operação', () => {
     const grid = new window.Skargrid('events-test-container', { data, columns, sortable: true });
     const ok = jest.fn();
-    grid.on('sort', () => { throw new Error('listener quebrado'); });
-    grid.on('sort', ok);
+    grid.on('sortChange', () => { throw new Error('listener quebrado'); });
+    grid.on('sortChange', ok);
 
     expect(() => grid.handleSort('nome')).not.toThrow();
     expect(ok).toHaveBeenCalledTimes(1);
@@ -120,11 +120,11 @@ describe('SkarGrid - event bus', () => {
   test('destroy() limpa todos os listeners registrados', () => {
     const grid = new window.Skargrid('events-test-container', { data, columns, sortable: true });
     const handler = jest.fn();
-    grid.on('sort', handler);
+    grid.on('sortChange', handler);
 
     grid.destroy();
     // emitir manualmente após destroy não deve chamar o handler nem lançar erro
-    expect(() => grid.emit('sort', 'nome', 'asc')).not.toThrow();
+    expect(() => grid.emit('sortChange', 'nome', 'asc')).not.toThrow();
     expect(handler).not.toHaveBeenCalled();
   });
 

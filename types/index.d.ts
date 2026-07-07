@@ -95,7 +95,7 @@ export interface SkargridState {
 }
 
 export interface SkargridEventMap<Row extends Record<string, unknown> = Record<string, unknown>> {
-  sort: (column: string | null, direction: 'asc' | 'desc' | null) => void;
+  sortChange: (column: string | null, direction: 'asc' | 'desc' | null) => void;
   pageChange: (page: number) => void;
   selectionChange: (rows: Row[]) => void;
   filterChange: () => void;

@@ -857,7 +857,7 @@ table.destroy();
 
 ```javascript
 // Listen to events
-table.on('sort', (column, direction) => {
+table.on('sortChange', (column, direction) => {
     console.log('Sorted by', column, direction); // direction: 'asc' | 'desc' | null
 });
 
@@ -881,7 +881,7 @@ table.on('rowClick', (row, index) => {
 // `onFilterChange` / `onRowClick` (constructor-time shortcut for on()).
 
 // off(event, handler?) removes a specific listener, or all listeners for that event
-table.off('sort', myHandler);
+table.off('sortChange', myHandler);
 ```
 
 ---
