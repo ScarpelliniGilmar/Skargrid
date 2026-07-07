@@ -48,6 +48,7 @@ const TableBodyFeature = {
   renderBody(grid) {
     const tbody = document.createElement('tbody');
     const frozenInfo = FrozenColumnsFeature.getOffsets(grid);
+    const columns = grid.getOrderedVisibleColumns();
 
     if (grid.options.virtualization) {
       // Virtualização: renderiza apenas linhas visíveis
@@ -58,7 +59,7 @@ const TableBodyFeature = {
       // Renderiza apenas as linhas visíveis
       for (let i = startIndex; i < endIndex; i++) {
         const row = grid.filteredData[i];
-        const tr = this.createTableRow(grid, row, i, frozenInfo);
+        const tr = this.createTableRow(grid, row, i, frozenInfo, columns);
         tbody.appendChild(tr);
       }
     } else {
@@ -71,7 +72,7 @@ const TableBodyFeature = {
           ? (grid.currentPage - 1) * grid.options.pageSize + pageIndex
           : pageIndex;
 
-        const tr = this.createTableRow(grid, row, globalIndex, frozenInfo);
+        const tr = this.createTableRow(grid, row, globalIndex, frozenInfo, columns);
         tbody.appendChild(tr);
       });
     }
@@ -81,10 +82,15 @@ const TableBodyFeature = {
 
   /**
    * Cria uma linha da tabela (usado tanto para virtualização quanto paginação normal).
-   * `frozenInfo` é opcional — se ausente, é calculado (uma renderBody() já o
-   * calcula uma vez e repassa para todas as linhas, evitando custo repetido).
+   * `frozenInfo` e `columns` são opcionais — se ausentes, são calculados; uma
+   * renderBody() já os calcula uma vez e repassa para todas as linhas,
+   * evitando recalcular a lista de colunas visíveis a cada linha renderizada.
    */
-  createTableRow(grid, row, globalIndex, frozenInfo = FrozenColumnsFeature.getOffsets(grid)) {
+  createTableRow(
+    grid, row, globalIndex,
+    frozenInfo = FrozenColumnsFeature.getOffsets(grid),
+    columns = grid.getOrderedVisibleColumns(),
+  ) {
     const tr = document.createElement('tr');
     tr.dataset.index = globalIndex;
 
@@ -122,7 +128,7 @@ const TableBodyFeature = {
       };
     }
 
-    grid.getOrderedVisibleColumns().forEach(column => {
+    columns.forEach(column => {
       const td = document.createElement('td');
       const value = row[column.field];
 

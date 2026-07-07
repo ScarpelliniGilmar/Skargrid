@@ -833,7 +833,7 @@ table.destroy();
 
 ```javascript
 // Escutar eventos
-table.on('sort', (coluna, direcao) => {
+table.on('sortChange', (coluna, direcao) => {
     console.log('Ordenado por', coluna, direcao); // direcao: 'asc' | 'desc' | null
 });
 
@@ -857,7 +857,7 @@ table.on('rowClick', (linha, indice) => {
 // onFilterChange / onRowClick (atalho no construtor para on()).
 
 // off(evento, handler?) remove um listener específico, ou todos os listeners do evento
-table.off('sort', meuHandler);
+table.off('sortChange', meuHandler);
 ```
 
 ---

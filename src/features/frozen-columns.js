@@ -29,14 +29,14 @@ const FrozenColumnsFeature = {
    */
   getOffsets(grid) {
     const offsets = new Map();
-    const freezeCheckbox = Boolean(grid.options.selectable) &&
-      grid.getOrderedVisibleColumns().some(col => col.frozen);
+    const columns = grid.getOrderedVisibleColumns();
+    const freezeCheckbox = Boolean(grid.options.selectable) && columns.some(col => col.frozen);
 
     let runningOffset = freezeCheckbox ? this.CHECKBOX_WIDTH : 0;
     let stillContiguous = true;
     let lastFrozenField = null;
 
-    grid.getOrderedVisibleColumns().forEach(column => {
+    columns.forEach(column => {
       if (!stillContiguous) {
         if (column.frozen && console && console.warn) {
           console.warn(`Skargrid: coluna "${column.field}" marcada como frozen, mas não está no início — ignorada (colunas congeladas devem ser um prefixo contíguo).`);
@@ -55,10 +55,6 @@ const FrozenColumnsFeature = {
     });
 
     return { offsets, lastFrozenField, freezeCheckbox };
-  },
-
-  hasFrozenColumns(grid) {
-    return this.getOffsets(grid).offsets.size > 0;
   },
 
   /**

@@ -22,7 +22,7 @@ import FooterAggregatesFeature from '../features/footer-aggregates.js';
 
 // Mapeia as opções de callback (compatibilidade) para os eventos do event bus.
 const OPTION_EVENT_MAP = {
-  onSortChange: 'sort',
+  onSortChange: 'sortChange',
   onPageChange: 'pageChange',
   onSelectionChange: 'selectionChange',
   onFilterChange: 'filterChange',
@@ -772,7 +772,7 @@ class Skargrid {
    */
   handleSort(field) {
     SortFeature.handleSort(this, field);
-    this.emit('sort', this.sortColumn, this.sortDirection);
+    this.emit('sortChange', this.sortColumn, this.sortDirection);
   }
 
   /**
@@ -793,14 +793,15 @@ class Skargrid {
     this.applyFilters();
     this.calculatePagination();
     this.render();
-    this.emit('sort', this.sortColumn, this.sortDirection);
+    this.emit('sortChange', this.sortColumn, this.sortDirection);
   }
 
   /**
-   * Obtém os dados atuais
+   * Obtém os dados atuais. Retorna uma cópia rasa — mutar o array retornado
+   * não afeta o grid; use updateData() para trocar os dados de fato.
    */
   getData() {
-    return this.options.data;
+    return [...this.options.data];
   }
 
   /**
@@ -935,7 +936,7 @@ class Skargrid {
   }
 
   /**
-   * Registra um listener para um evento ('sort', 'pageChange', 'selectionChange',
+   * Registra um listener para um evento ('sortChange', 'pageChange', 'selectionChange',
    * 'filterChange' ou 'rowClick'). Retorna a própria instância (encadeável).
    */
   on(event, handler) {

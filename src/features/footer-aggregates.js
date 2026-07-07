@@ -71,10 +71,6 @@ const FooterAggregatesFeature = {
     return builtIn(rows, column.field);
   },
 
-  hasAggregates(grid) {
-    return grid.getOrderedVisibleColumns().some(col => col.aggregate);
-  },
-
   /**
    * Renderiza o <tfoot> com uma célula por coluna visível: o valor agregado
    * (quando `column.aggregate` está definido) ou vazia, na mesma ordem/
