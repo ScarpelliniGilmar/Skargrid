@@ -1,8 +1,9 @@
-/* eslint-disable no-unused-vars */
 /**
  * Skargrid - Módulo de Cabeçalho da Tabela
  * Gerencia a renderização do cabeçalho com sort e filtros por coluna
  */
+
+import FrozenColumnsFeature from './frozen-columns.js';
 
 const TableHeaderFeature = {
   /**
@@ -11,11 +12,13 @@ const TableHeaderFeature = {
   renderHeader(grid) {
     const thead = document.createElement('thead');
     const tr = document.createElement('tr');
+    const frozenInfo = FrozenColumnsFeature.getOffsets(grid);
 
     // Adiciona coluna de checkbox se seleção está habilitada
     if (grid.options.selectable) {
       const th = document.createElement('th');
       th.className = 'skargrid-select-header';
+      FrozenColumnsFeature.applyToCheckboxCell(th, frozenInfo);
 
       const checkbox = document.createElement('input');
       checkbox.type = 'checkbox';
@@ -30,6 +33,7 @@ const TableHeaderFeature = {
     grid.getOrderedVisibleColumns().forEach(column => {
       const th = document.createElement('th');
       th.dataset.field = column.field;
+      FrozenColumnsFeature.applyToCell(th, column.field, frozenInfo);
 
       // Verifica se a coluna é ordenável
       const isSortable = grid.options.sortable && column.sortable !== false;
@@ -112,3 +116,5 @@ const TableHeaderFeature = {
     return thead;
   },
 };
+
+export default TableHeaderFeature;

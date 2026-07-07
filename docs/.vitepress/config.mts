@@ -1,0 +1,107 @@
+import { defineConfig } from 'vitepress';
+
+export default defineConfig({
+  title: 'SkarGrid Community',
+  description: 'Data grid completo, sem dependências em runtime, para Vanilla JavaScript e agentes de IA.',
+  lang: 'pt-BR',
+  cleanUrls: true,
+  lastUpdated: true,
+
+  head: [
+    ['link', { rel: 'icon', href: '/img/logos/favicon.ico' }],
+  ],
+
+  themeConfig: {
+    logo: {
+      light: '/img/logos/skargrid-logo-light.svg',
+      dark: '/img/logos/skargrid-logo-dark.svg',
+    },
+
+    nav: [
+      { text: 'Guia', link: '/guide/getting-started' },
+      { text: 'API', link: '/api/' },
+      { text: 'Exemplos', link: '/examples/' },
+      { text: 'Migração', link: '/migration/' },
+      { text: 'IA', link: '/ai/' },
+      {
+        text: 'v1.4.0',
+        items: [
+          { text: 'Changelog', link: 'https://github.com/ScarpelliniGilmar/Skargrid/blob/community-v2/CHANGELOG.md' },
+          { text: 'Playground local (docs/playground.html)', link: 'https://github.com/ScarpelliniGilmar/Skargrid/blob/community-v2/docs/playground.html' },
+        ],
+      },
+    ],
+
+    sidebar: {
+      '/guide/': [
+        {
+          text: 'Guia',
+          items: [
+            { text: 'Introdução', link: '/guide/getting-started' },
+            { text: 'Instalação', link: '/guide/installation' },
+            { text: 'Configuração de colunas', link: '/guide/columns' },
+            { text: 'Recursos', link: '/guide/features' },
+            { text: 'Acessibilidade e segurança', link: '/guide/accessibility-security' },
+          ],
+        },
+      ],
+      '/api/': [
+        {
+          text: 'Referência da API',
+          items: [
+            { text: 'Visão geral', link: '/api/' },
+            { text: 'Opções (options)', link: '/api/options' },
+            { text: 'Métodos', link: '/api/methods' },
+            { text: 'Eventos', link: '/api/events' },
+            { text: 'Estado (getState/setState)', link: '/api/state' },
+          ],
+        },
+      ],
+      '/examples/': [
+        {
+          text: 'Exemplos',
+          items: [
+            { text: 'Visão geral', link: '/examples/' },
+          ],
+        },
+      ],
+      '/migration/': [
+        {
+          text: 'Migração',
+          items: [
+            { text: 'Visão geral', link: '/migration/' },
+            { text: '1.x → Community 2.x', link: '/migration/1x-to-community' },
+            { text: 'Pro → Community', link: '/migration/pro-to-community' },
+          ],
+        },
+      ],
+      '/ai/': [
+        {
+          text: 'IA e agentes',
+          items: [
+            { text: 'Visão geral', link: '/ai/' },
+          ],
+        },
+      ],
+    },
+
+    socialLinks: [
+      { icon: 'github', link: 'https://github.com/ScarpelliniGilmar/Skargrid' },
+      { icon: 'npm', link: 'https://www.npmjs.com/package/skargrid' },
+    ],
+
+    search: {
+      provider: 'local',
+    },
+
+    footer: {
+      message: 'Publicado sob licença MIT.',
+      copyright: 'SkarGrid Community',
+    },
+
+    editLink: {
+      pattern: 'https://github.com/ScarpelliniGilmar/Skargrid/edit/community-v2/docs/:path',
+      text: 'Editar esta página no GitHub',
+    },
+  },
+});

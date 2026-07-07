@@ -86,40 +86,6 @@ const SelectionFeature = {
     return Array.from(grid.selectedRows).sort((a, b) => a - b);
   },
 
-  /**
-   * Renderiza checkbox no header (selecionar todos)
-   */
-  renderSelectAllCheckbox(grid) {
-    const checkbox = document.createElement('input');
-    checkbox.type = 'checkbox';
-    checkbox.className = 'skargrid-checkbox';
-    checkbox.checked = this.isAllSelected(grid);
-    checkbox.onchange = (e) => this.toggleSelectAll(grid, e.target.checked);
-    return checkbox;
-  },
-
-  /**
-   * Renderiza checkbox em uma célula de dados
-   */
-  renderRowCheckbox(grid, globalIndex) {
-    const checkbox = document.createElement('input');
-    checkbox.type = 'checkbox';
-    checkbox.className = 'skargrid-checkbox';
-    checkbox.checked = grid.selectedRows.has(globalIndex);
-    checkbox.onchange = (e) => {
-      e.stopPropagation();
-      this.toggleSelectRow(grid, globalIndex, e.target.checked);
-    };
-    return checkbox;
-  },
 };
 
-// Exporta para uso global
-if (typeof window !== 'undefined') {
-  window.SelectionFeature = SelectionFeature;
-}
-
-// Suporte para módulos ES6
-if (typeof module !== 'undefined' && module.exports) {
-  module.exports = SelectionFeature;
-}
+export default SelectionFeature;

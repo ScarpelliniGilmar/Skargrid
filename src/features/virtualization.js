@@ -110,12 +110,4 @@ const VirtualizationFeature = {
   },
 };
 
-// Torna a feature disponível globalmente
-if (typeof window !== 'undefined') {
-  window.VirtualizationFeature = VirtualizationFeature;
-}
-
-// Para compatibilidade com módulos CommonJS
-if (typeof module !== 'undefined' && module.exports) {
-  module.exports = VirtualizationFeature;
-}
+export default VirtualizationFeature;

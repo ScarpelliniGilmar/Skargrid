@@ -750,6 +750,13 @@ new Skargrid(containerId, options)
 | `exportCSV`           | Boolean | `false`                  | Enable CSV export button           |
 | `exportXLSX`          | Boolean | `false`                  | Enable XLSX export button          |
 | `exportFilename`      | String  | `'skargrid-export'`      | Base filename for exports          |
+| `allowUnsafeHtml`     | Boolean | `false`                  | Treat `render()`/`formatter()` string results as HTML instead of plain text (see [Security](#security)) |
+| `persistState`        | Boolean | `false`                  | Persist/restore `getState()`/`setState()` via localStorage |
+| `stateStorageKey`     | String  | `'skargrid-state-{id}'`  | localStorage key for `persistState` |
+| `stateVersion`        | Number  | `1`                      | Saved state with a different version is discarded |
+| `footerAggregates`    | Boolean | `false`                  | Show a `<tfoot>` row with each column's `aggregate` value |
+| `serverSide`          | Boolean | `false`                  | Delegate pagination/sorting/filtering/search to the server (see [Server-Side Processing](#server-side-processing)) |
+| `totalRecords`        | Number  | `0`                      | Total row count on the server; update it with `setTotalRecords()` |
 
 ### Column Configuration
 
@@ -763,10 +770,45 @@ new Skargrid(containerId, options)
     sortType: 'string',      // Sort type: 'string', 'number', 'date'
     filterable: true,        // Show filter icon (default: false)
     filterType: 'text',      // Type: 'text', 'number', 'date', 'select'
-    render: (value, row) => { // Custom formatting
-        return `<span style="color: blue;">${value}</span>`;
+    frozen: true,            // Sticks the column to the left during horizontal scroll (default: false).
+                              // Must form a contiguous prefix (from the first data column, after the
+                              // selection checkbox, if any) — a frozen column after a non-frozen one is
+                              // ignored with a console.warn instead of applied incorrectly.
+    render: (value, row) => { // Custom formatting — returned text is safe by default (textContent)
+        return value.toUpperCase();
     }
+    // Need actual HTML/DOM (badges, icons)? Prefer returning a Node — always treated as safe:
+    // render: (value) => {
+    //     const span = document.createElement('span');
+    //     span.style.color = 'blue';
+    //     span.textContent = value;
+    //     return span;
+    // }
+    // Returning an HTML string instead of a Node requires an explicit opt-in,
+    // since it's your responsibility to keep it free of untrusted input:
+    // allowUnsafeHtml: true
+    aggregate: 'sum',         // Footer value (requires options.footerAggregates: true).
+                              // Built-in: 'sum' | 'avg' | 'count' | 'min' | 'max', or a
+                              // custom function (rows, field) => value. Computed over
+                              // filteredData (respects search/filters, not just the current page).
+    aggregateFormatter: (value, rows) => `$${value.toFixed(2)}`, // optional, formats the footer cell
 }
+```
+
+### Security
+
+`column.render()`/`column.formatter()` return values are treated as **plain text by default** (`textContent`) — HTML tags in the string are not interpreted, so untrusted data (user input, API responses) can't inject markup or scripts. There are two safe ways to render actual HTML/DOM:
+
+1. **Preferred:** return a `Node` (e.g. `document.createElement(...)`) — always attached safely, regardless of any flag.
+2. Return an HTML string and set `allowUnsafeHtml: true`, either globally (all columns) or on the specific column that needs it. Only do this for content you control — never for unescaped user input.
+
+```javascript
+columns: [
+  // Safe: Node, no flag needed
+  { field: 'status', render: v => { const s = document.createElement('span'); s.textContent = v; return s; } },
+  // Opt-in: HTML string, this column only
+  { field: 'note', render: v => `<b>${v}</b>`, allowUnsafeHtml: true },
+]
 ```
 
 ### Methods
@@ -804,6 +846,11 @@ table.exportSelectedToCSV('selected.csv');
 table.exportToXLSX('data.xlsx');
 table.exportSelectedToXLSX('selected.xlsx');
 
+// State (see options.persistState for automatic localStorage persistence)
+const state = table.getState();
+table.setState(state);
+table.clearPersistedState(); // only relevant when persistState: true
+
 // Cleanup
 table.destroy();
 ```
@@ -812,18 +859,75 @@ table.destroy();
 
 ```javascript
 // Listen to events
+table.on('sortChange', (column, direction) => {
+    console.log('Sorted by', column, direction); // direction: 'asc' | 'desc' | null
+});
+
+table.on('pageChange', (page) => {
+    console.log('Current page:', page);
+});
+
 table.on('selectionChange', (selectedRows) => {
     console.log('Selection changed:', selectedRows);
 });
 
-table.on('filterChange', (filteredData) => {
-    console.log('Data filtered:', filteredData.length, 'rows');
+table.on('filterChange', () => {
+    console.log('Filters changed. Current rows:', table.getData().length);
 });
 
-table.on('pageChange', (pageInfo) => {
-    console.log('Page changed:', pageInfo);
+table.on('rowClick', (row, index) => {
+    console.log('Row clicked:', row, index);
 });
+
+// Same events as `options.onSortChange` / `onPageChange` / `onSelectionChange` /
+// `onFilterChange` / `onRowClick` (constructor-time shortcut for on()).
+
+// off(event, handler?) removes a specific listener, or all listeners for that event
+table.off('sortChange', myHandler);
 ```
+
+### Server-Side Processing
+
+With `serverSide: true`, the grid stops paginating/sorting/filtering/searching locally: `data` is always assumed to be exactly the current page, already sorted and filtered by your server. The grid doesn't own the fetch — you listen to the same `pageChange`/`sortChange`/`filterChange` events, make the request yourself (any HTTP client, any library), and hand the result back with `updateData()` + `setTotalRecords()`:
+
+```javascript
+const table = new Skargrid('myTable', {
+    data: [],
+    columns: [
+        { field: 'id', title: 'ID' },
+        { field: 'name', title: 'Name', sortable: true },
+        { field: 'city', title: 'City', filterable: true },
+    ],
+    pagination: true,
+    pageSize: 20,
+    sortable: true,
+    searchable: true,
+    columnFilters: true,
+    serverSide: true,
+});
+
+async function fetchPage() {
+    table.showLoading();
+    table.render(false);
+
+    const response = await fetch(`/api/users?page=${table.currentPage}&pageSize=${table.options.pageSize}` +
+        `&sort=${table.sortColumn ?? ''}&dir=${table.sortDirection ?? ''}&q=${table.searchText}`);
+    const { data, total } = await response.json();
+
+    table.hideLoading();
+    table.updateData(data);      // the current page's rows — does NOT reset page/sort/search in server mode
+    table.setTotalRecords(total); // recalculates total pages
+}
+
+table.on('pageChange', fetchPage);
+table.on('sortChange', fetchPage);
+table.on('filterChange', fetchPage); // covers search and column filters
+fetchPage(); // initial load
+```
+
+**Known limitations:**
+- Select-type column filters (`filterType: 'select'`) compute their checkbox list from `data` — in server-side mode that's only the current page, not the full distinct set of values. Fetch distinct values from your own endpoint if you need the complete list.
+- Row selection uses page-relative indices; selecting across multiple server pages isn't tracked automatically.
 
 ---
 

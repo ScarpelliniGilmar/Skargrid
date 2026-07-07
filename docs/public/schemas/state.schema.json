@@ -1,0 +1,53 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://skargrid.com/schemas/state.schema.json",
+  "title": "SkargridState",
+  "description": "Formato retornado por grid.getState() e aceito por grid.setState(). Reflete types/index.d.ts (SkargridState) do pacote skargrid.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "currentPage",
+    "pageSize",
+    "sortColumn",
+    "sortDirection",
+    "searchText",
+    "columnFilterValues",
+    "columnFilterSelected",
+    "selectedIndices",
+    "visibleColumns",
+    "columnOrder",
+    "theme"
+  ],
+  "properties": {
+    "currentPage": { "type": "integer", "minimum": 1 },
+    "pageSize": { "type": "integer", "minimum": 1 },
+    "sortColumn": { "type": ["string", "null"] },
+    "sortDirection": { "type": ["string", "null"], "enum": ["asc", "desc", null] },
+    "searchText": { "type": "string" },
+    "columnFilterValues": {
+      "type": "object",
+      "description": "Mapa field -> valor do filtro de texto/número/data.",
+      "additionalProperties": true
+    },
+    "columnFilterSelected": {
+      "type": "object",
+      "description": "Mapa field -> array de valores selecionados (filtros do tipo select).",
+      "additionalProperties": { "type": "array" }
+    },
+    "selectedIndices": {
+      "type": "array",
+      "items": { "type": "integer", "minimum": 0 }
+    },
+    "visibleColumns": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Campos (field) das colunas atualmente visíveis."
+    },
+    "columnOrder": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Ordem atual dos campos (field) das colunas."
+    },
+    "theme": { "type": "string", "enum": ["light", "dark"] }
+  }
+}

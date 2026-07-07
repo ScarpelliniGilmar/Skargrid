@@ -1,0 +1,102 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://skargrid.com/schemas/options.schema.json",
+  "title": "SkargridOptions",
+  "description": "Opções aceitas pelo construtor: new Skargrid(containerId, options). Reflete types/index.d.ts do pacote skargrid.",
+  "type": "object",
+  "additionalProperties": true,
+  "properties": {
+    "data": {
+      "type": "array",
+      "items": { "type": "object" },
+      "default": [],
+      "description": "Array de objetos de dados."
+    },
+    "columns": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/column" },
+      "default": [],
+      "description": "Configuração de colunas."
+    },
+    "className": { "type": "string", "default": "skargrid" },
+    "theme": { "type": "string", "enum": ["light", "dark"], "default": "light" },
+    "pagination": { "type": "boolean", "default": false },
+    "pageSize": { "type": "integer", "minimum": 1, "default": 10 },
+    "pageSizeOptions": {
+      "type": "array",
+      "items": { "type": "integer", "minimum": 1 },
+      "default": [10, 25, 50, 100]
+    },
+    "sortable": { "type": "boolean", "default": false },
+    "selectable": { "type": "boolean", "default": false },
+    "searchable": { "type": "boolean", "default": false },
+    "columnFilters": { "type": "boolean", "default": false },
+    "columnConfig": { "type": "boolean", "default": false },
+    "persistColumnConfig": { "type": "boolean", "default": false },
+    "storageKey": { "type": "string", "description": "Padrão: 'skargrid-config-{id}', derivado do id do container." },
+    "exportCSV": { "type": "boolean", "default": false },
+    "exportXLSX": { "type": "boolean", "default": false },
+    "exportFilename": { "type": "string", "default": "skargrid-export" },
+    "virtualization": {
+      "type": "boolean",
+      "default": false,
+      "description": "Não combina com pagination."
+    },
+    "height": { "type": "string", "description": "Necessária quando virtualization é true." },
+    "allowUnsafeHtml": {
+      "type": "boolean",
+      "default": false,
+      "description": "Padrão global para colunas sem allowUnsafeHtml próprio. Quando false (padrão), retornos em string de render()/formatter() são tratados como texto puro."
+    },
+    "persistState": { "type": "boolean", "default": false },
+    "stateStorageKey": { "type": "string", "description": "Padrão: 'skargrid-state-{id}', derivado do id do container." },
+    "stateVersion": {
+      "type": ["integer", "string"],
+      "default": 1,
+      "description": "Estado salvo com versão diferente da atual é descartado, não aplicado."
+    },
+    "footerAggregates": { "type": "boolean", "default": false },
+    "serverSide": {
+      "type": "boolean",
+      "default": false,
+      "description": "Delega paginação/ordenação/filtro/busca ao servidor. data passa a ser sempre a página atual."
+    },
+    "totalRecords": { "type": "integer", "minimum": 0, "default": 0 },
+    "labels": {
+      "type": "object",
+      "additionalProperties": { "type": "string" },
+      "description": "Overrides de texto (i18n). Ver documentação para as chaves disponíveis."
+    }
+  },
+  "$defs": {
+    "column": {
+      "type": "object",
+      "required": ["field"],
+      "additionalProperties": false,
+      "properties": {
+        "field": { "type": "string", "description": "Campo do objeto de dados." },
+        "title": { "type": "string" },
+        "width": { "type": "string" },
+        "visible": { "type": "boolean", "default": true },
+        "sortable": { "type": "boolean", "default": false },
+        "sortType": { "type": "string", "enum": ["string", "number", "date"] },
+        "filterable": { "type": "boolean", "default": false },
+        "filterType": { "type": "string", "enum": ["text", "number", "date", "select"] },
+        "allowUnsafeHtml": {
+          "type": "boolean",
+          "description": "Só necessário se render()/formatter() retornar uma string HTML. Um Node retornado é sempre seguro, com ou sem esta flag."
+        },
+        "frozen": {
+          "type": "boolean",
+          "default": false,
+          "description": "Fixa a coluna à esquerda no scroll horizontal. Precisa formar um prefixo contíguo a partir da primeira coluna de dados."
+        },
+        "aggregate": {
+          "description": "Requer options.footerAggregates: true. String com um agregador embutido, ou (via API JS, não serializável em JSON) uma função (rows, field) => valor.",
+          "type": "string",
+          "enum": ["sum", "avg", "count", "min", "max"]
+        }
+      }
+    }
+  }
+}

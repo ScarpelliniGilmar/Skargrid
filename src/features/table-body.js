@@ -1,8 +1,45 @@
-/* eslint-disable no-unused-vars */
 /**
  * Skargrid - Módulo de Corpo da Tabela
  * Gerencia a renderização do corpo da tabela com células e seleção
  */
+
+import FrozenColumnsFeature from './frozen-columns.js';
+import { applySafeContent } from './render-utils.js';
+
+/**
+ * Renderiza o conteúdo de uma célula com política segura por padrão:
+ * - Um Node retornado pelo renderer é anexado diretamente (forma preferida).
+ * - Uma string só vira HTML se `allowUnsafeHtml` estiver habilitado (na coluna
+ *   ou no grid); caso contrário é tratada como texto puro via `textContent`.
+ * - Sem renderer, o valor bruto também vai por `textContent`.
+ */
+function renderCellContent(td, grid, column, value, row, globalIndex) {
+  const cellRenderer = (column.formatter && typeof column.formatter === 'function')
+    ? column.formatter
+    : (column.render && typeof column.render === 'function')
+      ? column.render
+      : null;
+
+  if (!cellRenderer) {
+    td.textContent = value !== undefined && value !== null ? value : '';
+    return;
+  }
+
+  let result;
+  try {
+    result = cellRenderer(value, row, globalIndex);
+  } catch (e) {
+    td.textContent = value !== undefined && value !== null ? String(value) : '';
+    if (console && console.warn) {console.warn('Skargrid: erro ao executar renderer para coluna', column.field, e);}
+    return;
+  }
+
+  const allowUnsafeHtml = column.allowUnsafeHtml !== undefined
+    ? column.allowUnsafeHtml
+    : grid.options.allowUnsafeHtml;
+
+  applySafeContent(td, result, allowUnsafeHtml);
+}
 
 const TableBodyFeature = {
   /**
@@ -10,6 +47,8 @@ const TableBodyFeature = {
    */
   renderBody(grid) {
     const tbody = document.createElement('tbody');
+    const frozenInfo = FrozenColumnsFeature.getOffsets(grid);
+    const columns = grid.getOrderedVisibleColumns();
 
     if (grid.options.virtualization) {
       // Virtualização: renderiza apenas linhas visíveis
@@ -20,7 +59,7 @@ const TableBodyFeature = {
       // Renderiza apenas as linhas visíveis
       for (let i = startIndex; i < endIndex; i++) {
         const row = grid.filteredData[i];
-        const tr = this.createTableRow(grid, row, i);
+        const tr = this.createTableRow(grid, row, i, frozenInfo, columns);
         tbody.appendChild(tr);
       }
     } else {
@@ -33,7 +72,7 @@ const TableBodyFeature = {
           ? (grid.currentPage - 1) * grid.options.pageSize + pageIndex
           : pageIndex;
 
-        const tr = this.createTableRow(grid, row, globalIndex);
+        const tr = this.createTableRow(grid, row, globalIndex, frozenInfo, columns);
         tbody.appendChild(tr);
       });
     }
@@ -42,9 +81,16 @@ const TableBodyFeature = {
   },
 
   /**
-   * Cria uma linha da tabela (usado tanto para virtualização quanto paginação normal)
+   * Cria uma linha da tabela (usado tanto para virtualização quanto paginação normal).
+   * `frozenInfo` e `columns` são opcionais — se ausentes, são calculados; uma
+   * renderBody() já os calcula uma vez e repassa para todas as linhas,
+   * evitando recalcular a lista de colunas visíveis a cada linha renderizada.
    */
-  createTableRow(grid, row, globalIndex) {
+  createTableRow(
+    grid, row, globalIndex,
+    frozenInfo = FrozenColumnsFeature.getOffsets(grid),
+    columns = grid.getOrderedVisibleColumns(),
+  ) {
     const tr = document.createElement('tr');
     tr.dataset.index = globalIndex;
 
@@ -57,6 +103,7 @@ const TableBodyFeature = {
     if (grid.options.selectable) {
       const td = document.createElement('td');
       td.className = 'skargrid-select-cell';
+      FrozenColumnsFeature.applyToCheckboxCell(td, frozenInfo);
 
       const checkbox = document.createElement('input');
       checkbox.type = 'checkbox';
@@ -81,36 +128,23 @@ const TableBodyFeature = {
       };
     }
 
-    grid.getOrderedVisibleColumns().forEach(column => {
+    columns.forEach(column => {
       const td = document.createElement('td');
       const value = row[column.field];
 
-      // Permite formatação customizada
-      // Suporta ambas as propriedades `formatter` (antiga) e `render` (exemplo/docs)
-      const cellRenderer = (column.formatter && typeof column.formatter === 'function')
-        ? column.formatter
-        : (column.render && typeof column.render === 'function')
-          ? column.render
-          : null;
-
-      if (cellRenderer) {
-        // renderer pode retornar HTML ou texto
-        try {
-          td.innerHTML = cellRenderer(value, row, globalIndex);
-        } catch (e) {
-          // Falha ao executar renderer — fallback para texto simples
-          td.textContent = value !== undefined && value !== null ? String(value) : '';
-          // Log para debug em consoles do dev
-          if (console && console.warn) {console.warn('Skargrid: erro ao executar renderer para coluna', column.field, e);}
-        }
-      } else {
-        td.textContent = value !== undefined && value !== null ? value : '';
-      }
+      renderCellContent(td, grid, column, value, row, globalIndex);
+      FrozenColumnsFeature.applyToCell(td, column.field, frozenInfo);
 
       td.dataset.field = column.field;
       tr.appendChild(td);
     });
 
+    tr.addEventListener('click', () => {
+      grid.emit('rowClick', row, globalIndex);
+    });
+
     return tr;
   },
 };
+
+export default TableBodyFeature;

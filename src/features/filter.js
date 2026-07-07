@@ -3,6 +3,8 @@
  * Gerencia busca global e filtros por coluna
  */
 
+import { extractRenderedText } from './render-utils.js';
+
 const FilterFeature = {
   // Token interno para representar valores vazios (null/undefined/'')
   EMPTY_TOKEN: '__SG_EMPTY__',
@@ -21,10 +23,10 @@ const FilterFeature = {
         : null;
 
     if (exportRenderer) {
-      // Renderiza e remove HTML tags
+      // Renderiza e extrai o texto puro (o renderer pode retornar HTML ou um Node)
       try {
         const rendered = exportRenderer(value, row);
-        value = grid.stripHTML(rendered);
+        value = extractRenderedText(rendered);
       } catch {
         // Mantém o valor original como fallback
       }
@@ -58,6 +60,15 @@ const FilterFeature = {
    * Aplica todos os filtros (busca + filtros de coluna)
    */
   applyFilters(grid) {
+    // Modo server-side: busca/filtros já foram aplicados pelo servidor antes
+    // de options.data chegar aqui — filtrar de novo no cliente cortaria
+    // linhas que o servidor já decidiu incluir (ele não reenvia as
+    // excluídas). filteredData é só um espelho de options.data.
+    if (grid.options.serverSide) {
+      grid.filteredData = [...grid.options.data];
+      return;
+    }
+
     let filtered = [...grid.options.data];
 
     // Aplica busca global se houver texto
@@ -421,12 +432,4 @@ const FilterFeature = {
   },
 };
 
-// Exporta para uso global
-if (typeof window !== 'undefined') {
-  window.FilterFeature = FilterFeature;
-}
-
-// Suporte para módulos ES6
-if (typeof module !== 'undefined' && module.exports) {
-  module.exports = FilterFeature;
-}
+export default FilterFeature;

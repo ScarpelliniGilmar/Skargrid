@@ -33,8 +33,10 @@ const PaginationFeature = {
     const info = document.createElement('div');
     info.className = 'skargrid-pagination-info';
 
-    const totalRecords = grid.filteredData.length;
-    const totalOriginal = grid.options.data.length;
+    // Modo server-side: o total é o que o servidor informou
+    // (options.totalRecords), não o tamanho da página atual.
+    const totalRecords = grid.options.serverSide ? (grid.options.totalRecords || 0) : grid.filteredData.length;
+    const totalOriginal = grid.options.serverSide ? totalRecords : grid.options.data.length;
     const startRecord = totalRecords === 0 ? 0 : (grid.currentPage - 1) * grid.options.pageSize + 1;
     const endRecord = Math.min(grid.currentPage * grid.options.pageSize, totalRecords);
 
@@ -42,9 +44,10 @@ const PaginationFeature = {
       .replace('{start}', startRecord)
       .replace('{end}', endRecord)
       .replace('{total}', totalRecords);
-    
-    // Adiciona info de filtro se houver busca ativa
-    if (grid.searchText && totalRecords < totalOriginal) {
+
+    // Adiciona info de filtro se houver busca ativa (não aplicável em
+    // server-side: o cliente não sabe o total não filtrado)
+    if (!grid.options.serverSide && grid.searchText && totalRecords < totalOriginal) {
       text += ` (${grid.labels.filteredOfTotal.replace('{total}', totalOriginal)})`;
     }
 
@@ -64,7 +67,7 @@ const PaginationFeature = {
     firstBtn.textContent = '«';
     firstBtn.className = 'skargrid-pagination-btn';
     firstBtn.disabled = grid.currentPage === 1;
-    firstBtn.onclick = () => this.goToPage(grid, 1);
+    firstBtn.onclick = () => grid.goToPage(1);
     controls.appendChild(firstBtn);
 
     // Botão Anterior
@@ -72,7 +75,7 @@ const PaginationFeature = {
     prevBtn.textContent = '‹';
     prevBtn.className = 'skargrid-pagination-btn';
     prevBtn.disabled = grid.currentPage === 1;
-    prevBtn.onclick = () => this.goToPage(grid, grid.currentPage - 1);
+    prevBtn.onclick = () => grid.goToPage(grid.currentPage - 1);
     controls.appendChild(prevBtn);
 
     // Números de página
@@ -90,7 +93,7 @@ const PaginationFeature = {
         if (pageNum === grid.currentPage) {
           pageBtn.classList.add('active');
         }
-        pageBtn.onclick = () => this.goToPage(grid, pageNum);
+        pageBtn.onclick = () => grid.goToPage(pageNum);
         controls.appendChild(pageBtn);
       }
     });
@@ -100,7 +103,7 @@ const PaginationFeature = {
     nextBtn.textContent = '›';
     nextBtn.className = 'skargrid-pagination-btn';
     nextBtn.disabled = grid.currentPage === grid.totalPages;
-    nextBtn.onclick = () => this.goToPage(grid, grid.currentPage + 1);
+    nextBtn.onclick = () => grid.goToPage(grid.currentPage + 1);
     controls.appendChild(nextBtn);
 
     // Botão Última Página
@@ -108,7 +111,7 @@ const PaginationFeature = {
     lastBtn.textContent = '»';
     lastBtn.className = 'skargrid-pagination-btn';
     lastBtn.disabled = grid.currentPage === grid.totalPages;
-    lastBtn.onclick = () => this.goToPage(grid, grid.totalPages);
+    lastBtn.onclick = () => grid.goToPage(grid.totalPages);
     controls.appendChild(lastBtn);
 
     return controls;
@@ -178,7 +181,7 @@ const PaginationFeature = {
     });
 
     select.onchange = (e) => {
-      this.changePageSize(grid, parseInt(e.target.value));
+      grid.changePageSize(parseInt(e.target.value));
     };
 
     selector.appendChild(select);
@@ -210,9 +213,11 @@ const PaginationFeature = {
    * Calcula paginação
    */
   calculatePagination(grid) {
-    const totalRecords = grid.filteredData.length;
+    // Modo server-side: o total de registros é informado pelo servidor
+    // (options.totalRecords/setTotalRecords), não o tamanho da página atual.
+    const totalRecords = grid.options.serverSide ? (grid.options.totalRecords || 0) : grid.filteredData.length;
     grid.totalPages = Math.ceil(totalRecords / grid.options.pageSize) || 1;
-    
+
     // Ajusta página atual se estiver fora do range
     if (grid.currentPage > grid.totalPages) {
       grid.currentPage = grid.totalPages;
@@ -223,7 +228,9 @@ const PaginationFeature = {
    * Retorna dados da página atual
    */
   getPageData(grid) {
-    if (!grid.options.pagination) {
+    // Modo server-side: options.data já é exatamente a página atual — o
+    // servidor decide o recorte, o cliente não deve fatiar de novo.
+    if (!grid.options.pagination || grid.options.serverSide) {
       return grid.filteredData;
     }
 
@@ -233,12 +240,4 @@ const PaginationFeature = {
   },
 };
 
-// Exporta para uso global
-if (typeof window !== 'undefined') {
-  window.PaginationFeature = PaginationFeature;
-}
-
-// Suporte para módulos ES6
-if (typeof module !== 'undefined' && module.exports) {
-  module.exports = PaginationFeature;
-}
+export default PaginationFeature;

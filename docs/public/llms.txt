@@ -1,0 +1,45 @@
+# SkarGrid Community
+
+> Data grid completo para Vanilla JavaScript: zero dependências em runtime, sem acoplamento a framework, API pequena e estado serializável. Licença MIT.
+
+SkarGrid é instalado via npm (`skargrid`), CDN (jsDelivr) ou download direto, e inicializado com `new Skargrid(containerId, options)`. Não requer nenhum framework nem bundler — funciona com um `<script>` simples.
+
+## Documentação
+
+- [Introdução](https://skargrid.com/guide/getting-started): instalação e exemplo mínimo.
+- [Instalação](https://skargrid.com/guide/installation): npm, CDN, download.
+- [Configuração de colunas](https://skargrid.com/guide/columns): propriedades de `column` (`field`, `render`, `frozen`, `aggregate`, etc.).
+- [Recursos](https://skargrid.com/guide/features): paginação, ordenação, busca, filtros, seleção, export, virtualização, colunas congeladas, agregações, persistência, server-side.
+- [Acessibilidade e segurança](https://skargrid.com/guide/accessibility-security): comportamento seguro de `render()`/`formatter()`; limitações atuais de acessibilidade.
+- [Referência da API — Opções](https://skargrid.com/api/options): todas as opções do construtor.
+- [Referência da API — Métodos](https://skargrid.com/api/methods): API pública da instância.
+- [Referência da API — Eventos](https://skargrid.com/api/events): `on()`/`off()`/`emit()`.
+- [Referência da API — Estado](https://skargrid.com/api/state): `getState()`/`setState()`, `persistState`, `serverSide`.
+- [Migração 1.x → Community 2.x](https://skargrid.com/migration/1x-to-community).
+- [Migração Pro → Community](https://skargrid.com/migration/pro-to-community).
+
+## Schemas (JSON Schema, draft 2020-12)
+
+- [Opções do construtor](https://skargrid.com/schemas/options.schema.json): valida um objeto de configuração `options` (incluindo `columns`). Funções (`render`, `formatter`, `aggregateFormatter`) não são representáveis em JSON e ficam fora do schema — adicione-as programaticamente depois de validar o restante.
+- [Estado (getState/setState)](https://skargrid.com/schemas/state.schema.json): valida o objeto retornado por `getState()` e aceito por `setState()`.
+
+## Tipos TypeScript
+
+O pacote npm publica declarações completas em `types/index.d.ts`: `SkargridOptions`, `SkargridColumn`, `SkargridState`, `SkargridEventMap`, e a classe `Skargrid`.
+
+## Regras importantes para geração de código
+
+- `render()`/`formatter()` de coluna retornando uma **string** é tratado como texto puro por padrão — tags HTML não são interpretadas. Para HTML real, retorne um `Node`, ou defina `allowUnsafeHtml: true` explicitamente (apenas para conteúdo confiável, nunca para entrada de usuário sem escape).
+- `virtualization: true` e `pagination: true` não podem ser combinados na mesma instância.
+- `serverSide: true` faz o grid parar de paginar/ordenar/filtrar/buscar localmente — o consumidor deve escutar `pageChange`/`sortChange`/`filterChange` e chamar `updateData()` + `setTotalRecords()`.
+- `frozen: true` em uma coluna exige que as colunas congeladas formem um prefixo contíguo a partir da primeira coluna de dados; caso contrário a coluna é ignorada (com aviso no console), não aplicada de forma inconsistente.
+- Sempre chame `grid.destroy()` antes de remover o container do DOM, para não vazar listeners/timers.
+
+## Recursos ainda não implementados (não assuma que existem)
+
+- Inline editing, computed columns, row grouping, undo/redo, charts, adapters oficiais para React/Vue, MCP Server.
+- Acessibilidade WCAG AA (sem `aria-sort`, navegação por teclado dedicada ou gerenciamento de foco em modais, até o momento).
+
+## Licença
+
+MIT. Repositório: https://github.com/ScarpelliniGilmar/Skargrid
