@@ -62,12 +62,4 @@ const InputFilterFeature = {
   },
 };
 
-// Torna a feature disponível globalmente
-if (typeof window !== 'undefined') {
-  window.InputFilterFeature = InputFilterFeature;
-}
-
-// Para compatibilidade com módulos CommonJS
-if (typeof module !== 'undefined' && module.exports) {
-  module.exports = InputFilterFeature;
-}
+export default InputFilterFeature;

@@ -9,21 +9,7 @@ export default [
         ...globals.browser,
         ...globals.node,
         console: "readonly",
-        process: "readonly",
-        // Variáveis globais das features (definidas no build)
-        PaginationFeature: "readonly",
-        FilterFeature: "readonly",
-        SelectFilterFeature: "readonly",
-        InputFilterFeature: "readonly",
-        VirtualizationFeature: "readonly",
-        SortFeature: "readonly",
-        SelectionFeature: "readonly",
-        SearchFeature: "readonly",
-        TableHeaderFeature: "readonly",
-        TableBodyFeature: "readonly",
-        TopBarFeature: "readonly",
-        Skargrid: "readonly",
-        initColumnConfig: "readonly"
+        process: "readonly"
       },
       ecmaVersion: 2022,
       sourceType: "module"

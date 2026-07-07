@@ -3,6 +3,8 @@
  * Gerencia dropdowns de filtros select com busca inteligente
  */
 
+import FilterFeature from './filter.js';
+
 const SelectFilterFeature = {
   /**
    * Cria dropdown de filtro com checkboxes para tipo 'select'
@@ -227,12 +229,4 @@ const SelectFilterFeature = {
   },
 };
 
-// Torna a feature disponível globalmente
-if (typeof window !== 'undefined') {
-  window.SelectFilterFeature = SelectFilterFeature;
-}
-
-// Para compatibilidade com módulos CommonJS
-if (typeof module !== 'undefined' && module.exports) {
-  module.exports = SelectFilterFeature;
-}
+export default SelectFilterFeature;

@@ -421,12 +421,4 @@ const FilterFeature = {
   },
 };
 
-// Exporta para uso global
-if (typeof window !== 'undefined') {
-  window.FilterFeature = FilterFeature;
-}
-
-// Suporte para módulos ES6
-if (typeof module !== 'undefined' && module.exports) {
-  module.exports = FilterFeature;
-}
+export default FilterFeature;

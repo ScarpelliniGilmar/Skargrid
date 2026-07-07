@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 /**
  * Skargrid - Módulo de Corpo da Tabela
  * Gerencia a renderização do corpo da tabela com células e seleção
@@ -114,3 +113,5 @@ const TableBodyFeature = {
     return tr;
   },
 };
+
+export default TableBodyFeature;

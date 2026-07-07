@@ -68,3 +68,17 @@ test('alternar tema aplica data-theme no documento', async ({ page }) => {
   await page.click('#toggle-theme');
   await expect(page.locator('html')).toHaveAttribute('data-theme', 'light');
 });
+
+test('exportação CSV e XLSX funcionam de ponta a ponta', async ({ page }) => {
+  const [csvDownload] = await Promise.all([
+    page.waitForEvent('download'),
+    page.click('#grid button[title="Export CSV"]'),
+  ]);
+  expect(csvDownload.suggestedFilename()).toContain('.csv');
+
+  const [xlsxDownload] = await Promise.all([
+    page.waitForEvent('download'),
+    page.click('#grid button[title="Export XLSX"]'),
+  ]);
+  expect(xlsxDownload.suggestedFilename()).toContain('.xlsx');
+});

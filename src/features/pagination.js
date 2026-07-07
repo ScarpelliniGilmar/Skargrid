@@ -233,12 +233,4 @@ const PaginationFeature = {
   },
 };
 
-// Exporta para uso global
-if (typeof window !== 'undefined') {
-  window.PaginationFeature = PaginationFeature;
-}
-
-// Suporte para módulos ES6
-if (typeof module !== 'undefined' && module.exports) {
-  module.exports = PaginationFeature;
-}
+export default PaginationFeature;

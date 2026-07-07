@@ -4,6 +4,20 @@
  * Este é o core de renderização, o ponto de entrada é index.js
  */
 
+import PaginationFeature from '../features/pagination.js';
+import SortFeature from '../features/sort.js';
+import SelectionFeature from '../features/selection.js';
+import FilterFeature from '../features/filter.js';
+import SelectFilterFeature from '../features/select-filter.js';
+import InputFilterFeature from '../features/input-filter.js';
+import VirtualizationFeature from '../features/virtualization.js';
+import { initColumnConfig } from '../features/columnConfig.js';
+import ExportFeature from '../features/export.js';
+import SearchFeature from '../features/search.js';
+import TableHeaderFeature from '../features/table-header.js';
+import TableBodyFeature from '../features/table-body.js';
+import TopBarFeature from '../features/top-bar.js';
+
 class Skargrid {
   constructor(containerId, options = {}) {
     this.container = document.getElementById(containerId);
@@ -116,21 +130,11 @@ class Skargrid {
     );
     this.columnOrder = this.options.columns.map(col => col.field);
 
-    // Estado da virtualização (inicializado pela feature se disponível)
-    if (typeof VirtualizationFeature !== 'undefined') {
-      VirtualizationFeature.initVirtualization(this);
-    } else {
-      // Fallback básico se VirtualizationFeature não disponível
-      this.virtualScrollTop = 0;
-      this.virtualRowHeight = 40;
-      this.virtualVisibleRows = 20;
-      this.virtualBufferSize = 5;
-    }
+    // Estado da virtualização
+    VirtualizationFeature.initVirtualization(this);
 
     // Inicializa features modulares
-    if (typeof initColumnConfig === 'function') {
-      initColumnConfig(this);
-    }
+    initColumnConfig(this);
 
     this.init();
   }
@@ -143,7 +147,7 @@ class Skargrid {
     if (!this.visibleColumns || !this.columnOrder) {
       return this.options.columns;
     }
-    
+
     return this.columnOrder
       .filter(field => this.visibleColumns.has(field))
       .map(field => this.options.columns.find(col => col.field === field))
@@ -163,19 +167,14 @@ class Skargrid {
    * Calcula informações de paginação
    */
   calculatePagination() {
-    if (typeof PaginationFeature !== 'undefined') {
-      PaginationFeature.calculatePagination(this);
-    }
+    PaginationFeature.calculatePagination(this);
   }
 
   /**
    * Obtém os dados da página atual
    */
   getPageData() {
-    if (typeof PaginationFeature !== 'undefined') {
-      return PaginationFeature.getPageData(this);
-    }
-    return this.filteredData;
+    return PaginationFeature.getPageData(this);
   }
 
   /**
@@ -194,7 +193,7 @@ class Skargrid {
     // Cria wrapper principal
     const wrapper = document.createElement('div');
     wrapper.className = 'skargrid-wrapper';
-    
+
     // Aplica tema
     if (this.options.theme === 'dark') {
       wrapper.classList.add('skargrid-dark');
@@ -212,18 +211,9 @@ class Skargrid {
 
     // Configura virtualização se habilitada
     if (this.options.virtualization) {
-      if (typeof VirtualizationFeature !== 'undefined') {
-        VirtualizationFeature.setupVirtualContainer(this, tableContainer);
-      } else {
-        // Fallback básico se VirtualizationFeature não disponível
-        tableContainer.classList.add('skargrid-virtual-container');
-        tableContainer.style.overflowY = 'auto';
-        tableContainer.style.overflowX = 'auto';
-        tableContainer.style.position = 'relative';
-        tableContainer.onscroll = (e) => this.handleVirtualScroll(e);
-      }
+      VirtualizationFeature.setupVirtualContainer(this, tableContainer);
     }
-    
+
     // Adiciona indicador de loading APENAS na área da tabela
     if (this.isLoading) {
       const loadingOverlay = document.createElement('div');
@@ -246,14 +236,9 @@ class Skargrid {
     table.className = this.options.className;
 
     if (this.options.virtualization) {
-      if (typeof VirtualizationFeature !== 'undefined') {
-        // Usa a feature de virtualização
-        const virtualContainer = VirtualizationFeature.renderVirtualStructure(this);
-        tableContainer.appendChild(virtualContainer);
-      } else {
-        // Fallback básico se VirtualizationFeature não disponível
-        this.renderBasicVirtualStructure(tableContainer);
-      }
+      // Usa a feature de virtualização
+      const virtualContainer = VirtualizationFeature.renderVirtualStructure(this);
+      tableContainer.appendChild(virtualContainer);
     } else {
       // Renderização normal
       const thead = this.renderHeader();
@@ -341,195 +326,66 @@ class Skargrid {
   }
 
   /**
-   * Renderiza o campo de busca
-   */
-  /**
    * Renderiza barra superior com busca e botões de ação
    */
   renderTopBar() {
-    if (typeof TopBarFeature !== 'undefined') {
-      return TopBarFeature.renderTopBar(this);
-    } else {
-      // Fallback básico se TopBarFeature não disponível
-      return this.createBasicTopBar();
-    }
+    return TopBarFeature.renderTopBar(this);
   }
 
-  /**
-   * Renderiza apenas o input de busca
-   */
   /**
    * Renderiza o componente de busca global
    */
   renderSearchInput() {
-    if (typeof SearchFeature !== 'undefined') {
-      return SearchFeature.renderSearchInput(this);
-    } else {
-      // Fallback básico se SearchFeature não disponível
-      console.warn('SearchFeature not available, using basic search input');
-      return this.createBasicSearchInput();
-    }
-  }
-
-  /**
-   * Fallback básico para campo de busca quando SearchFeature não está disponível
-   */
-  createBasicSearchInput() {
-    const searchWrapper = document.createElement('div');
-    searchWrapper.className = 'skargrid-search-wrapper';
-
-    const searchInput = document.createElement('input');
-    searchInput.type = 'text';
-    searchInput.className = 'skargrid-search-input';
-    searchInput.placeholder = this.labels.searchPlaceholder;
-    searchInput.value = this.searchText;
-
-    searchInput.oninput = (e) => {
-      clearTimeout(this.searchTimeout);
-      this.searchTimeout = setTimeout(() => {
-        this.handleSearch(e.target.value);
-      }, 300);
-    };
-
-    searchWrapper.appendChild(searchInput);
-    return searchWrapper;
+    return SearchFeature.renderSearchInput(this);
   }
 
   /**
    * Renderiza botão "Limpar Filtros"
    */
   renderClearFiltersButton() {
-    if (typeof TopBarFeature !== 'undefined') {
-      return TopBarFeature.renderClearFiltersButton(this);
-    }
-    return document.createElement('button');
+    return TopBarFeature.renderClearFiltersButton(this);
   }
 
   /**
    * Renderiza botão "Exportar CSV"
    */
   renderExportCSVButton() {
-    if (typeof TopBarFeature !== 'undefined') {
-      return TopBarFeature.renderExportCSVButton(this);
-    }
-    return document.createElement('button');
-  }
-
-  /**
-   * Fallback básico para renderização da barra superior quando TopBarFeature não está disponível
-   */
-  createBasicTopBar() {
-    const hasSearch = this.options.searchable;
-
-    // Se não tem busca, retorna null
-    if (!hasSearch) {
-      return null;
-    }
-
-    const searchContainer = document.createElement('div');
-    searchContainer.className = 'skargrid-search-container';
-
-    // Renderiza input de busca básico
-    const searchWrapper = this.createBasicSearchInput();
-    searchContainer.appendChild(searchWrapper);
-
-    return searchContainer;
+    return TopBarFeature.renderExportCSVButton(this);
   }
 
   /**
    * Renderiza o cabeçalho da tabela
    */
   renderHeader() {
-    if (typeof TableHeaderFeature !== 'undefined') {
-      return TableHeaderFeature.renderHeader(this);
-    } else {
-      // Fallback básico se TableHeaderFeature não disponível
-      console.warn('TableHeaderFeature not available, using basic header');
-      return this.createBasicHeader();
-    }
-  }
-
-  /**
-   * Fallback básico para cabeçalho quando TableHeaderFeature não está disponível
-   */
-  createBasicHeader() {
-    const thead = document.createElement('thead');
-    const tr = document.createElement('tr');
-
-    // Adiciona coluna de checkbox se seleção está habilitada
-    if (this.options.selectable) {
-      const th = document.createElement('th');
-      th.className = 'skargrid-select-header';
-
-      const checkbox = document.createElement('input');
-      checkbox.type = 'checkbox';
-      checkbox.className = 'skargrid-checkbox';
-      checkbox.checked = this.isAllSelected();
-      checkbox.onchange = (e) => this.toggleSelectAll(e.target.checked);
-
-      th.appendChild(checkbox);
-      tr.appendChild(th);
-    }
-
-    this.getOrderedVisibleColumns().forEach(column => {
-      const th = document.createElement('th');
-      th.dataset.field = column.field;
-
-      const text = document.createElement('span');
-      text.className = 'th-text';
-      text.textContent = column.title || column.field;
-      th.appendChild(text);
-
-      tr.appendChild(th);
-    });
-
-    thead.appendChild(tr);
-    return thead;
+    return TableHeaderFeature.renderHeader(this);
   }
 
   /**
    * Verifica se uma coluna tem filtro ativo
    */
   hasActiveFilter(field) {
-    if (typeof FilterFeature !== 'undefined') {
-      return FilterFeature.hasActiveFilter(this, field);
-    }
-    return false;
+    return FilterFeature.hasActiveFilter(this, field);
   }
 
   /**
    * Normaliza string para busca (remove acentos)
    */
   normalizeString(str) {
-    if (typeof FilterFeature !== 'undefined') {
-      return FilterFeature.normalizeString(str);
-    }
-    // Fallback se FilterFeature não disponível
-    if (!str) {return '';}
-    return String(str)
-      .normalize('NFD')
-      .replace(/[\u0300-\u036f]/g, '')
-      .toLowerCase();
+    return FilterFeature.normalizeString(str);
   }
 
   /**
    * Obtém valores únicos de uma coluna (dados originais)
    */
   getUniqueColumnValues(field) {
-    if (typeof FilterFeature !== 'undefined') {
-      return FilterFeature.getUniqueColumnValues(this, field);
-    }
-    return [];
+    return FilterFeature.getUniqueColumnValues(this, field);
   }
 
   /**
    * Obtém valores disponíveis de uma coluna (dados filtrados, exceto a própria coluna)
    */
   getAvailableColumnValues(field) {
-    if (typeof FilterFeature !== 'undefined') {
-      return FilterFeature.getAvailableColumnValues(this, field);
-    }
-    return [];
+    return FilterFeature.getAvailableColumnValues(this, field);
   }
 
   /**
@@ -549,19 +405,19 @@ class Skargrid {
     // Cria novo dropdown
     const dropdown = this.createFilterDropdown(column);
     dropdown.dataset.field = column.field;
-    
+
     // Adiciona ao body para calcular tamanho e evitar ser cortado
     dropdown.style.visibility = 'hidden';
     dropdown.style.position = 'fixed';
     document.body.appendChild(dropdown);
-    
+
     // Função para posicionar o dropdown
     const positionDropdown = () => {
       const rect = buttonElement.getBoundingClientRect();
       const dropdownRect = dropdown.getBoundingClientRect();
       const viewportWidth = window.innerWidth;
       const viewportHeight = window.innerHeight;
-      
+
       // Posição inicial (logo abaixo do botão, alinhado à esquerda)
       // Prefer always opening below the button. If there's not enough room
       // below, don't flip above; instead constrain the dropdown height so it
@@ -586,27 +442,27 @@ class Skargrid {
         dropdown.style.maxHeight = '';
         dropdown.style.overflowY = '';
       }
-      
+
       // Garante que não saia pela esquerda
       if (left < 10) {
         left = 10;
       }
-      
+
       dropdown.style.top = `${top}px`;
       dropdown.style.left = `${left}px`;
     };
-    
+
     // Posiciona inicialmente
     positionDropdown();
     dropdown.style.visibility = 'visible';
-    
+
     this.openFilterDropdown = dropdown;
 
     // Handler para reposicionar no scroll
     const scrollHandler = () => {
       positionDropdown();
     };
-    
+
     // Adiciona listeners de scroll
     window.addEventListener('scroll', scrollHandler, true); // true = capture phase para pegar todos scrolls
     this.scrollHandler = scrollHandler;
@@ -647,12 +503,7 @@ class Skargrid {
       this.createCheckboxFilter(dropdown, column);
     } else {
       // Input simples para text, number, date
-      if (typeof InputFilterFeature !== 'undefined') {
-        InputFilterFeature.createInputFilter(this, dropdown, column, filterType);
-      } else {
-        // Fallback se InputFilterFeature não disponível
-        this.createBasicInputFilter(dropdown, column, filterType);
-      }
+      InputFilterFeature.createInputFilter(this, dropdown, column, filterType);
     }
 
     return dropdown;
@@ -662,158 +513,14 @@ class Skargrid {
    * Cria filtro com checkboxes e busca interna (valores disponíveis dinamicamente)
    */
   createCheckboxFilter(dropdown, column) {
-    if (typeof SelectFilterFeature !== 'undefined') {
-      SelectFilterFeature.createCheckboxFilter(this, dropdown, column);
-    } else {
-      // Fallback se SelectFilterFeature não disponível
-      console.warn('SelectFilterFeature not available, using basic filter');
-      this.createBasicCheckboxFilter(dropdown, column);
-    }
-  }
-
-  /**
-   * Fallback básico para filtro checkbox quando SelectFilterFeature não está disponível
-   */
-  createBasicCheckboxFilter(dropdown, column) {
-    const allValues = this.getUniqueColumnValues(column.field);
-    const availableValues = this.getAvailableColumnValues(column.field);
-
-    // Header do dropdown
-    const header = document.createElement('div');
-    header.className = 'filter-dropdown-header';
-    header.innerHTML = `<strong>${this.labels.filterTitle.replace('{title}', column.title || column.field)}</strong>`;
-    dropdown.appendChild(header);
-
-    // Lista básica de checkboxes
-    const listWrapper = document.createElement('div');
-    listWrapper.className = 'filter-list-wrapper';
-
-    const list = document.createElement('div');
-    list.className = 'filter-list';
-
-    availableValues.forEach(value => {
-      const item = document.createElement('div');
-      item.className = 'filter-list-item';
-
-      const checkbox = document.createElement('input');
-      checkbox.type = 'checkbox';
-      checkbox.className = 'skargrid-checkbox';
-      checkbox.value = value;
-      const safeVal = String(value).replace(/[^a-z0-9-_]/gi, '_');
-      checkbox.id = `filter-${column.field}-${safeVal}`;
-
-      const isSelected = (this.columnFilterSelected[column.field] || allValues).includes(value);
-      checkbox.checked = isSelected;
-
-      const label = document.createElement('label');
-      label.htmlFor = `filter-${column.field}-${safeVal}`;
-      label.textContent = value;
-
-      item.appendChild(checkbox);
-      item.appendChild(label);
-      list.appendChild(item);
-
-      checkbox.onchange = () => {
-        if (!this.columnFilterSelected[column.field]) {
-          this.columnFilterSelected[column.field] = [...allValues];
-        }
-        if (checkbox.checked) {
-          if (!this.columnFilterSelected[column.field].includes(value)) {
-            this.columnFilterSelected[column.field].push(value);
-          }
-        } else {
-          this.columnFilterSelected[column.field] = this.columnFilterSelected[column.field].filter(v => v !== value);
-        }
-      };
-    });
-
-    listWrapper.appendChild(list);
-    dropdown.appendChild(listWrapper);
-
-    // Footer básico
-    const footer = document.createElement('div');
-    footer.className = 'filter-dropdown-footer';
-
-    const applyBtn = document.createElement('button');
-    applyBtn.textContent = this.labels.apply;
-    applyBtn.className = 'filter-btn-apply';
-    applyBtn.onclick = () => {
-      this.handleColumnFilterCheckbox(column.field);
-      dropdown.remove();
-      this.openFilterDropdown = null;
-    };
-
-    footer.appendChild(applyBtn);
-    dropdown.appendChild(footer);
+    SelectFilterFeature.createCheckboxFilter(this, dropdown, column);
   }
 
   /**
    * Cria filtro com input simples
    */
   createInputFilter(dropdown, column, filterType) {
-    if (typeof InputFilterFeature !== 'undefined') {
-      InputFilterFeature.createInputFilter(this, dropdown, column, filterType);
-    } else {
-      // Fallback se InputFilterFeature não disponível
-      this.createBasicInputFilter(dropdown, column, filterType);
-    }
-  }
-
-  /**
-   * Fallback básico para filtro input quando InputFilterFeature não está disponível
-   */
-  createBasicInputFilter(dropdown, column, filterType) {
-    const header = document.createElement('div');
-    header.className = 'filter-dropdown-header';
-    header.innerHTML = `<strong>${this.labels.filterTitle.replace('{title}', column.title || column.field)}</strong>`;
-    dropdown.appendChild(header);
-
-    const inputWrapper = document.createElement('div');
-    inputWrapper.className = 'filter-input-wrapper';
-
-    const input = document.createElement('input');
-    input.type = filterType === 'number' ? 'number' : filterType === 'date' ? 'date' : 'text';
-    input.className = 'filter-dropdown-input';
-    input.placeholder = this.labels.filterInputPlaceholder;
-    input.value = this.columnFilterValues[column.field] || '';
-
-    inputWrapper.appendChild(input);
-    dropdown.appendChild(inputWrapper);
-
-    const footer = document.createElement('div');
-    footer.className = 'filter-dropdown-footer';
-
-    const clearBtn = document.createElement('button');
-    clearBtn.textContent = this.labels.clear;
-    clearBtn.className = 'filter-btn-clear';
-    clearBtn.onclick = () => {
-      this.handleColumnFilter(column.field, '');
-      dropdown.remove();
-      this.openFilterDropdown = null;
-    };
-
-    const applyBtn = document.createElement('button');
-    applyBtn.textContent = this.labels.apply;
-    applyBtn.className = 'filter-btn-apply';
-    applyBtn.onclick = () => {
-      this.handleColumnFilter(column.field, input.value);
-      dropdown.remove();
-      this.openFilterDropdown = null;
-    };
-
-    footer.appendChild(clearBtn);
-    footer.appendChild(applyBtn);
-    dropdown.appendChild(footer);
-
-    // Aplica ao pressionar Enter
-    input.onkeypress = (e) => {
-      if (e.key === 'Enter') {
-        applyBtn.click();
-      }
-    };
-
-    // Foco automático
-    setTimeout(() => input.focus(), 100);
+    InputFilterFeature.createInputFilter(this, dropdown, column, filterType);
   }
 
   /**
@@ -822,14 +529,14 @@ class Skargrid {
   handleColumnFilterCheckbox(field) {
     const allValues = this.getUniqueColumnValues(field);
     const selected = this.columnFilterSelected[field] || [];
-    
+
     // Se todos estão selecionados, não filtra
     if (selected.length === allValues.length) {
       delete this.columnFilterValues[field];
     } else {
       this.columnFilterValues[field] = selected;
     }
-    
+
     this.currentPage = 1;
     this.applyFilters();
     this.calculatePagination();
@@ -841,219 +548,42 @@ class Skargrid {
    * Renderiza o corpo da tabela
    */
   renderBody() {
-    const tbody = document.createElement('tbody');
-    
-    if (this.options.virtualization) {
-      // Virtualização: renderiza apenas linhas visíveis
-      const totalRows = this.filteredData.length;
-      const startIndex = Math.max(0, Math.floor(this.virtualScrollTop / this.virtualRowHeight) - this.virtualBufferSize);
-      const endIndex = Math.min(totalRows, startIndex + this.virtualVisibleRows + (this.virtualBufferSize * 2));
-
-      // Renderiza apenas as linhas visíveis
-      for (let i = startIndex; i < endIndex; i++) {
-        const row = this.filteredData[i];
-        const tr = this.createTableRow(row, i);
-        tbody.appendChild(tr);
-      }
-    } else {
-      // Renderização normal (com paginação)
-      const pageData = this.getPageData();
-      
-      pageData.forEach((row, pageIndex) => {
-        // Calcula o índice global do registro
-        const globalIndex = this.options.pagination
-          ? (this.currentPage - 1) * this.options.pageSize + pageIndex
-          : pageIndex;
-        
-        const tr = this.createTableRow(row, globalIndex);
-        tbody.appendChild(tr);
-      });
-    }
-
-    return tbody;
+    return TableBodyFeature.renderBody(this);
   }
 
   /**
    * Cria uma linha da tabela (usado tanto para virtualização quanto paginação normal)
    */
   createTableRow(row, globalIndex) {
-    const tr = document.createElement('tr');
-    tr.dataset.index = globalIndex;
-
-    // Adiciona classe se a linha está selecionada
-    if (this.selectedRows.has(globalIndex)) {
-      tr.classList.add('selected');
-    }
-
-    // Adiciona coluna de checkbox se seleção está habilitada
-    if (this.options.selectable) {
-      const td = document.createElement('td');
-      td.className = 'skargrid-select-cell';
-      
-      const checkbox = document.createElement('input');
-      checkbox.type = 'checkbox';
-      checkbox.className = 'skargrid-checkbox';
-      checkbox.checked = this.selectedRows.has(globalIndex);
-      checkbox.onchange = (e) => {
-        e.stopPropagation();
-        this.toggleSelectRow(globalIndex, e.target.checked);
-      };
-      
-      td.appendChild(checkbox);
-      tr.appendChild(td);
-
-      // Adiciona clique na linha para selecionar
-      tr.style.cursor = 'pointer';
-      tr.onclick = (e) => {
-        // Ignora clique no checkbox
-        if (e.target.type !== 'checkbox') {
-          checkbox.checked = !checkbox.checked;
-          this.toggleSelectRow(globalIndex, checkbox.checked);
-        }
-      };
-    }
-
-    this.getOrderedVisibleColumns().forEach(column => {
-      const td = document.createElement('td');
-      const value = row[column.field];
-      
-      // Permite formatação customizada
-      // Suporta ambas as propriedades `formatter` (antiga) e `render` (exemplo/docs)
-      const cellRenderer = (column.formatter && typeof column.formatter === 'function')
-        ? column.formatter
-        : (column.render && typeof column.render === 'function')
-          ? column.render
-          : null;
-
-      if (cellRenderer) {
-        // renderer pode retornar HTML ou texto
-        try {
-          td.innerHTML = cellRenderer(value, row, globalIndex);
-        } catch (e) {
-          // Falha ao executar renderer — fallback para texto simples
-          td.textContent = value !== undefined && value !== null ? String(value) : '';
-          // Log para debug em consoles do dev
-          if (console && console.warn) {console.warn('Skargrid: erro ao executar renderer para coluna', column.field, e);}
-        }
-      } else {
-        td.textContent = value !== undefined && value !== null ? value : '';
-      }
-
-      td.dataset.field = column.field;
-      tr.appendChild(td);
-    });
-
-    return tr;
+    return TableBodyFeature.createTableRow(this, row, globalIndex);
   }
 
   /**
    * Manipula o scroll virtual
    */
   handleVirtualScroll(e) {
-    if (typeof VirtualizationFeature !== 'undefined') {
-      VirtualizationFeature.handleVirtualScroll(this, e);
-    } else {
-      // Fallback básico se VirtualizationFeature não disponível
-      this.handleBasicVirtualScroll(e);
-    }
-  }
-
-  /**
-   * Fallback básico para scroll virtual quando VirtualizationFeature não está disponível
-   */
-  handleBasicVirtualScroll(e) {
-    const scrollTop = e.target.scrollTop;
-    this.virtualScrollTop = scrollTop;
-
-    // Atualiza a posição da tabela dentro do container virtual
-    const virtualContainer = this.container.querySelector('.skargrid-table-container > div');
-    const table = virtualContainer.querySelector('.skargrid');
-    if (table) {
-      // Calcula qual deve ser a posição da tabela baseada no scroll
-      const startIndex = Math.max(0, Math.floor(scrollTop / this.virtualRowHeight) - this.virtualBufferSize);
-      const topOffset = startIndex * this.virtualRowHeight;
-      table.style.top = `${topOffset}px`;
-
-      // Calcula a nova altura da tabela baseada nas linhas que serão renderizadas
-      const endIndex = Math.min(this.filteredData.length, startIndex + this.virtualVisibleRows + (this.virtualBufferSize * 2));
-      const renderedRows = endIndex - startIndex;
-      const tableHeight = renderedRows * this.virtualRowHeight;
-      table.style.height = `${tableHeight}px`;
-
-      // Re-renderiza apenas o corpo da tabela com as linhas corretas
-      const oldTbody = table.querySelector('tbody');
-      if (oldTbody) {
-        const newTbody = this.renderBody();
-        table.replaceChild(newTbody, oldTbody);
-      }
-    }
+    VirtualizationFeature.handleVirtualScroll(this, e);
   }
 
   /**
    * Renderiza os controles de paginação
    */
   renderPagination() {
-    if (typeof PaginationFeature !== 'undefined') {
-      return PaginationFeature.renderPagination(this);
-    }
-    return document.createElement('div');
-  }
-
-  /**
-   * Fallback básico para renderização virtual quando VirtualizationFeature não está disponível
-   */
-  renderBasicVirtualStructure(tableContainer) {
-    const virtualContainer = document.createElement('div');
-    virtualContainer.style.position = 'relative';
-    virtualContainer.style.height = `${this.filteredData.length * this.virtualRowHeight}px`;
-
-    // Calcula quantas linhas serão realmente renderizadas
-    const startIndex = Math.max(0, Math.floor(this.virtualScrollTop / this.virtualRowHeight) - this.virtualBufferSize);
-    const endIndex = Math.min(this.filteredData.length, startIndex + this.virtualVisibleRows + (this.virtualBufferSize * 2));
-    const renderedRows = endIndex - startIndex;
-
-    // Cria a tabela posicionada absolutamente
-    const table = document.createElement('table');
-    table.className = this.options.className;
-    table.style.position = 'absolute';
-    table.style.top = '0';
-    table.style.left = '0';
-    table.style.width = '100%';
-    // Define altura baseada no número real de linhas renderizadas
-    const tableHeight = renderedRows * this.virtualRowHeight;
-    table.style.height = `${tableHeight}px`;
-
-    const thead = this.renderHeader();
-    thead.style.position = 'sticky';
-    thead.style.top = '0';
-    thead.style.zIndex = '1';
-    thead.style.background = 'var(--sg-thead-bg, #f8f9fa)';
-    thead.style.width = '100%';
-    table.appendChild(thead);
-
-    const tbody = this.renderBody();
-    table.appendChild(tbody);
-
-    virtualContainer.appendChild(table);
-    tableContainer.appendChild(virtualContainer);
+    return PaginationFeature.renderPagination(this);
   }
 
   /**
    * Navega para uma página específica
    */
   goToPage(pageNumber) {
-    if (typeof PaginationFeature !== 'undefined') {
-      PaginationFeature.goToPage(this, pageNumber);
-    }
+    PaginationFeature.goToPage(this, pageNumber);
   }
 
   /**
    * Muda o número de itens por página
    */
   changePageSize(newSize) {
-    if (typeof PaginationFeature !== 'undefined') {
-      PaginationFeature.changePageSize(this, newSize);
-    }
+    PaginationFeature.changePageSize(this, newSize);
   }
 
   /**
@@ -1067,10 +597,10 @@ class Skargrid {
     this.sortDirection = null;
     this.selectedRows.clear();  // Limpa seleções ao atualizar dados
     this.searchText = '';
-    
+
     // Reseta scroll virtual
     this.virtualScrollTop = 0;
-    
+
     this.applyFilters();
     this.calculatePagination();
     this.render();
@@ -1080,48 +610,35 @@ class Skargrid {
    * Manipula a busca de texto
    */
   handleSearch(searchText) {
-    if (typeof FilterFeature !== 'undefined') {
-      FilterFeature.handleSearch(this, searchText);
-    }
+    FilterFeature.handleSearch(this, searchText);
   }
 
   /**
    * Manipula filtro por coluna
    */
   handleColumnFilter(field, value) {
-    if (typeof FilterFeature !== 'undefined') {
-      FilterFeature.handleColumnFilter(this, field, value);
-    }
+    FilterFeature.handleColumnFilter(this, field, value);
   }
 
   /**
    * Limpa todos os filtros de coluna
    */
   clearColumnFilters() {
-    if (typeof FilterFeature !== 'undefined') {
-      FilterFeature.clearColumnFilters(this);
-    }
+    FilterFeature.clearColumnFilters(this);
   }
 
   /**
    * Limpa TODOS os filtros (busca + filtros de coluna)
    */
   clearAllFilters() {
-    if (typeof FilterFeature !== 'undefined') {
-      FilterFeature.clearAllFilters(this);
-    }
+    FilterFeature.clearAllFilters(this);
   }
 
   /**
    * Atualiza o botão de limpar filtros com contador de filtros ativos
    */
-  /**
-   * Atualiza o botão de limpar filtros com contador de filtros ativos
-   */
   updateClearFiltersButton(button = null) {
-    if (typeof TopBarFeature !== 'undefined') {
-      TopBarFeature.updateClearFiltersButton(this, button);
-    }
+    TopBarFeature.updateClearFiltersButton(this, button);
   }
 
   /**
@@ -1130,9 +647,7 @@ class Skargrid {
   applyFilters() {
     const previousFilteredCount = this.filteredData ? this.filteredData.length : this.options.data.length;
 
-    if (typeof FilterFeature !== 'undefined') {
-      FilterFeature.applyFilters(this);
-    }
+    FilterFeature.applyFilters(this);
 
     // Ajusta scroll virtual se necessário após aplicação de filtros
     if (this.options.virtualization && this.filteredData) {
@@ -1167,27 +682,21 @@ class Skargrid {
    * Limpa a busca
    */
   clearSearch() {
-    if (typeof FilterFeature !== 'undefined') {
-      FilterFeature.clearSearch(this);
-    }
+    FilterFeature.clearSearch(this);
   }
 
   /**
    * Manipula o clique em uma coluna para ordenação
    */
   handleSort(field) {
-    if (typeof SortFeature !== 'undefined') {
-      SortFeature.handleSort(this, field);
-    }
+    SortFeature.handleSort(this, field);
   }
 
   /**
    * Ordena os dados pela coluna e direção atuais
    */
   sortData() {
-    if (typeof SortFeature !== 'undefined') {
-      SortFeature.sortData(this);
-    }
+    SortFeature.sortData(this);
   }
 
   /**
@@ -1214,75 +723,56 @@ class Skargrid {
    * Alterna a seleção de uma linha específica
    */
   toggleSelectRow(index, selected) {
-    if (typeof SelectionFeature !== 'undefined') {
-      SelectionFeature.toggleSelectRow(this, index, selected);
-    }
+    SelectionFeature.toggleSelectRow(this, index, selected);
   }
 
   /**
    * Seleciona ou desseleciona todas as linhas
    */
   toggleSelectAll(selected) {
-    if (typeof SelectionFeature !== 'undefined') {
-      SelectionFeature.toggleSelectAll(this, selected);
-    }
+    SelectionFeature.toggleSelectAll(this, selected);
   }
 
   /**
    * Verifica se todas as linhas estão selecionadas
    */
   isAllSelected() {
-    if (typeof SelectionFeature !== 'undefined') {
-      return SelectionFeature.isAllSelected(this);
-    }
-    return false;
+    return SelectionFeature.isAllSelected(this);
   }
 
   /**
    * Seleciona linhas específicas por índices
    */
   selectRows(indices) {
-    if (typeof SelectionFeature !== 'undefined') {
-      SelectionFeature.selectRows(this, indices);
-    }
+    SelectionFeature.selectRows(this, indices);
   }
 
   /**
    * Desseleciona linhas específicas por índices
    */
   deselectRows(indices) {
-    if (typeof SelectionFeature !== 'undefined') {
-      SelectionFeature.deselectRows(this, indices);
-    }
+    SelectionFeature.deselectRows(this, indices);
   }
 
   /**
    * Limpa todas as seleções
    */
   clearSelection() {
-    if (typeof SelectionFeature !== 'undefined') {
-      SelectionFeature.clearSelection(this);
-    }
+    SelectionFeature.clearSelection(this);
   }
 
   /**
    * Obtém os dados das linhas selecionadas
    */
   getSelectedRows() {
-    if (typeof SelectionFeature !== 'undefined') {
-      return SelectionFeature.getSelectedRows(this);
-    }
-    return [];
+    return SelectionFeature.getSelectedRows(this);
   }
 
   /**
    * Obtém os índices das linhas selecionadas
    */
   getSelectedIndices() {
-    if (typeof SelectionFeature !== 'undefined') {
-      return SelectionFeature.getSelectedIndices(this);
-    }
-    return [];
+    return SelectionFeature.getSelectedIndices(this);
   }
 
   /**
@@ -1297,6 +787,62 @@ class Skargrid {
    */
   hideLoading() {
     this.isLoading = false;
+  }
+
+  /**
+   * Exporta dados visíveis (ou filtrados) para CSV
+   */
+  exportToCSV(filename) {
+    ExportFeature.exportToCSV(this, filename);
+  }
+
+  /**
+   * Exporta dados selecionados para CSV
+   */
+  exportSelectedToCSV(filename) {
+    ExportFeature.exportSelectedToCSV(this, filename);
+  }
+
+  /**
+   * Exporta dados visíveis (ou filtrados) para Excel legado (.xls)
+   */
+  exportToExcel(filename) {
+    ExportFeature.exportToExcel(this, filename);
+  }
+
+  /**
+   * Exporta dados selecionados para Excel legado (.xls)
+   */
+  exportSelectedToExcel(filename) {
+    ExportFeature.exportSelectedToExcel(this, filename);
+  }
+
+  /**
+   * Exporta dados visíveis (ou filtrados) para XLSX real (OpenXML)
+   */
+  exportToXLSX(filename) {
+    ExportFeature.exportToXLSX(this, filename);
+  }
+
+  /**
+   * Exporta dados selecionados para XLSX
+   */
+  exportSelectedToXLSX(filename) {
+    ExportFeature.exportSelectedToXLSX(this, filename);
+  }
+
+  /**
+   * Escapa valores para CSV
+   */
+  escapeCSV(value) {
+    return ExportFeature.escapeCSV(value);
+  }
+
+  /**
+   * Remove tags HTML de uma string
+   */
+  stripHTML(html) {
+    return ExportFeature.stripHTML(html);
   }
 
   /**
@@ -1408,7 +954,7 @@ class Skargrid {
     }
 
     this.options.theme = theme;
-    
+
     const wrapper = this.container.querySelector('.skargrid-wrapper');
     if (!wrapper) {
       console.warn('Wrapper não encontrado. A tabela foi renderizada?');
@@ -1423,15 +969,4 @@ class Skargrid {
   }
 }
 
-// Exporta para uso global como Skargrid (implementação)
-
-
-// UMD/Global export para browser
-if (typeof window !== 'undefined') {
-  window.Skargrid = Skargrid;
-}
-
-// Suporte para módulos ES6
-if (typeof module !== 'undefined' && module.exports) {
-  module.exports = Skargrid;
-}
+export default Skargrid;

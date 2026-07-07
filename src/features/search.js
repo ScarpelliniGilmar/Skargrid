@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 /**
  * Skargrid - Módulo de Busca Global
  * Gerencia a renderização e interação do campo de busca
@@ -61,3 +60,5 @@ const SearchFeature = {
   },
 
 };
+
+export default SearchFeature;
