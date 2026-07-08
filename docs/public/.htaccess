@@ -10,11 +10,11 @@ RewriteRule ^get-started/?$ /guide/getting-started [R=301,L]
 RewriteRule ^documentation/?$ /guide/getting-started [R=301,L]
 # /examples já existe no site novo com o mesmo caminho — sem redirect.
 
-# Rotas comerciais já redirecionadas pelo Laravel na transição; quem procurava
-# preço/painel deve ler que a Pro foi consolidada na Community.
-RewriteRule ^pricing/?$ /migration/pro-to-community [R=301,L]
-RewriteRule ^login/?$ /migration/pro-to-community [R=301,L]
-RewriteRule ^painel/?$ /migration/pro-to-community [R=301,L]
+# Rotas comerciais do site Laravel antigo não têm mais equivalente — envia
+# para a home.
+RewriteRule ^pricing/?$ / [R=301,L]
+RewriteRule ^login/?$ / [R=301,L]
+RewriteRule ^painel/?$ / [R=301,L]
 RewriteRule ^locale/.*$ / [R=301,L]
 
 # ---------------------------------------------------------------------------

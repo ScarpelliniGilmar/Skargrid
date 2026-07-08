@@ -84,7 +84,6 @@ export default defineConfig({
           items: [
             { text: 'Visão geral', link: '/migration/' },
             { text: '1.x → Community 2.x', link: '/migration/1x-to-community' },
-            { text: 'Pro → Community', link: '/migration/pro-to-community' },
           ],
         },
       ],
