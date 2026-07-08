@@ -23,10 +23,22 @@ npm run dev       # build em modo watch + servidor local
 # abra http://localhost:5500/docs/playground.html
 ```
 
-## Snippets rápidos
+## Exemplo por recurso
 
-Para exemplos mínimos e prontos para copiar, veja:
+Cada recurso tem um snippet pronto para copiar na documentação:
 
-- [Introdução](/guide/getting-started) — tabela básica com paginação, ordenação e busca.
-- [Recursos](/guide/features) — um snippet por recurso (filtros, seleção, export, virtualização, etc.).
-- [Estado § Server-Side Processing](/api/state#server-side-processing) — exemplo completo de integração com uma API paginada.
+| Recurso | Exemplo |
+| --- | --- |
+| Tabela básica (paginação, ordenação, busca) | [Introdução](/guide/getting-started#exemplo-mínimo) |
+| Filtros por coluna (texto/número/data/select) | [Recursos § Filtros](/guide/features#filtros-por-coluna) |
+| Seleção de linhas | [Recursos § Seleção](/guide/features#seleção-de-linhas) |
+| Colunas congeladas (`frozen`) | [Colunas § frozen](/guide/columns#frozen) |
+| Agregações no rodapé | [Colunas § aggregate](/guide/columns#aggregate-aggregateformatter) |
+| Persistência de estado (`persistState`) | [Recursos § Persistência](/guide/features#persistência-de-estado-persiststate) |
+| Server-side processing | [Estado § Server-Side](/api/state#server-side-processing) — exemplo completo com fetch por eventos |
+| Exportação CSV/XLSX | [Recursos § Exportação](/guide/features#exportação-csv-xlsx) |
+| Virtualização (50k linhas) | [Recursos § Virtualização](/guide/features#virtualização) |
+| Render customizado seguro (badge com `Node`) | [Colunas § render](/guide/columns#render-formatter) |
+| Eventos (`on`/`off`) | [Eventos](/api/events#uso) |
+| Temas e variáveis CSS | [Recursos § Temas](/guide/features#temas) |
+| i18n (labels) | [Opções § labels](/api/options#internacionalização-labels) |

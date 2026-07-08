@@ -31,7 +31,7 @@
 ## Key Features
 
 - **Internationalization (i18n)** - Professional labels system, fully customizable for any language (Portuguese, Spanish, French, etc.)
-- **Virtual Scrolling** - High-performance rendering for large datasets (10k-500k+ rows) with smooth scrolling
+- **Virtual Scrolling** - High-performance rendering for large datasets, validated with 50k rows in Chromium, Firefox and WebKit
 - **Column Configuration** - Drag & drop to reorder, show/hide columns with persistence
 - **Smart Persistence** - Saves user preferences in localStorage automatically
 - **Theme Support** - Light/Dark theme with smooth transitions and custom variables
@@ -44,7 +44,7 @@
 - **Footer Aggregates** *New in 2.0* - `sum`/`avg`/`count`/`min`/`max` or custom functions, computed over filtered data
 - **Event Bus** *New in 2.0* - `on()`/`off()`/`emit()` for `sortChange`, `pageChange`, `selectionChange`, `filterChange`, `rowClick`
 - **Safe Rendering by Default** *New in 2.0* - `render()`/`formatter()` return plain text unless you opt in to HTML (XSS protection, see [Security](#security))
-- **Single Bundle** - Only 2 files (JS + CSS) - **63.85KB compressed**
+- **Single Bundle** - Only 2 files (JS + CSS) - **~15.5KB gzipped** (65.6KB minified)
 - **Zero Dependencies** - Pure Vanilla JavaScript, framework agnostic
 - **High Performance** - Optimized for datasets up to 25,000+ records
 - **Export Support** - CSV and native XLSX export without external dependencies
@@ -83,51 +83,38 @@ Below are visual examples of Skargrid features, in recommended learning order:
 
 ## Performance Guidelines & Limitations
 
-### Recommended Usage (Optimal Performance)
-- **Datasets**: 100 - 25,000 records
-- **Virtual Scrolling**: 10,000+ records with `virtualization: true`
-- **Client-side Filtering**: Up to 50,000 records
-- **All Features**: Search, sort, filters, export work perfectly
-
-### Large Datasets (50K - 500K records)
-- **Virtual Scrolling Required**: Essential for smooth performance
-- **Filtering Performance**: 200-1000ms for 500K records (acceptable for demos)
-- **Memory Usage**: 50-200MB depending on browser
-- **Not Recommended**: For production with 500K+ records
-
-### Enterprise Datasets (1M+ records)
-- **Client-side Only**: Not suitable for million+ records
-- **Recommended**: Server-side pagination + SkarGrid
-- **Implementation**: See `docs/realistic-server-pagination.html`
-- **Performance**: < 50ms responses, < 10MB memory usage
+### Recommended Usage
+- **Client-side (all features)**: up to ~25,000 records — search, sort, filters and export stay responsive
+- **Virtual scrolling**: recommended above ~10,000 records with `virtualization: true`; validated with 50,000 rows in real browsers (Chromium, Firefox, WebKit) via the project's Playwright suite
+- **Beyond that**: use [server-side processing](#server-side-processing) — the grid receives one page at a time and delegates pagination, sorting, filtering and search to your backend, so dataset size is bounded by your server, not the browser
 
 ### Best Practices
 
-**For Large Datasets:**
+**For large datasets:**
 ```javascript
-//  Recommended: Server-side approach
+// Recommended: server-side approach
 const grid = new Skargrid('grid', {
-  data: pageData, // Only current page (100 records)
+  data: pageData, // Only current page
   pagination: true,
+  serverSide: true,
   // Server handles: filtering, sorting, pagination
 });
 ```
 
-**For Small Datasets:**
+**For small datasets:**
 ```javascript
-//  Perfect: Client-side everything
+// Client-side everything
 const grid = new Skargrid('grid', {
-  data: fullDataset, // Up to 25K records
+  data: fullDataset, // Up to ~25K records
   searchable: true,
   sortable: true,
   columnFilters: true,
-  // All features work instantly
 });
 ```
 
 **See Real Examples:**
-- `docs/realistic-server-pagination.html` - 50K records, server-side
-- `docs/massive-dataset-test.html` - 500K records, client-side limits
+- [Server-side processing guide](https://skargrid.com/api/state#server-side-processing) — complete fetch-on-event pattern
+- `docs/playground.html` (run locally with `npm run dev`) — includes a 50K-row virtualization section and a fake-server server-side section
 
 ---
 
@@ -460,7 +447,9 @@ function toggleTheme() {
 </html>
 ```
 
-### Massive Dataset Example (500K Rows)
+### Large Dataset Example (50K Rows, Virtualized)
+
+This is the same scale exercised by the project's Playwright suite in Chromium, Firefox and WebKit:
 
 ```html
 <!DOCTYPE html>
@@ -468,27 +457,25 @@ function toggleTheme() {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Massive Dataset Demo</title>
+    <title>Large Dataset Demo</title>
     <link rel="stylesheet" href="dist/skargrid.min.css">
 </head>
 <body>
-    <div id="massiveTable"></div>
+    <div id="largeTable"></div>
 
     <script src="dist/skargrid.min.js"></script>
     <script>
-        // Generate 500,000 rows for extreme testing
-        function generateMassiveDataset() {
+        // Generate 50,000 rows
+        function generateLargeDataset() {
             const data = [];
             const cities = ['New York', 'Los Angeles', 'Chicago', 'Houston', 'Phoenix'];
             const companies = ['TechCorp', 'DataSys', 'InfoTech', 'WebSolutions', 'CloudNet'];
-            const ageGroups = ['18-25', '26-35', '36-45', '46-55', '55+'];
 
-            for (let i = 1; i <= 500000; i++) {
+            for (let i = 1; i <= 50000; i++) {
                 data.push({
                     id: i,
                     name: `Person ${i}`,
                     age: Math.floor(Math.random() * 50) + 18,
-                    ageGroup: ageGroups[Math.floor(Math.random() * ageGroups.length)],
                     city: cities[Math.floor(Math.random() * cities.length)],
                     company: companies[Math.floor(Math.random() * companies.length)],
                     salary: Math.floor(Math.random() * 100000) + 30000
@@ -501,27 +488,27 @@ function toggleTheme() {
             { field: 'id', title: 'ID', width: '80px', sortable: true },
             { field: 'name', title: 'Name', sortable: true },
             { field: 'age', title: 'Age', width: '70px', sortable: true },
-            { field: 'ageGroup', title: 'Age Group', filterType: 'select' },
             { field: 'city', title: 'City', filterType: 'select' },
             { field: 'company', title: 'Company', filterType: 'select' },
             { field: 'salary', title: 'Salary', sortable: true, render: v => `$${v.toLocaleString()}` }
         ];
 
-        // Initialize with advanced filters
-        const table = new Skargrid('massiveTable', {
-            data: generateMassiveDataset(),
+        // virtualization requires a fixed height and replaces pagination
+        const table = new Skargrid('largeTable', {
+            data: generateLargeDataset(),
             columns: columns,
             virtualization: true,
             searchable: true,
             sortable: true,
             columnFilters: true,
-            height: '600px',
-            pageSize: 50
+            height: '600px'
         });
     </script>
 </body>
 </html>
 ```
+
+Need more than the browser can hold comfortably? Use [server-side processing](#server-side-processing) — the grid only ever receives one page.
 
 ### Server-Side Pagination Example
 
@@ -622,66 +609,26 @@ function toggleTheme() {
 
 ---
 
-## Performance Benchmarks
+## Performance
 
-### Test Results (v1.3.0)
+### What is actually verified
 
-| Dataset Size     | Render Time | Memory Usage | Status      | Notes                    |
-| ---------------- | ----------- | ------------ | ----------- | ------------------------ |
-| 1.000 rows       | ~26ms       | < 5MB        |  Excellent | Instant rendering        |
-| 5.000 rows       | ~35ms       | < 8MB        |  Excellent | Smooth performance       |
-| 10.000 rows      | ~31ms       | < 12MB       |  Excellent | Virtual scrolling active |
-| 15.000 rows      | ~17ms       | < 15MB       |  Excellent | Optimized for scale      |
-| 20.000 rows      | ~36ms       | < 18MB       |  Excellent | Production ready         |
-| **50.000 rows**  | ~45ms       | < 25MB       |  Excellent | Server-side recommended  |
-| **500.000 rows** | ~200ms      | < 50MB       |  Extreme   | Browser limits test      |
+- The browser test suite (Playwright) exercises a **50,000-row virtualized grid** in Chromium, Firefox and WebKit on every CI run — scrolling, filtering and destroy/recreate cycles included.
+- Older releases published synthetic benchmark tables measured in jsdom; those numbers were not reproducible in real browsers and are no longer advertised. Reproducible, real-browser benchmarks are on the roadmap.
 
 ### Performance Features
 
-- **Virtual Scrolling**: Only visible rows rendered (10k+ rows support)
-- **Lazy Rendering**: On-demand row rendering with buffer
-- **Optimized Filters**: Efficient search algorithms with debouncing
-- **Memory Management**: Automatic cleanup and garbage collection
-- **Smart Scroll**: Auto-adjusts when filters are applied
-- **Debounced Search**: Prevents excessive filtering operations
+- **Virtual Scrolling**: Only visible rows (plus a buffer) are rendered
+- **Debounced Search**: Prevents excessive filtering operations while typing
+- **Server-Side Processing**: For datasets that shouldn't live in the browser at all — see [Server-Side Processing](#server-side-processing)
 
-### Performance Guidelines
+### Choosing an approach
 
-#### Recommended Usage (Optimal Performance)
-```javascript
-// Best for: 100 - 25,000 records
-const grid = new Skargrid('myTable', {
-    data: dataset,
-    searchable: true,
-    sortable: true,
-    columnFilters: true,
-    // All features work instantly
-});
-```
-
-#### Large Datasets (25K - 100K records)
-```javascript
-// Best for: 10,000 - 100,000 records
-const grid = new Skargrid('myTable', {
-    data: largeDataset,
-    virtualization: true,    // Essential for performance
-    searchable: true,
-    sortable: true,
-    columnFilters: true,
-    // Virtual scrolling maintains smooth performance
-});
-```
-
-#### Enterprise Datasets (100K+ records)
-```javascript
-// Recommended for: 1M+ records
-// Use server-side pagination (see realistic-server-pagination.html)
-const grid = new Skargrid('myTable', {
-    data: pageData,          // Only current page (100 records)
-    pagination: true,
-    // Server handles: filtering, sorting, pagination
-});
-```
+| Dataset size | Approach |
+| --- | --- |
+| Up to ~25K records | Client-side, all features enabled |
+| ~10K–50K records | Add `virtualization: true` (requires fixed `height`, replaces pagination) |
+| Beyond that | `serverSide: true` — the grid holds one page at a time |
 
 ---
 
@@ -1044,87 +991,40 @@ npm run build
 ### Project Structure
 ```
 skargrid/
-├── dist/                 # Built files
-│   ├── skargrid.min.js   # Minified JavaScript (63.85KB)
-│   ├── skargrid.min.css  # Minified CSS
-│   └── themes/           # Theme files
-├── src/                  # Source code
-│   ├── core/            # Main coordination module
-│   │   └── skargrid.js  # Core table logic and feature integration
-│   ├── features/        # Modular feature system (13 modules)
-│   │   ├── search.js           # Global search functionality
-│   │   ├── input-filter.js     # Text input filters per column
-│   │   ├── select-filter.js    # Dropdown select filters per column
-│   │   ├── virtualization.js   # Virtual scrolling for large datasets
-│   │   ├── table-header.js     # Table header rendering
-│   │   ├── table-body.js       # Table body rendering
-│   │   ├── top-bar.js          # Top bar with search and action buttons
-│   │   ├── pagination.js       # Pagination controls and logic
-│   │   ├── sort.js             # Column sorting functionality
-│   │   ├── selection.js        # Row selection and management
-│   │   ├── filter.js           # Core filtering coordination
-│   │   ├── export.js           # CSV and XLSX export capabilities
-│   │   └── columnConfig.js     # Column visibility and reordering
+├── dist/                 # Built files (ESM, CJS, IIFE/CDN, CSS, source maps)
+├── src/
+│   ├── index.js         # Public entry point (imports core + CSS)
+│   ├── core/
+│   │   └── skargrid.js  # Lifecycle, central state, event bus, feature coordination
+│   ├── features/        # One ES module per feature (search, filters, pagination,
+│   │                    #   sort, selection, export, virtualization, frozen columns,
+│   │                    #   footer aggregates, persistence, column config, ...)
 │   └── css/             # Stylesheets and themes
-├── tests/               # Test files (Jest)
-├── docs/                # Documentation & examples
-└── package.json         # Project configuration
+├── types/               # TypeScript declarations (published)
+├── tests/               # Jest (unit/integration) + Playwright (browser)
+├── docs/                # VitePress documentation site + local playground
+└── package.json
 ```
 
 ### Architecture
 
-Skargrid uses a **modular architecture** where features are separated into individual modules for better maintainability, extensibility, and performance optimization:
-
-#### Core Module (`src/core/skargrid.js`)
-- **Coordination Layer**: Main table logic and feature integration
-- **State Management**: Data state, configuration, and UI coordination
-- **Feature Delegation**: Routes calls to appropriate feature modules
-- **Fallback Support**: Graceful degradation when features are unavailable
-
-#### Feature Modules (`src/features/` - 13 Specialized Modules)
-
-** Search & Filtering (4 modules):**
-- **`search.js`** - Global search with accent-insensitive matching
-- **`input-filter.js`** - Text input filters per column
-- **`select-filter.js`** - Smart dropdown filters with available options
-- **`filter.js`** - Core filtering coordination and utilities
-
-** Data Presentation (4 modules):**
-- **`table-header.js`** - Table header rendering with sorting indicators
-- **`table-body.js`** - Table body rendering with cell formatters
-- **`top-bar.js`** - Top bar with search input and action buttons
-- **`virtualization.js`** - Virtual scrolling for large datasets (10k-500k+ rows)
-
-** Functionality (5 modules):**
-- **`pagination.js`** - Pagination controls and page navigation
-- **`sort.js`** - Column sorting with multiple data types
-- **`selection.js`** - Row selection and bulk operations
-- **`export.js`** - CSV and native XLSX export capabilities
-- **`columnConfig.js`** - Column visibility, reordering, and persistence
-
-#### Feature Integration System
-Features are loaded globally and checked with `typeof FeatureName !== 'undefined'` for graceful degradation. Each feature can be:
-- **Included** in the build for full functionality
-- **Excluded** for custom lightweight builds
-- **Extended** by developers for custom features
-- **Tested** independently with dedicated test suites
-
-#### Benefits of Modular Architecture
-- **Performance**: Selective feature inclusion for optimized bundles
-- **Maintainability**: Isolated code changes and bug fixes
-- **Testability**: Each feature tested independently
-- **Extensibility**: Easy addition of new features
-- **Customization**: Build tailored versions for specific use cases
+- **Core** (`src/core/skargrid.js`) owns lifecycle, the central `state` object, the typed event bus (`on`/`off`/`emit`) and coordination between features.
+- **Features** (`src/features/`) are real ES modules imported directly by the core — one module per capability, communicating through the grid instance rather than reaching into each other.
+- **Rendering is safe by default**: cell content goes through `textContent` unless a renderer returns a `Node` or `allowUnsafeHtml` is explicitly enabled.
+- Each feature has dedicated tests; browser behavior is verified with Playwright in Chromium, Firefox and WebKit.
 
 ### Build Commands
 ```bash
-# Development build
-npm run build:dev
-
-# Production build
+# Full build (lint + tests + typecheck + bundle)
 npm run build
 
-# Watch mode
+# Bundle only
+npm run build:bundle
+
+# Watch mode (rebuild on change) + local playground server
+npm run dev
+
+# Watch mode only
 npm run watch
 
 # Lint code
@@ -1133,8 +1033,12 @@ npm run lint
 # Run tests
 npm run test
 
-# Generate documentation
-npm run docs
+# Browser tests (Playwright, 3 engines)
+npm run test:browser
+
+# Documentation site (VitePress)
+npm run docs:dev      # live-reload dev server
+npm run docs:build    # static build (fails on dead links)
 ```
 
 ---
