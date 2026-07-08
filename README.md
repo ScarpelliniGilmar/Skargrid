@@ -8,50 +8,50 @@
 [![Bundle Size](https://img.shields.io/bundlephobia/minzip/skargrid)](https://bundlephobia.com/package/skargrid)
 
 **Website:** [https://skargrid.com](https://skargrid.com) •
-**🇧🇷 [Leia em Português](README.pt-br.md)**
+**[Leia em Português](README.pt-br.md)**
 
 ---
 
-## 📋 Table of Contents
+## Table of Contents
 
-- [✨ Key Features](#-key-features)
-- [📸 Visual Examples](#-visual-examples)
-- [🚀 Quick Start](#-quick-start)
-- [📖 Complete Examples](#-complete-examples)
-- [⚡ Performance Benchmarks](#-performance-benchmarks)
-- [🎯 API Reference](#-api-reference)
-- [🎨 Theming & Styling](#-theming--styling)
-- [🔧 Build & Development](#-build--development)
-- [📋 Changelog](#-changelog)
-- [🤝 Contributing](#-contributing)
-- [📄 License](#-license)
-
----
-
-## ✨ Key Features
-
-- 🌐 **Internationalization (i18n)** ⭐ - Professional labels system, fully customizable for any language (Portuguese, Spanish, French, etc.)
-- ⚡ **Virtual Scrolling** ⭐ - High-performance rendering for large datasets (10k-500k+ rows) with smooth scrolling
-- 🎨 **Column Configuration** - Drag & drop to reorder, show/hide columns with persistence
-- 🗄️ **Smart Persistence** - Saves user preferences in localStorage automatically
-- 🌓 **Theme Support** - Light/Dark theme with smooth transitions and custom variables
-- 🔄 **Smart Select Filters**: Improved select filters to show only available options when other columns are filtered, with intelligent search behavior that isolates selections during search
-- 🌍 **Accent-Insensitive Search** - Automatically handles accents (José = jose)
-- ↔️ **Horizontal Scroll** - Custom scrollbar for wide tables with fixed columns
-- 🖥️ **Server-Side Processing** ⭐ *New in 2.0* - Delegate pagination, sorting, filtering and search to your backend via events (see [Server-Side Processing](#server-side-processing))
-- 💾 **State Persistence** ⭐ *New in 2.0* - Serializable `getState()`/`setState()`, with optional automatic `localStorage` persistence via `persistState`
-- 🧊 **Frozen Columns** ⭐ *New in 2.0* - Pin columns to the left during horizontal scroll with `column.frozen`
-- 🧮 **Footer Aggregates** ⭐ *New in 2.0* - `sum`/`avg`/`count`/`min`/`max` or custom functions, computed over filtered data
-- 📡 **Event Bus** ⭐ *New in 2.0* - `on()`/`off()`/`emit()` for `sortChange`, `pageChange`, `selectionChange`, `filterChange`, `rowClick`
-- 🔒 **Safe Rendering by Default** ⭐ *New in 2.0* - `render()`/`formatter()` return plain text unless you opt in to HTML (XSS protection, see [Security](#security))
-- 📦 **Single Bundle** - Only 2 files (JS + CSS) - **63.85KB compressed**
-- 🎯 **Zero Dependencies** - Pure Vanilla JavaScript, framework agnostic
-- 🧪 **High Performance** - Optimized for datasets up to 25,000+ records
-- 📊 **Export Support** - CSV and native XLSX export without external dependencies
+- [Key Features](#key-features)
+- [Visual Examples](#visual-examples)
+- [Quick Start](#quick-start)
+- [Complete Examples](#complete-examples)
+- [Performance Benchmarks](#performance-benchmarks)
+- [API Reference](#api-reference)
+- [Theming & Styling](#theming--styling)
+- [Build & Development](#build--development)
+- [Changelog](#changelog)
+- [Contributing](#contributing)
+- [License](#license)
 
 ---
 
-## 📸 Visual Examples
+## Key Features
+
+- **Internationalization (i18n)** - Professional labels system, fully customizable for any language (Portuguese, Spanish, French, etc.)
+- **Virtual Scrolling** - High-performance rendering for large datasets (10k-500k+ rows) with smooth scrolling
+- **Column Configuration** - Drag & drop to reorder, show/hide columns with persistence
+- **Smart Persistence** - Saves user preferences in localStorage automatically
+- **Theme Support** - Light/Dark theme with smooth transitions and custom variables
+- **Smart Select Filters**: Improved select filters to show only available options when other columns are filtered, with intelligent search behavior that isolates selections during search
+- **Accent-Insensitive Search** - Automatically handles accents (José = jose)
+- **Horizontal Scroll** - Custom scrollbar for wide tables with fixed columns
+- **Server-Side Processing** *New in 2.0* - Delegate pagination, sorting, filtering and search to your backend via events (see [Server-Side Processing](#server-side-processing))
+- **State Persistence** *New in 2.0* - Serializable `getState()`/`setState()`, with optional automatic `localStorage` persistence via `persistState`
+- **Frozen Columns** *New in 2.0* - Pin columns to the left during horizontal scroll with `column.frozen`
+- **Footer Aggregates** *New in 2.0* - `sum`/`avg`/`count`/`min`/`max` or custom functions, computed over filtered data
+- **Event Bus** *New in 2.0* - `on()`/`off()`/`emit()` for `sortChange`, `pageChange`, `selectionChange`, `filterChange`, `rowClick`
+- **Safe Rendering by Default** *New in 2.0* - `render()`/`formatter()` return plain text unless you opt in to HTML (XSS protection, see [Security](#security))
+- **Single Bundle** - Only 2 files (JS + CSS) - **63.85KB compressed**
+- **Zero Dependencies** - Pure Vanilla JavaScript, framework agnostic
+- **High Performance** - Optimized for datasets up to 25,000+ records
+- **Export Support** - CSV and native XLSX export without external dependencies
+
+---
+
+## Visual Examples
 
 Below are visual examples of Skargrid features, in recommended learning order:
 
@@ -81,31 +81,31 @@ Below are visual examples of Skargrid features, in recommended learning order:
 
 ---
 
-## ⚠️ Performance Guidelines & Limitations
+## Performance Guidelines & Limitations
 
-### 🟢 Recommended Usage (Optimal Performance)
-- **✅ Datasets**: 100 - 25,000 records
-- **✅ Virtual Scrolling**: 10,000+ records with `virtualization: true`
-- **✅ Client-side Filtering**: Up to 50,000 records
-- **✅ All Features**: Search, sort, filters, export work perfectly
+### Recommended Usage (Optimal Performance)
+- **Datasets**: 100 - 25,000 records
+- **Virtual Scrolling**: 10,000+ records with `virtualization: true`
+- **Client-side Filtering**: Up to 50,000 records
+- **All Features**: Search, sort, filters, export work perfectly
 
-### 🟡 Large Datasets (50K - 500K records)
-- **⚠️ Virtual Scrolling Required**: Essential for smooth performance
-- **⚠️ Filtering Performance**: 200-1000ms for 500K records (acceptable for demos)
-- **⚠️ Memory Usage**: 50-200MB depending on browser
-- **❌ Not Recommended**: For production with 500K+ records
+### Large Datasets (50K - 500K records)
+- **Virtual Scrolling Required**: Essential for smooth performance
+- **Filtering Performance**: 200-1000ms for 500K records (acceptable for demos)
+- **Memory Usage**: 50-200MB depending on browser
+- **Not Recommended**: For production with 500K+ records
 
-### 🔴 Enterprise Datasets (1M+ records)
-- **❌ Client-side Only**: Not suitable for million+ records
-- **✅ Recommended**: Server-side pagination + SkarGrid
-- **📋 Implementation**: See `docs/realistic-server-pagination.html`
-- **🚀 Performance**: < 50ms responses, < 10MB memory usage
+### Enterprise Datasets (1M+ records)
+- **Client-side Only**: Not suitable for million+ records
+- **Recommended**: Server-side pagination + SkarGrid
+- **Implementation**: See `docs/realistic-server-pagination.html`
+- **Performance**: < 50ms responses, < 10MB memory usage
 
-### 💡 Best Practices
+### Best Practices
 
 **For Large Datasets:**
 ```javascript
-// ✅ Recommended: Server-side approach
+//  Recommended: Server-side approach
 const grid = new Skargrid('grid', {
   data: pageData, // Only current page (100 records)
   pagination: true,
@@ -115,7 +115,7 @@ const grid = new Skargrid('grid', {
 
 **For Small Datasets:**
 ```javascript
-// ✅ Perfect: Client-side everything
+//  Perfect: Client-side everything
 const grid = new Skargrid('grid', {
   data: fullDataset, // Up to 25K records
   searchable: true,
@@ -131,7 +131,7 @@ const grid = new Skargrid('grid', {
 
 ---
 
-## 🚀 Quick Start
+## Quick Start
 
 ### Installation
 
@@ -191,9 +191,9 @@ cp skargrid/dist/* your-project/
 
 ---
 
-## 📖 Complete Examples
+## Complete Examples
 
-### 🏆 Full-Featured Table
+### Full-Featured Table
 
 ```html
 <!DOCTYPE html>
@@ -235,7 +235,7 @@ cp skargrid/dist/* your-project/
             {
                 field: 'active',
                 title: 'Status',
-                render: (value) => value ? '✅ Ativo' : '❌ Inativo'
+                render: (value) => value ? ' Ativo' : ' Inativo'
             }
         ];
 
@@ -261,7 +261,7 @@ cp skargrid/dist/* your-project/
 </html>
 ```
 
-### 📊 Data Management Example
+### Data Management Example
 
 ```javascript
 // Initialize table
@@ -300,7 +300,7 @@ function toggleTheme() {
 }
 ```
 
-### 🎨 Advanced Styling
+### Advanced Styling
 
 ```css
 /* Custom theme variables */
@@ -335,7 +335,7 @@ function toggleTheme() {
 }
 ```
 
-### 🚀 Virtual Scrolling Example
+### Virtual Scrolling Example
 
 ```html
 <!DOCTYPE html>
@@ -394,7 +394,7 @@ function toggleTheme() {
 </html>
 ```
 
-### 🌐 Internationalization Example
+### Internationalization Example
 
 ```html
 <!DOCTYPE html>
@@ -460,7 +460,7 @@ function toggleTheme() {
 </html>
 ```
 
-### 📊 Massive Dataset Example (500K Rows)
+### Massive Dataset Example (500K Rows)
 
 ```html
 <!DOCTYPE html>
@@ -523,7 +523,7 @@ function toggleTheme() {
 </html>
 ```
 
-### 🖥️ Server-Side Pagination Example
+### Server-Side Pagination Example
 
 ```html
 <!DOCTYPE html>
@@ -622,21 +622,21 @@ function toggleTheme() {
 
 ---
 
-## ⚡ Performance Benchmarks
+## Performance Benchmarks
 
-### 📈 Test Results (v1.3.0)
+### Test Results (v1.3.0)
 
 | Dataset Size     | Render Time | Memory Usage | Status      | Notes                    |
 | ---------------- | ----------- | ------------ | ----------- | ------------------------ |
-| 1.000 rows       | ~26ms       | < 5MB        | ✅ Excellent | Instant rendering        |
-| 5.000 rows       | ~35ms       | < 8MB        | ✅ Excellent | Smooth performance       |
-| 10.000 rows      | ~31ms       | < 12MB       | ✅ Excellent | Virtual scrolling active |
-| 15.000 rows      | ~17ms       | < 15MB       | ✅ Excellent | Optimized for scale      |
-| 20.000 rows      | ~36ms       | < 18MB       | ✅ Excellent | Production ready         |
-| **50.000 rows**  | ~45ms       | < 25MB       | ✅ Excellent | Server-side recommended  |
-| **500.000 rows** | ~200ms      | < 50MB       | ⚠️ Extreme   | Browser limits test      |
+| 1.000 rows       | ~26ms       | < 5MB        |  Excellent | Instant rendering        |
+| 5.000 rows       | ~35ms       | < 8MB        |  Excellent | Smooth performance       |
+| 10.000 rows      | ~31ms       | < 12MB       |  Excellent | Virtual scrolling active |
+| 15.000 rows      | ~17ms       | < 15MB       |  Excellent | Optimized for scale      |
+| 20.000 rows      | ~36ms       | < 18MB       |  Excellent | Production ready         |
+| **50.000 rows**  | ~45ms       | < 25MB       |  Excellent | Server-side recommended  |
+| **500.000 rows** | ~200ms      | < 50MB       |  Extreme   | Browser limits test      |
 
-### 🎯 Performance Features
+### Performance Features
 
 - **Virtual Scrolling**: Only visible rows rendered (10k+ rows support)
 - **Lazy Rendering**: On-demand row rendering with buffer
@@ -645,9 +645,9 @@ function toggleTheme() {
 - **Smart Scroll**: Auto-adjusts when filters are applied
 - **Debounced Search**: Prevents excessive filtering operations
 
-### 💡 Performance Guidelines
+### Performance Guidelines
 
-#### ✅ Recommended Usage (Optimal Performance)
+#### Recommended Usage (Optimal Performance)
 ```javascript
 // Best for: 100 - 25,000 records
 const grid = new Skargrid('myTable', {
@@ -659,7 +659,7 @@ const grid = new Skargrid('myTable', {
 });
 ```
 
-#### 🚀 Large Datasets (25K - 100K records)
+#### Large Datasets (25K - 100K records)
 ```javascript
 // Best for: 10,000 - 100,000 records
 const grid = new Skargrid('myTable', {
@@ -672,7 +672,7 @@ const grid = new Skargrid('myTable', {
 });
 ```
 
-#### 🏢 Enterprise Datasets (100K+ records)
+#### Enterprise Datasets (100K+ records)
 ```javascript
 // Recommended for: 1M+ records
 // Use server-side pagination (see realistic-server-pagination.html)
@@ -685,7 +685,7 @@ const grid = new Skargrid('myTable', {
 
 ---
 
-## 🌐 Internationalization (i18n)
+## Internationalization (i18n)
 
 SkarGrid comes with default English labels but supports full customization for any language. Override labels by passing a `labels` object in the options:
 
@@ -727,7 +727,7 @@ Available label keys:
 
 ---
 
-## 🎯 API Reference
+## API Reference
 
 ### Constructor
 
@@ -937,7 +937,7 @@ fetchPage(); // initial load
 
 ---
 
-## 🎨 Theming & Styling
+## Theming & Styling
 
 ### Built-in Themes
 
@@ -1016,7 +1016,7 @@ table.setTheme('dark');
 
 ---
 
-## 🔧 Build & Development
+## Build & Development
 
 ### Prerequisites
 - Node.js 16+
@@ -1083,19 +1083,19 @@ Skargrid uses a **modular architecture** where features are separated into indiv
 
 #### Feature Modules (`src/features/` - 13 Specialized Modules)
 
-**🔍 Search & Filtering (4 modules):**
+** Search & Filtering (4 modules):**
 - **`search.js`** - Global search with accent-insensitive matching
 - **`input-filter.js`** - Text input filters per column
 - **`select-filter.js`** - Smart dropdown filters with available options
 - **`filter.js`** - Core filtering coordination and utilities
 
-**📊 Data Presentation (4 modules):**
+** Data Presentation (4 modules):**
 - **`table-header.js`** - Table header rendering with sorting indicators
 - **`table-body.js`** - Table body rendering with cell formatters
 - **`top-bar.js`** - Top bar with search input and action buttons
 - **`virtualization.js`** - Virtual scrolling for large datasets (10k-500k+ rows)
 
-**⚙️ Functionality (5 modules):**
+** Functionality (5 modules):**
 - **`pagination.js`** - Pagination controls and page navigation
 - **`sort.js`** - Column sorting with multiple data types
 - **`selection.js`** - Row selection and bulk operations
@@ -1110,11 +1110,11 @@ Features are loaded globally and checked with `typeof FeatureName !== 'undefined
 - **Tested** independently with dedicated test suites
 
 #### Benefits of Modular Architecture
-- 🚀 **Performance**: Selective feature inclusion for optimized bundles
-- 🔧 **Maintainability**: Isolated code changes and bug fixes
-- 🧪 **Testability**: Each feature tested independently
-- 📦 **Extensibility**: Easy addition of new features
-- 🎯 **Customization**: Build tailored versions for specific use cases
+- **Performance**: Selective feature inclusion for optimized bundles
+- **Maintainability**: Isolated code changes and bug fixes
+- **Testability**: Each feature tested independently
+- **Extensibility**: Easy addition of new features
+- **Customization**: Build tailored versions for specific use cases
 
 ### Build Commands
 ```bash
@@ -1139,42 +1139,42 @@ npm run docs
 
 ---
 
-## 📋 Changelog
+## Changelog
 
 ### [v2.0.0] - 2026-07-07
-- **🏗️ Core Refactor**: centralized state, typed event bus, and a safe-by-default renderer
-- **⚠️ Breaking**: `render()`/`formatter()` string returns are now plain text by default (XSS protection). Return a `Node` or opt in with `allowUnsafeHtml: true` — see the [migration guide](https://skargrid.com/migration/1x-to-community)
-- **🆕 New features**: server-side processing, state persistence, frozen columns, footer aggregates
-- **🆕 API**: `getState()`/`setState()`, event bus (`on`/`off`/`emit`), reliable `destroy()`
-- **📚 New docs**: https://skargrid.com — with `llms.txt` and JSON Schemas for AI agents
+- **Core Refactor**: centralized state, typed event bus, and a safe-by-default renderer
+- **Breaking**: `render()`/`formatter()` string returns are now plain text by default (XSS protection). Return a `Node` or opt in with `allowUnsafeHtml: true` — see the [migration guide](https://skargrid.com/migration/1x-to-community)
+- **New features**: server-side processing, state persistence, frozen columns, footer aggregates
+- **API**: `getState()`/`setState()`, event bus (`on`/`off`/`emit`), reliable `destroy()`
+- **New docs**: https://skargrid.com — with `llms.txt` and JSON Schemas for AI agents
 - Full details in [CHANGELOG.md](CHANGELOG.md)
 
 ### [v1.4.0] - 2025-11-16
-- **🏗️ Complete Modular Architecture Refactoring**: Major architectural overhaul with 13 specialized feature modules
-- **📦 Core Reduction**: Core module reduced by 25% (~450 lines) through systematic feature extraction
-- **🔧 Feature Modules**: Complete separation of concerns with dedicated modules for:
+- **Complete Modular Architecture Refactoring**: Major architectural overhaul with 13 specialized feature modules
+- **Core Reduction**: Core module reduced by 25% (~450 lines) through systematic feature extraction
+- **Feature Modules**: Complete separation of concerns with dedicated modules for:
   - Search & Filtering: `search.js`, `input-filter.js`, `select-filter.js`, `filter.js`
   - Data Presentation: `table-header.js`, `table-body.js`, `top-bar.js`, `virtualization.js`
   - Functionality: `pagination.js`, `sort.js`, `selection.js`, `export.js`, `columnConfig.js`
-- **⚡ Performance Maintained**: All 21 tests passing, no performance degradation
-- **🔄 Backward Compatibility**: Graceful degradation with feature availability checks
-- **📊 Bundle Size**: Updated to 63.85KB compressed (includes all features)
-- **🧪 Enhanced Testability**: Each feature module can be tested independently
-- **🚀 Build Flexibility**: Selective feature inclusion for custom lightweight builds
+- **Performance Maintained**: All 21 tests passing, no performance degradation
+- **Backward Compatibility**: Graceful degradation with feature availability checks
+- **Bundle Size**: Updated to 63.85KB compressed (includes all features)
+- **Enhanced Testability**: Each feature module can be tested independently
+- **Build Flexibility**: Selective feature inclusion for custom lightweight builds
 
 ### [v1.3.0] - 2025-11-15
-- **🌐 Website Launch**: Official website skargrid.com with comprehensive documentation, live examples, and performance benchmarks
-- **📊 Updated Performance Benchmarks**: Comprehensive testing results for v1.3.0 with optimizations for large datasets
-- **🔄 Smart Select Filters**: Improved select filters to show only available options when other columns are filtered, with intelligent search behavior that isolates selections during search, enhancing user experience
-- **🔧 Minor Fixes and Improvements**: Various bug fixes and code quality enhancements
+- **Website Launch**: Official website skargrid.com with comprehensive documentation, live examples, and performance benchmarks
+- **Updated Performance Benchmarks**: Comprehensive testing results for v1.3.0 with optimizations for large datasets
+- **Smart Select Filters**: Improved select filters to show only available options when other columns are filtered, with intelligent search behavior that isolates selections during search, enhancing user experience
+- **Minor Fixes and Improvements**: Various bug fixes and code quality enhancements
 
 ### [v1.2.0] - 2025-01-13
-- **📚 Enhanced Documentation**: Complete README rewrite with practical examples
-- **🎯 Live Examples**: Four ready-to-use HTML examples (basic, complete, React integration, performance test)
-- **📊 Performance Benchmarks**: Comprehensive testing with 25k+ records
-- **🧪 Automated Testing**: Jest test suite with 21 tests covering all features
-- **🔧 Code Quality**: ESLint implementation with 169 fixes applied
-- **📦 Package Optimization**: 66% size reduction (27.8KB compressed)
+- **Enhanced Documentation**: Complete README rewrite with practical examples
+- **Live Examples**: Four ready-to-use HTML examples (basic, complete, React integration, performance test)
+- **Performance Benchmarks**: Comprehensive testing with 25k+ records
+- **Automated Testing**: Jest test suite with 21 tests covering all features
+- **Code Quality**: ESLint implementation with 169 fixes applied
+- **Package Optimization**: 66% size reduction (27.8KB compressed)
 
 ### [v1.1.0] - Major fixes & improvements
 - **Filters & Export**: Filters and export now use rendered values
@@ -1208,7 +1208,7 @@ npm run docs
 
 ---
 
-## 🤝 Contributing
+## Contributing
 
 We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md) for details.
 
@@ -1229,7 +1229,7 @@ We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md) f
 
 ---
 
-## 📄 License
+## License
 
 **MIT License** - see [LICENSE](LICENSE) file for details.
 
@@ -1237,14 +1237,14 @@ Copyright (c) 2025 Gilmar A S Trindade
 
 ---
 
-## 💝 Support the Project
+## Support the Project
 
 If SkarGrid has been helpful to you, consider supporting the project:
 
-- **⭐ Star this repository** on GitHub
-- **🐛 Report bugs** and request features
-- **📢 Share** with your network
-- **💻 Contribute** code improvements
+- **Star this repository** on GitHub
+- **Report bugs** and request features
+- **Share** with your network
+- **Contribute** code improvements
 
 Your support helps keep the project active and evolving!
 
