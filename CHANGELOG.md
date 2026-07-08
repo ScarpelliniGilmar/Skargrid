@@ -2,34 +2,67 @@
 
 Todas as mudanças notáveis neste projecto serão documentadas aqui.
 
+## [2.0.0] - 2026-07-07
+
+### Resumo
+Core refatorado (estado central, event bus, renderer seguro por padrão), 4 novas funcionalidades e nova documentação em https://skargrid.com. Guia de migração: https://skargrid.com/migration/1x-to-community
+
+### Mudança incompatível
+- **`render()`/`formatter()` não injetam mais HTML por padrão.** Uma string retornada é tratada como texto puro (`textContent`); tags HTML não são interpretadas — proteção contra XSS com dados não confiáveis. Para HTML/DOM real: retorne um `Node` (sempre seguro) ou habilite `allowUnsafeHtml: true` (global ou por coluna). Este é o único ajuste necessário para quem migra da 1.x.
+
+### Novas funcionalidades
+- **Server-side processing** — `serverSide: true` + `totalRecords`/`setTotalRecords()`: paginação/ordenação/filtro/busca delegadas ao seu backend via eventos.
+- **Persistência de estado** — `persistState`/`stateStorageKey`/`stateVersion`: estado salvo e restaurado do `localStorage`, com versionamento.
+- **Colunas congeladas** — `column.frozen: true`: prefixo contíguo fixado à esquerda no scroll horizontal.
+- **Agregações no rodapé** — `footerAggregates` + `column.aggregate` (`sum`/`avg`/`count`/`min`/`max` ou função customizada), calculadas sobre os dados filtrados.
+
+### Novidades da API
+- **Estado serializável** — `getState()`/`setState()` cobrindo página, ordenação, filtros, busca, seleção, colunas e tema.
+- **Event bus** — `on()`/`off()`/`emit()` com `sortChange`, `pageChange`, `selectionChange`, `filterChange` e `rowClick`. As opções `onSortChange`/`onPageChange`/`onSelectionChange`/`onFilterChange`/`onRowClick` (declaradas nos tipos desde a 1.x mas nunca implementadas) agora funcionam.
+- **`destroy()` confiável** — remove listeners de scroll, timers e dropdowns órfãos (vazamentos corrigidos).
+- **`getData()`** agora retorna uma cópia (mutar o retorno não corrompe mais o estado interno).
+
+### Infraestrutura
+- Módulos ES reais entre core e features (fim da concatenação global e dos checks `typeof XFeature !== 'undefined'`).
+- Build Vite em library mode: ESM, CJS, IIFE/CDN, CSS, source maps e tipos TypeScript (`exports` no package.json).
+- CI (GitHub Actions): lint, typecheck, Jest, Playwright em Chromium/Firefox/WebKit, auditoria e build de docs.
+- 70 testes Jest + 42 testes Playwright (14 cenários × 3 navegadores).
+- Documentação nova (VitePress) em https://skargrid.com, com `llms.txt` e JSON Schemas de `options`/`state` para agentes de IA.
+
+### Correções notáveis
+- Filtro de coluna com `render()` retornando `Node` colapsava valores em `[object HTMLSpanElement]`.
+- Botões de paginação e "selecionar todos" não emitiam `pageChange`/`selectionChange` em cliques reais.
+- `Number(null) === 0` distorcia `avg`/`min`/`max` nas agregações.
+- Exportação quebrava com `TypeError` quando filtros zeravam os dados.
+
 ## [1.4.0] - 2025-11-16
 ### Resumo
 Refatoração completa da arquitetura para sistema modular com 13 features especializadas, melhorando manutenibilidade, testabilidade e flexibilidade de build.
 
 ### Alterações
-- **🏗️ Arquitetura Modular Completa**
+- **Arquitetura Modular Completa**
   - Refatoração sistemática do core para 13 módulos especializados
   - Redução de 25% no código do core (~450 linhas)
   - Separação clara de responsabilidades por feature
 
-- **📦 Módulos de Features (13 módulos)**
+- **Módulos de Features (13 módulos)**
   - **Busca e Filtros**: `search.js`, `input-filter.js`, `select-filter.js`, `filter.js`
   - **Apresentação de Dados**: `table-header.js`, `table-body.js`, `top-bar.js`, `virtualization.js`
   - **Funcionalidades**: `pagination.js`, `sort.js`, `selection.js`, `export.js`, `columnConfig.js`
 
-- **🔧 Melhorias Técnicas**
+- **Melhorias Técnicas**
   - Sistema de delegação com fallbacks para compatibilidade
   - Verificação `typeof FeatureName !== 'undefined'` para degradação graciosa
   - Build system atualizado para incluir todas as features
   - ESLint configurado para todos os novos módulos
 
-- **⚡ Performance e Qualidade**
+- **Performance e Qualidade**
   - Todos os 21 testes passando
   - Performance mantida (63.85KB minificado)
   - Compatibilidade backward total
   - Testabilidade aprimorada com módulos isolados
 
-- **🚀 Flexibilidade de Build**
+- **Flexibilidade de Build**
   - Possibilidade de builds customizados excluindo features
   - Carregamento seletivo de funcionalidades
   - Extensibilidade para novas features
@@ -39,14 +72,14 @@ Refatoração completa da arquitetura para sistema modular com 13 features espec
 Implementação completa do sistema de internacionalização (i18n) profissional com suporte a múltiplos idiomas e labels totalmente customizáveis.
 
 ### Alterações
-- **Internacionalização (i18n) Completa** 🌐
+- **Internacionalização (i18n) Completa** 
   - Sistema profissional de labels customizáveis para qualquer idioma
   - Labels padrão em português brasileiro
   - Suporte completo via `options.labels` com todas as mensagens da interface
   - Compatibilidade total com todas as funcionalidades existentes
   - Fácil customização para qualquer idioma (inglês, espanhol, francês, etc.)
 
-- **Labels Customizáveis** 📝
+- **Labels Customizáveis** 
   - Busca: `searchPlaceholder`, `clearSearch`
   - Filtros: `filterTitle`, `selectAll`, `clear`, `apply`
   - Paginação: `showing`, `filteredOfTotal`, `itemsPerPage`
@@ -54,7 +87,7 @@ Implementação completa do sistema de internacionalização (i18n) profissional
   - Estados: `noData`, `loading`
   - Exportação: `exportCSV`, `exportXLSX`
 
-- **Compatibilidade e Extensibilidade** 🔧
+- **Compatibilidade e Extensibilidade** 
   - Mantém retrocompatibilidade com versões anteriores
   - Sistema extensível para novos idiomas
   - Labels aplicados a todos os componentes (botões, tooltips, mensagens)
@@ -67,36 +100,36 @@ Implementação completa do sistema de internacionalização (i18n) profissional
 Implementação completa de virtual scrolling para datasets grandes, com performance excepcional e suporte a todas as funcionalidades.
 
 ### Alterações
-- **Virtual Scrolling Completo** 🚀
+- **Virtual Scrolling Completo** 
   - Renderização otimizada para datasets grandes (10k+ registros)
   - Apenas linhas visíveis + buffer são renderizadas
   - Performance excepcional mantendo < 50MB de memória
   - Scroll suave e responsivo em todas as condições
 
-- **Scroll Inteligente com Filtros** 🎯
+- **Scroll Inteligente com Filtros** 
   - Scroll se ajusta automaticamente quando filtros são aplicados
   - Altura do container recalculada dinamicamente
   - Transições suaves entre estados filtrados
   - Compatibilidade total com busca, ordenação e filtros
 
-- **Cabeçalho Fixo Aprimorado** 📌
+- **Cabeçalho Fixo Aprimorado** 
   - Cabeçalho sticky funciona perfeitamente com virtualização
   - Alinhamento correto entre header e corpo da tabela
   - Performance mantida mesmo com scroll longo
 
-- **Filtros Avançados** 🔍
+- **Filtros Avançados** 
   - Filtros select em múltiplas colunas
   - Opções pré-definidas para melhor UX
   - Performance otimizada para datasets grandes
   - Interface intuitiva com dropdowns
 
-- **Testes e Exemplos** 📊
+- **Testes e Exemplos** 
   - Exemplo completo com 10K registros (virtual scrolling)
   - Teste extremo com 500K registros (validação de limites)
   - Exemplo realista com paginação server-side simulada
   - Guias de performance e limitações documentadas
 
-- **Otimização de Performance** ⚡
+- **Otimização de Performance** 
   - Algoritmos otimizados para renderização condicional
   - Gerenciamento inteligente de memória
   - Scroll events otimizados

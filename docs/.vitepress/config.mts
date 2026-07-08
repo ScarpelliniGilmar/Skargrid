@@ -1,20 +1,33 @@
 import { defineConfig } from 'vitepress';
 
+// skargrid.com (Hostinger) serve na raiz; o mirror no GitHub Pages
+// (scarpellinigilmar.github.io/Skargrid/) precisa do path como base.
+// DOCS_BASE é setado apenas no workflow de deploy do GitHub Pages.
+const base = process.env.DOCS_BASE || '/';
+
 export default defineConfig({
   title: 'SkarGrid Community',
   description: 'Data grid completo, sem dependências em runtime, para Vanilla JavaScript e agentes de IA.',
   lang: 'pt-BR',
+  base,
   cleanUrls: true,
   lastUpdated: true,
 
   head: [
-    ['link', { rel: 'icon', href: '/img/logos/favicon.ico' }],
+    // entradas em `head` não são reescritas com `base` automaticamente,
+    // ao contrário de themeConfig.logo e links markdown — por isso o
+    // prefixo manual aqui.
+    ['link', { rel: 'icon', href: `${base}img/logos/favicon.ico` }],
   ],
 
   themeConfig: {
+    // Os arquivos são nomeados pelo fundo em que ficam legíveis, o inverso
+    // da chave que o VitePress espera aqui: skargrid-logo-dark.svg é colorido
+    // (visível em fundo claro) e skargrid-logo-light.svg é branco (visível
+    // em fundo escuro).
     logo: {
-      light: '/img/logos/skargrid-logo-light.svg',
-      dark: '/img/logos/skargrid-logo-dark.svg',
+      light: '/img/logos/skargrid-logo-dark.svg',
+      dark: '/img/logos/skargrid-logo-light.svg',
     },
 
     nav: [
@@ -24,7 +37,7 @@ export default defineConfig({
       { text: 'Migração', link: '/migration/' },
       { text: 'IA', link: '/ai/' },
       {
-        text: 'v1.4.0',
+        text: 'v2.0.0',
         items: [
           { text: 'Changelog', link: 'https://github.com/ScarpelliniGilmar/Skargrid/blob/community-v2/CHANGELOG.md' },
           { text: 'Playground local (docs/playground.html)', link: 'https://github.com/ScarpelliniGilmar/Skargrid/blob/community-v2/docs/playground.html' },
@@ -71,7 +84,6 @@ export default defineConfig({
           items: [
             { text: 'Visão geral', link: '/migration/' },
             { text: '1.x → Community 2.x', link: '/migration/1x-to-community' },
-            { text: 'Pro → Community', link: '/migration/pro-to-community' },
           ],
         },
       ],

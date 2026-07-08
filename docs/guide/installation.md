@@ -7,7 +7,7 @@
 <script src="https://cdn.jsdelivr.net/npm/skargrid@latest/dist/skargrid.min.js"></script>
 ```
 
-Fixe uma versão em produção (`skargrid@1.4.0` em vez de `@latest`) para evitar que um release novo mude o comportamento sem aviso.
+Fixe uma versão em produção (`skargrid@2.0.0` em vez de `@latest`) para evitar que um release novo mude o comportamento sem aviso.
 
 ## npm
 

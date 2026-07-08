@@ -16,7 +16,6 @@ SkarGrid é instalado via npm (`skargrid`), CDN (jsDelivr) ou download direto, e
 - [Referência da API — Eventos](https://skargrid.com/api/events): `on()`/`off()`/`emit()`.
 - [Referência da API — Estado](https://skargrid.com/api/state): `getState()`/`setState()`, `persistState`, `serverSide`.
 - [Migração 1.x → Community 2.x](https://skargrid.com/migration/1x-to-community).
-- [Migração Pro → Community](https://skargrid.com/migration/pro-to-community).
 
 ## Schemas (JSON Schema, draft 2020-12)
 

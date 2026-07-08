@@ -1,0 +1,49 @@
+# SkarGrid Community — site estático (VitePress) na Hostinger (Apache/LiteSpeed)
+
+# ---------------------------------------------------------------------------
+# 1. Redirects 301 das URLs do site Laravel antigo (Gate 4 do plano:
+#    nenhuma URL principal pode apontar para conteúdo removido)
+# ---------------------------------------------------------------------------
+RewriteEngine On
+
+RewriteRule ^get-started/?$ /guide/getting-started [R=301,L]
+RewriteRule ^documentation/?$ /guide/getting-started [R=301,L]
+# /examples já existe no site novo com o mesmo caminho — sem redirect.
+
+# Rotas comerciais do site Laravel antigo não têm mais equivalente — envia
+# para a home.
+RewriteRule ^pricing/?$ / [R=301,L]
+RewriteRule ^login/?$ / [R=301,L]
+RewriteRule ^painel/?$ / [R=301,L]
+RewriteRule ^locale/.*$ / [R=301,L]
+
+# ---------------------------------------------------------------------------
+# 2. cleanUrls do VitePress: /guide/installation → guide/installation.html
+# ---------------------------------------------------------------------------
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME}.html -f
+RewriteRule ^(.*)$ $1.html [L]
+
+# ---------------------------------------------------------------------------
+# 3. Página 404 do VitePress
+# ---------------------------------------------------------------------------
+ErrorDocument 404 /404.html
+
+# ---------------------------------------------------------------------------
+# 4. Tipos e cache
+# ---------------------------------------------------------------------------
+AddType application/json .json
+AddType text/plain .txt
+
+<IfModule mod_expires.c>
+  ExpiresActive On
+  # Assets com hash no nome podem ser cacheados agressivamente
+  <FilesMatch "\.(js|css|woff2)$">
+    ExpiresDefault "access plus 1 year"
+  </FilesMatch>
+  # HTML sempre revalidado (deploys novos aparecem na hora)
+  <FilesMatch "\.html$">
+    ExpiresDefault "access plus 0 seconds"
+  </FilesMatch>
+</IfModule>
