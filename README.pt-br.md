@@ -8,53 +8,53 @@
 [![Bundle Size](https://img.shields.io/bundlephobia/minzip/skargrid)](https://bundlephobia.com/package/skargrid)
 
 **Site:** [https://skargrid.com](https://skargrid.com) •
-**🇺🇸 [Read in English](README.md)**
+**[Read in English](README.md)**
 
 ---
 
-## 📋 Sumário
+## Sumário
 
-- [✨ Principais Recursos](#-principais-recursos)
-- [📸 Exemplos Visuais](#-exemplos-visuais)
-- [⚠️ Diretrizes de Performance e Limitações](#️-diretrizes-de-performance-e-limitações)
-- [🚀 Início Rápido](#-início-rápido)
-- [📖 Exemplos Completos](#-exemplos-completos)
-- [⚡ Benchmarks de Performance](#-benchmarks-de-performance)
-- [🌐 Internacionalização (i18n)](#-internacionalização-i18n)
-- [🎯 Referência da API](#-referência-da-api)
-- [🎨 Temas e Estilização](#-temas-e-estilização)
-- [🔧 Build e Desenvolvimento](#-build-e-desenvolvimento)
-- [📋 Changelog](#-changelog)
-- [🤝 Contribuição](#-contribuição)
-- [📄 Licença](#-licença)
-- [💝 Apoie o Projeto](#-apoie-o-projeto)
-
----
-
-## ✨ Principais Recursos
-
-- 🌐 **Internacionalização (i18n)** ⭐ - Sistema profissional de labels, totalmente personalizável para qualquer idioma (português, espanhol, francês, etc.)
-- ⚡ **Rolagem Virtual** ⭐ - Renderização de alta performance para datasets grandes (10k-500k+ linhas) com rolagem suave
-- 🎨 **Configuração de Colunas** - Arrastar e soltar para reordenar, mostrar/ocultar colunas com persistência
-- 🗄️ **Persistência Inteligente** - Salva preferências do usuário no localStorage automaticamente
-- 🌓 **Suporte a Temas** - Tema claro/escuro com transições suaves e variáveis customizáveis
-- 🔄 **Filtros Select Inteligentes** - Filtros select aprimorados para mostrar apenas opções disponíveis quando outras colunas estão filtradas, com comportamento de busca inteligente que isola seleções durante a pesquisa
-- 🌍 **Busca Sem Acentos** - Trata acentos automaticamente (José = jose)
-- ↔️ **Rolagem Horizontal** - Barra de rolagem customizada para tabelas largas
-- 🖥️ **Processamento Server-Side** ⭐ *Novo na 2.0* - Delegue paginação, ordenação, filtro e busca ao seu backend via eventos (veja [Processamento Server-Side](#processamento-server-side))
-- 💾 **Persistência de Estado** ⭐ *Novo na 2.0* - `getState()`/`setState()` serializáveis, com persistência automática opcional no `localStorage` via `persistState`
-- 🧊 **Colunas Congeladas** ⭐ *Novo na 2.0* - Fixe colunas à esquerda durante a rolagem horizontal com `column.frozen`
-- 🧮 **Agregações no Rodapé** ⭐ *Novo na 2.0* - `sum`/`avg`/`count`/`min`/`max` ou funções customizadas, calculadas sobre os dados filtrados
-- 📡 **Event Bus** ⭐ *Novo na 2.0* - `on()`/`off()`/`emit()` para `sortChange`, `pageChange`, `selectionChange`, `filterChange`, `rowClick`
-- 🔒 **Renderização Segura por Padrão** ⭐ *Novo na 2.0* - `render()`/`formatter()` retornam texto puro a menos que você habilite HTML explicitamente (proteção XSS, veja [Segurança](#segurança))
-- 📦 **Bundle Único** - Apenas 2 arquivos (JS + CSS) - **63.85KB comprimido**
-- 🎯 **Zero Dependências** - JavaScript puro Vanilla, agnóstico a frameworks
-- 🧪 **Testes Automatizados** - 21 testes abrangentes cobrindo todas as funcionalidades
-- 📊 **Suporte a Exportação** - Exportação CSV e XLSX nativa sem dependências externas
+- [Principais Recursos](#principais-recursos)
+- [Exemplos Visuais](#exemplos-visuais)
+- [Diretrizes de Performance e Limitações](#diretrizes-de-performance-e-limitações)
+- [Início Rápido](#início-rápido)
+- [Exemplos Completos](#exemplos-completos)
+- [Benchmarks de Performance](#benchmarks-de-performance)
+- [Internacionalização (i18n)](#internacionalização-i18n)
+- [Referência da API](#referência-da-api)
+- [Temas e Estilização](#temas-e-estilização)
+- [Build e Desenvolvimento](#build-e-desenvolvimento)
+- [Changelog](#changelog)
+- [Contribuição](#contribuição)
+- [Licença](#licença)
+- [Apoie o Projeto](#apoie-o-projeto)
 
 ---
 
-## 📸 Exemplos Visuais
+## Principais Recursos
+
+- **Internacionalização (i18n)** - Sistema profissional de labels, totalmente personalizável para qualquer idioma (português, espanhol, francês, etc.)
+- **Rolagem Virtual** - Renderização de alta performance para datasets grandes (10k-500k+ linhas) com rolagem suave
+- **Configuração de Colunas** - Arrastar e soltar para reordenar, mostrar/ocultar colunas com persistência
+- **Persistência Inteligente** - Salva preferências do usuário no localStorage automaticamente
+- **Suporte a Temas** - Tema claro/escuro com transições suaves e variáveis customizáveis
+- **Filtros Select Inteligentes** - Filtros select aprimorados para mostrar apenas opções disponíveis quando outras colunas estão filtradas, com comportamento de busca inteligente que isola seleções durante a pesquisa
+- **Busca Sem Acentos** - Trata acentos automaticamente (José = jose)
+- **Rolagem Horizontal** - Barra de rolagem customizada para tabelas largas
+- **Processamento Server-Side** *Novo na 2.0* - Delegue paginação, ordenação, filtro e busca ao seu backend via eventos (veja [Processamento Server-Side](#processamento-server-side))
+- **Persistência de Estado** *Novo na 2.0* - `getState()`/`setState()` serializáveis, com persistência automática opcional no `localStorage` via `persistState`
+- **Colunas Congeladas** *Novo na 2.0* - Fixe colunas à esquerda durante a rolagem horizontal com `column.frozen`
+- **Agregações no Rodapé** *Novo na 2.0* - `sum`/`avg`/`count`/`min`/`max` ou funções customizadas, calculadas sobre os dados filtrados
+- **Event Bus** *Novo na 2.0* - `on()`/`off()`/`emit()` para `sortChange`, `pageChange`, `selectionChange`, `filterChange`, `rowClick`
+- **Renderização Segura por Padrão** *Novo na 2.0* - `render()`/`formatter()` retornam texto puro a menos que você habilite HTML explicitamente (proteção XSS, veja [Segurança](#segurança))
+- **Bundle Único** - Apenas 2 arquivos (JS + CSS) - **63.85KB comprimido**
+- **Zero Dependências** - JavaScript puro Vanilla, agnóstico a frameworks
+- **Testes Automatizados** - 21 testes abrangentes cobrindo todas as funcionalidades
+- **Suporte a Exportação** - Exportação CSV e XLSX nativa sem dependências externas
+
+---
+
+## Exemplos Visuais
 
 Abaixo exemplos visuais dos recursos do SkarGrid, em ordem de aprendizado recomendada:
 
@@ -84,31 +84,31 @@ Abaixo exemplos visuais dos recursos do SkarGrid, em ordem de aprendizado recome
 
 ---
 
-## ⚠️ Diretrizes de Performance e Limitações
+## Diretrizes de Performance e Limitações
 
-### 🟢 Uso Recomendado (Performance Ótima)
-- **✅ Datasets**: 100 - 25.000 registros
-- **✅ Rolagem Virtual**: 10.000+ registros com `virtualization: true`
-- **✅ Filtragem Client-side**: Até 50.000 registros
-- **✅ Todos os Recursos**: Busca, ordenação, filtros, exportação funcionam perfeitamente
+### Uso Recomendado (Performance Ótima)
+- **Datasets**: 100 - 25.000 registros
+- **Rolagem Virtual**: 10.000+ registros com `virtualization: true`
+- **Filtragem Client-side**: Até 50.000 registros
+- **Todos os Recursos**: Busca, ordenação, filtros, exportação funcionam perfeitamente
 
-### 🟡 Datasets Grandes (50K - 500K registros)
-- **⚠️ Rolagem Virtual Obrigatória**: Essencial para performance suave
-- **⚠️ Performance de Filtragem**: 200-1000ms para 500K registros (aceitável para demos)
-- **⚠️ Uso de Memória**: 50-200MB dependendo do navegador
-- **❌ Não Recomendado**: Para produção com 500K+ registros
+### Datasets Grandes (50K - 500K registros)
+- **Rolagem Virtual Obrigatória**: Essencial para performance suave
+- **Performance de Filtragem**: 200-1000ms para 500K registros (aceitável para demos)
+- **Uso de Memória**: 50-200MB dependendo do navegador
+- **Não Recomendado**: Para produção com 500K+ registros
 
-### 🔴 Datasets Enterprise (1M+ registros)
-- **❌ Apenas Client-side**: Não adequado para milhões de registros
-- **✅ Recomendado**: Paginação server-side + SkarGrid
-- **📋 Implementação**: Veja `docs/realistic-server-pagination.html`
-- **🚀 Performance**: < 50ms respostas, < 10MB uso de memória
+### Datasets Enterprise (1M+ registros)
+- **Apenas Client-side**: Não adequado para milhões de registros
+- **Recomendado**: Paginação server-side + SkarGrid
+- **Implementação**: Veja `docs/realistic-server-pagination.html`
+- **Performance**: < 50ms respostas, < 10MB uso de memória
 
-### 💡 Melhores Práticas
+### Melhores Práticas
 
 **Para Datasets Grandes:**
 ```javascript
-// ✅ Recomendado: Abordagem server-side
+//  Recomendado: Abordagem server-side
 const grid = new Skargrid('grid', {
   data: pageData, // Apenas página atual (100 registros)
   pagination: true,
@@ -118,7 +118,7 @@ const grid = new Skargrid('grid', {
 
 **Para Datasets Pequenos:**
 ```javascript
-// ✅ Perfeito: Tudo client-side
+//  Perfeito: Tudo client-side
 const grid = new Skargrid('grid', {
   data: fullDataset, // Até 25K registros
   searchable: true,
@@ -134,7 +134,7 @@ const grid = new Skargrid('grid', {
 
 ---
 
-## 🚀 Início Rápido
+## Início Rápido
 
 ### Instalação
 
@@ -194,9 +194,9 @@ cp skargrid/dist/* seu-projeto/
 
 ---
 
-## 📖 Exemplos Completos
+## Exemplos Completos
 
-### 🏆 Tabela Completa com Todos os Recursos
+### Tabela Completa com Todos os Recursos
 
 ```html
 <!DOCTYPE html>
@@ -238,7 +238,7 @@ cp skargrid/dist/* seu-projeto/
             {
                 field: 'active',
                 title: 'Status',
-                render: (value) => value ? '✅ Ativo' : '❌ Inativo'
+                render: (value) => value ? ' Ativo' : ' Inativo'
             }
         ];
 
@@ -264,7 +264,7 @@ cp skargrid/dist/* seu-projeto/
 </html>
 ```
 
-### 📊 Exemplo de Gerenciamento de Dados
+### Exemplo de Gerenciamento de Dados
 
 ```javascript
 // Inicializar tabela
@@ -303,7 +303,7 @@ function alternarTema() {
 }
 ```
 
-### 🎨 Estilização Avançada
+### Estilização Avançada
 
 ```css
 /* Variáveis de tema customizado */
@@ -338,7 +338,7 @@ function alternarTema() {
 }
 ```
 
-### 🚀 Exemplo de Rolagem Virtual
+### Exemplo de Rolagem Virtual
 
 ```html
 <!DOCTYPE html>
@@ -397,7 +397,7 @@ function alternarTema() {
 </html>
 ```
 
-### 🌐 Exemplo de Internacionalização
+### Exemplo de Internacionalização
 
 ```html
 <!DOCTYPE html>
@@ -463,7 +463,7 @@ function alternarTema() {
 </html>
 ```
 
-### 📊 Exemplo de Dataset Massivo (500K Registros)
+### Exemplo de Dataset Massivo (500K Registros)
 
 ```html
 <!DOCTYPE html>
@@ -526,7 +526,7 @@ function alternarTema() {
 </html>
 ```
 
-### 🖥️ Exemplo de Paginação Server-Side
+### Exemplo de Paginação Server-Side
 
 ```html
 <!DOCTYPE html>
@@ -625,19 +625,19 @@ function alternarTema() {
 
 ---
 
-## ⚡ Benchmarks de Performance
+## Benchmarks de Performance
 
-### 📈 Resultados dos Testes (v1.3.0)
+### Resultados dos Testes (v1.3.0)
 
 | Tamanho do Dataset | Tempo de Renderização | Status | Observações |
 |-------------------|----------------------|--------|-------------|
-| 1.000 registros | ~26ms | ✅ Excelente | Renderização instantânea |
-| 5.000 registros | ~35ms | ✅ Excelente | Performance suave |
-| 10.000 registros | ~31ms | ✅ Excelente | Lida com datasets grandes |
-| 15.000 registros | ~17ms | ✅ Excelente | Otimizado para escala |
-| 20.000 registros | ~36ms | ✅ Excelente | Pronto para produção |
+| 1.000 registros | ~26ms |  Excelente | Renderização instantânea |
+| 5.000 registros | ~35ms |  Excelente | Performance suave |
+| 10.000 registros | ~31ms |  Excelente | Lida com datasets grandes |
+| 15.000 registros | ~17ms |  Excelente | Otimizado para escala |
+| 20.000 registros | ~36ms |  Excelente | Pronto para produção |
 
-### 🎯 Recursos de Performance
+### Recursos de Performance
 
 - **Renderização Lazy**: Apenas linhas visíveis são renderizadas
 - **Filtros Otimizados**: Algoritmos de busca eficientes
@@ -645,7 +645,7 @@ function alternarTema() {
 - **Busca com Debounce**: Evita filtragem excessiva
 - **Virtual Scrolling**: Pronto para 100k+ linhas (futuro)
 
-### 💡 Dicas de Performance
+### Dicas de Performance
 
 ```javascript
 // Para datasets grandes (>10k linhas)
@@ -661,7 +661,7 @@ const table = new Skargrid('myTable', {
 
 ---
 
-## 🌐 Internacionalização (i18n)
+## Internacionalização (i18n)
 
 O SkarGrid vem com labels padrão em inglês, mas suporta personalização completa para qualquer idioma. Sobrescreva os labels passando um objeto `labels` nas opções:
 
@@ -703,7 +703,7 @@ Chaves de labels disponíveis:
 
 ---
 
-## 🎯 Referência da API
+## Referência da API
 
 ### Construtor
 
@@ -913,7 +913,7 @@ buscarPagina(); // carga inicial
 
 ---
 
-## 🎨 Temas e Estilização
+## Temas e Estilização
 
 ### Temas Integrados
 
@@ -1057,19 +1057,19 @@ O Skargrid utiliza uma **arquitetura modular** onde as funcionalidades são sepa
 
 #### Módulos de Features (`src/features/` - 13 Módulos Especializados)
 
-**🔍 Busca e Filtragem (4 módulos):**
+** Busca e Filtragem (4 módulos):**
 - **`search.js`** - Busca global com correspondência insensível a acentos
 - **`input-filter.js`** - Filtros de entrada de texto por coluna
 - **`select-filter.js`** - Filtros dropdown inteligentes com opções disponíveis
 - **`filter.js`** - Coordenação central de filtragem e utilitários
 
-**📊 Apresentação de Dados (4 módulos):**
+** Apresentação de Dados (4 módulos):**
 - **`table-header.js`** - Renderização do cabeçalho com indicadores de ordenação
 - **`table-body.js`** - Renderização do corpo com formatadores de células
 - **`top-bar.js`** - Barra superior com entrada de busca e botões de ação
 - **`virtualization.js`** - Rolagem virtual para datasets grandes (10k-500k+ linhas)
 
-**⚙️ Funcionalidades (5 módulos):**
+** Funcionalidades (5 módulos):**
 - **`pagination.js`** - Controles de paginação e navegação
 - **`sort.js`** - Ordenação de colunas com múltiplos tipos de dados
 - **`selection.js`** - Seleção de linhas e operações em lote
@@ -1084,11 +1084,11 @@ As features são carregadas globalmente e verificadas com `typeof NomeFeature !=
 - **Testada** independentemente com suítes de teste dedicadas
 
 #### Benefícios da Arquitetura Modular
-- 🚀 **Performance**: Inclusão seletiva de features para bundles otimizados
-- 🔧 **Manutenibilidade**: Mudanças isoladas de código e correções de bugs
-- 🧪 **Testabilidade**: Cada feature testada independentemente
-- 📦 **Extensibilidade**: Adição fácil de novas features
-- 🎯 **Customização**: Construção de versões adaptadas para casos específicos de uso
+- **Performance**: Inclusão seletiva de features para bundles otimizados
+- **Manutenibilidade**: Mudanças isoladas de código e correções de bugs
+- **Testabilidade**: Cada feature testada independentemente
+- **Extensibilidade**: Adição fácil de novas features
+- **Customização**: Construção de versões adaptadas para casos específicos de uso
 
 ### Comandos de Build
 ```bash
@@ -1113,42 +1113,42 @@ npm run docs
 
 ---
 
-## 📋 Changelog
+## Changelog
 
 ### [v2.0.0] - 2026-07-07
-- **🏗️ Refatoração do Core**: estado central, event bus tipado e renderer seguro por padrão
-- **⚠️ Incompatível**: strings retornadas por `render()`/`formatter()` agora são texto puro por padrão (proteção XSS). Retorne um `Node` ou habilite `allowUnsafeHtml: true` — veja o [guia de migração](https://skargrid.com/migration/1x-to-community)
-- **🆕 Novas funcionalidades**: server-side processing, persistência de estado, colunas congeladas, agregações no rodapé
-- **🆕 API**: `getState()`/`setState()`, event bus (`on`/`off`/`emit`), `destroy()` confiável
-- **📚 Documentação nova**: https://skargrid.com — com `llms.txt` e JSON Schemas para agentes de IA
+- **Refatoração do Core**: estado central, event bus tipado e renderer seguro por padrão
+- **Incompatível**: strings retornadas por `render()`/`formatter()` agora são texto puro por padrão (proteção XSS). Retorne um `Node` ou habilite `allowUnsafeHtml: true` — veja o [guia de migração](https://skargrid.com/migration/1x-to-community)
+- **Novas funcionalidades**: server-side processing, persistência de estado, colunas congeladas, agregações no rodapé
+- **API**: `getState()`/`setState()`, event bus (`on`/`off`/`emit`), `destroy()` confiável
+- **Documentação nova**: https://skargrid.com — com `llms.txt` e JSON Schemas para agentes de IA
 - Detalhes completos no [CHANGELOG.md](CHANGELOG.md)
 
 ### [v1.4.0] - 2025-11-16
-- **🏗️ Refatoração Completa da Arquitetura Modular**: Reestruturação arquitetural majoritária com 13 módulos especializados de features
-- **📦 Redução do Core**: Módulo core reduzido em 25% (~450 linhas) através de extração sistemática de features
-- **🔧 Módulos de Features**: Separação completa de responsabilidades com módulos dedicados para:
+- **Refatoração Completa da Arquitetura Modular**: Reestruturação arquitetural majoritária com 13 módulos especializados de features
+- **Redução do Core**: Módulo core reduzido em 25% (~450 linhas) através de extração sistemática de features
+- **Módulos de Features**: Separação completa de responsabilidades com módulos dedicados para:
   - Busca e Filtragem: `search.js`, `input-filter.js`, `select-filter.js`, `filter.js`
   - Apresentação de Dados: `table-header.js`, `table-body.js`, `top-bar.js`, `virtualization.js`
   - Funcionalidades: `pagination.js`, `sort.js`, `selection.js`, `export.js`, `columnConfig.js`
-- **⚡ Performance Mantida**: Todos os 21 testes passando, sem degradação de performance
-- **🔄 Compatibilidade Backward**: Degradação graciosa com verificações de disponibilidade de features
-- **📊 Tamanho do Bundle**: Atualizado para 63.85KB comprimido (inclui todas as features)
-- **🧪 Testabilidade Aprimorada**: Cada módulo de feature pode ser testado independentemente
-- **🚀 Flexibilidade de Build**: Inclusão seletiva de features para builds leves customizados
+- **Performance Mantida**: Todos os 21 testes passando, sem degradação de performance
+- **Compatibilidade Backward**: Degradação graciosa com verificações de disponibilidade de features
+- **Tamanho do Bundle**: Atualizado para 63.85KB comprimido (inclui todas as features)
+- **Testabilidade Aprimorada**: Cada módulo de feature pode ser testado independentemente
+- **Flexibilidade de Build**: Inclusão seletiva de features para builds leves customizados
 
 ### [v1.3.0] - 2025-11-15
-- **🌐 Lançamento do Site**: Site oficial skargrid.com com documentação completa, exemplos ao vivo e benchmarks de performance
-- **📊 Benchmarks de Performance Atualizados**: Resultados abrangentes de testes para v1.3.0 com otimizações para datasets grandes
-- **🔄 Filtros Select Inteligentes**: Filtros select aprimorados para mostrar apenas opções disponíveis quando outras colunas estão filtradas, com comportamento de busca inteligente que isola seleções durante a pesquisa, melhorando a experiência do usuário
-- **🔧 Correções Menores e Melhorias**: Várias correções de bugs e aprimoramentos de qualidade de código
+- **Lançamento do Site**: Site oficial skargrid.com com documentação completa, exemplos ao vivo e benchmarks de performance
+- **Benchmarks de Performance Atualizados**: Resultados abrangentes de testes para v1.3.0 com otimizações para datasets grandes
+- **Filtros Select Inteligentes**: Filtros select aprimorados para mostrar apenas opções disponíveis quando outras colunas estão filtradas, com comportamento de busca inteligente que isola seleções durante a pesquisa, melhorando a experiência do usuário
+- **Correções Menores e Melhorias**: Várias correções de bugs e aprimoramentos de qualidade de código
 
 ### [v1.2.0] - 2025-01-13
-- **📚 Documentação Aprimorada**: Reescrita completa do README com exemplos práticos
-- **🎯 Exemplos ao Vivo**: Quatro exemplos HTML prontos para uso (básico, completo, integração React, teste de performance)
-- **📊 Benchmarks de Performance**: Testes abrangentes com 25k+ registros
-- **🧪 Testes Automatizados**: Suite de testes Jest com 21 testes cobrindo todas as funcionalidades
-- **🔧 Qualidade de Código**: Implementação ESLint com 169 correções aplicadas
-- **📦 Otimização de Pacote**: Redução de 66% no tamanho (27.8KB comprimido)
+- **Documentação Aprimorada**: Reescrita completa do README com exemplos práticos
+- **Exemplos ao Vivo**: Quatro exemplos HTML prontos para uso (básico, completo, integração React, teste de performance)
+- **Benchmarks de Performance**: Testes abrangentes com 25k+ registros
+- **Testes Automatizados**: Suite de testes Jest com 21 testes cobrindo todas as funcionalidades
+- **Qualidade de Código**: Implementação ESLint com 169 correções aplicadas
+- **Otimização de Pacote**: Redução de 66% no tamanho (27.8KB comprimido)
 
 ### [v1.1.0] - Correções abrangentes e melhorias
 - **Filtros e Exportação**: Filtros e exportação agora usam valores renderizados
@@ -1182,7 +1182,7 @@ npm run docs
 
 ---
 
-## 🤝 Contribuição
+## Contribuição
 
 Aceitamos contribuições! Consulte nosso [Guia de Contribuição](CONTRIBUTING.md) para detalhes.
 
@@ -1203,7 +1203,7 @@ Aceitamos contribuições! Consulte nosso [Guia de Contribuição](CONTRIBUTING.
 
 ---
 
-## 📄 Licença
+## Licença
 
 **Licença MIT** - consulte arquivo [LICENSE](LICENSE) para detalhes.
 
@@ -1211,14 +1211,14 @@ Copyright (c) 2025 Gilmar A S Trindade
 
 ---
 
-## 💝 Apoie o Projeto
+## Apoie o Projeto
 
 Se o SkarGrid foi útil para você, considere apoiar o projeto:
 
-- **⭐ Dê uma estrela** neste repositório no GitHub
-- **🐛 Reporte bugs** e solicite funcionalidades
-- **📢 Compartilhe** com sua rede
-- **💻 Contribua** com melhorias no código
+- **Dê uma estrela** neste repositório no GitHub
+- **Reporte bugs** e solicite funcionalidades
+- **Compartilhe** com sua rede
+- **Contribua** com melhorias no código
 
 Seu apoio ajuda a manter o projeto ativo e evoluindo!
 
