@@ -2,6 +2,17 @@
 
 Todas as mudanças notáveis neste projecto serão documentadas aqui.
 
+## [2.0.1] - 2026-07-08
+
+### Adicionado
+- Scrollbar customizada no container da tabela (horizontal e vertical): fina, na cor de acento da marca, com variante para o tema escuro. Antes o README anunciava "custom scrollbar" sem que existisse — agora existe.
+
+### Documentação
+- README (EN e PT-BR) auditado contra o código real: removidos claims de 500 mil registros sem benchmark reproduzível (o verificado é 50 mil linhas virtualizadas em Chromium/Firefox/WebKit via Playwright), tamanho do bundle corrigido (~15,5KB gzip / 65,6KB minificado, era "63.85KB"), referências a arquivos de exemplo inexistentes substituídas por links reais, seção de arquitetura reescrita para refletir os módulos ES (a descrição anterior documentava o sistema antigo de globals com `typeof`), comandos npm corrigidos para os scripts que existem.
+- Tabela de benchmarks sintéticos (jsdom, v1.3.0) removida — substituída por seção honesta sobre o que é verificado em navegador real.
+- Exemplo "500K registros" substituído por exemplo de 50K (e corrigido: usava `pageSize` junto com `virtualization`, que não se combinam).
+- Página de exemplos do site ganhou um índice recurso → exemplo.
+
 ## [2.0.0] - 2026-07-07
 
 ### Resumo

@@ -748,8 +748,32 @@
   min-height: 0;
 }
 
-/* Estilização do scroll horizontal */
-/* Default browser scrollbar retained for .skargrid-table-container */
+/* Estilização do scroll (horizontal e vertical) do container da tabela.
+   Firefox usa as propriedades padrão; WebKit/Blink usam os pseudo-elementos. */
+.skargrid-table-container {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(var(--sg-accent-rgb), 0.45) transparent;
+}
+
+.skargrid-table-container::-webkit-scrollbar {
+  height: 10px;
+  width: 10px;
+}
+
+.skargrid-table-container::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.skargrid-table-container::-webkit-scrollbar-thumb {
+  background-color: rgba(var(--sg-accent-rgb), 0.45);
+  border-radius: 5px;
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
+
+.skargrid-table-container::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(var(--sg-accent-rgb), 0.7);
+}
 
 .skargrid-loading-overlay {
   position: absolute;
@@ -1029,7 +1053,18 @@
   border-top-color: var(--sg-accent);
 }
 
-/* Default browser scrollbar in dark theme (no custom styling) */
+/* Scrollbar no tema escuro: thumb mais claro para contraste no fundo escuro */
+.skargrid-wrapper.skargrid-dark .skargrid-table-container {
+  scrollbar-color: rgba(var(--sg-accent-rgb), 0.6) transparent;
+}
+
+.skargrid-wrapper.skargrid-dark .skargrid-table-container::-webkit-scrollbar-thumb {
+  background-color: rgba(var(--sg-accent-rgb), 0.6);
+}
+
+.skargrid-wrapper.skargrid-dark .skargrid-table-container::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(var(--sg-accent-rgb), 0.85);
+}
 
 /* ============================================
    CONFIGURAÇÃO DE COLUNAS
