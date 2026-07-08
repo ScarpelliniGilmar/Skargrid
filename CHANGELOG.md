@@ -5,12 +5,12 @@ Todas as mudanças notáveis neste projecto serão documentadas aqui.
 ## [2.0.0] - 2026-07-07
 
 ### Resumo
-Consolidação das edições Free e Pro em uma única edição **Community** (MIT), com core refatorado (estado central, event bus, renderer seguro por padrão), 4 features migradas da Pro e nova documentação em https://skargrid.com. Guia de migração: https://skargrid.com/migration/1x-to-community
+Core refatorado (estado central, event bus, renderer seguro por padrão), 4 novas funcionalidades e nova documentação em https://skargrid.com. Guia de migração: https://skargrid.com/migration/1x-to-community
 
 ### ⚠️ Mudança incompatível
 - **`render()`/`formatter()` não injetam mais HTML por padrão.** Uma string retornada é tratada como texto puro (`textContent`); tags HTML não são interpretadas — proteção contra XSS com dados não confiáveis. Para HTML/DOM real: retorne um `Node` (sempre seguro) ou habilite `allowUnsafeHtml: true` (global ou por coluna). Este é o único ajuste necessário para quem migra da 1.x.
 
-### Novas funcionalidades (migradas da Pro, agora MIT)
+### Novas funcionalidades
 - **Server-side processing** — `serverSide: true` + `totalRecords`/`setTotalRecords()`: paginação/ordenação/filtro/busca delegadas ao seu backend via eventos.
 - **Persistência de estado** — `persistState`/`stateStorageKey`/`stateVersion`: estado salvo e restaurado do `localStorage`, com versionamento.
 - **Colunas congeladas** — `column.frozen: true`: prefixo contíguo fixado à esquerda no scroll horizontal.

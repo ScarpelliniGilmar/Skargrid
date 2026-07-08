@@ -41,6 +41,12 @@
 - 🔄 **Filtros Select Inteligentes** - Filtros select aprimorados para mostrar apenas opções disponíveis quando outras colunas estão filtradas, com comportamento de busca inteligente que isola seleções durante a pesquisa
 - 🌍 **Busca Sem Acentos** - Trata acentos automaticamente (José = jose)
 - ↔️ **Rolagem Horizontal** - Barra de rolagem customizada para tabelas largas
+- 🖥️ **Processamento Server-Side** ⭐ *Novo na 2.0* - Delegue paginação, ordenação, filtro e busca ao seu backend via eventos (veja [Processamento Server-Side](#processamento-server-side))
+- 💾 **Persistência de Estado** ⭐ *Novo na 2.0* - `getState()`/`setState()` serializáveis, com persistência automática opcional no `localStorage` via `persistState`
+- 🧊 **Colunas Congeladas** ⭐ *Novo na 2.0* - Fixe colunas à esquerda durante a rolagem horizontal com `column.frozen`
+- 🧮 **Agregações no Rodapé** ⭐ *Novo na 2.0* - `sum`/`avg`/`count`/`min`/`max` ou funções customizadas, calculadas sobre os dados filtrados
+- 📡 **Event Bus** ⭐ *Novo na 2.0* - `on()`/`off()`/`emit()` para `sortChange`, `pageChange`, `selectionChange`, `filterChange`, `rowClick`
+- 🔒 **Renderização Segura por Padrão** ⭐ *Novo na 2.0* - `render()`/`formatter()` retornam texto puro a menos que você habilite HTML explicitamente (proteção XSS, veja [Segurança](#segurança))
 - 📦 **Bundle Único** - Apenas 2 arquivos (JS + CSS) - **63.85KB comprimido**
 - 🎯 **Zero Dependências** - JavaScript puro Vanilla, agnóstico a frameworks
 - 🧪 **Testes Automatizados** - 21 testes abrangentes cobrindo todas as funcionalidades
@@ -1110,9 +1116,9 @@ npm run docs
 ## 📋 Changelog
 
 ### [v2.0.0] - 2026-07-07
-- **🏛️ Edição Community**: edições Free e Pro consolidadas em um único pacote MIT — sem verificação de licença, sem plano pago
+- **🏗️ Refatoração do Core**: estado central, event bus tipado e renderer seguro por padrão
 - **⚠️ Incompatível**: strings retornadas por `render()`/`formatter()` agora são texto puro por padrão (proteção XSS). Retorne um `Node` ou habilite `allowUnsafeHtml: true` — veja o [guia de migração](https://skargrid.com/migration/1x-to-community)
-- **🆕 Da Pro, agora grátis**: server-side processing, persistência de estado, colunas congeladas, agregações no rodapé
+- **🆕 Novas funcionalidades**: server-side processing, persistência de estado, colunas congeladas, agregações no rodapé
 - **🆕 API**: `getState()`/`setState()`, event bus (`on`/`off`/`emit`), `destroy()` confiável
 - **📚 Documentação nova**: https://skargrid.com — com `llms.txt` e JSON Schemas para agentes de IA
 - Detalhes completos no [CHANGELOG.md](CHANGELOG.md)

@@ -38,6 +38,12 @@
 - 🔄 **Smart Select Filters**: Improved select filters to show only available options when other columns are filtered, with intelligent search behavior that isolates selections during search
 - 🌍 **Accent-Insensitive Search** - Automatically handles accents (José = jose)
 - ↔️ **Horizontal Scroll** - Custom scrollbar for wide tables with fixed columns
+- 🖥️ **Server-Side Processing** ⭐ *New in 2.0* - Delegate pagination, sorting, filtering and search to your backend via events (see [Server-Side Processing](#server-side-processing))
+- 💾 **State Persistence** ⭐ *New in 2.0* - Serializable `getState()`/`setState()`, with optional automatic `localStorage` persistence via `persistState`
+- 🧊 **Frozen Columns** ⭐ *New in 2.0* - Pin columns to the left during horizontal scroll with `column.frozen`
+- 🧮 **Footer Aggregates** ⭐ *New in 2.0* - `sum`/`avg`/`count`/`min`/`max` or custom functions, computed over filtered data
+- 📡 **Event Bus** ⭐ *New in 2.0* - `on()`/`off()`/`emit()` for `sortChange`, `pageChange`, `selectionChange`, `filterChange`, `rowClick`
+- 🔒 **Safe Rendering by Default** ⭐ *New in 2.0* - `render()`/`formatter()` return plain text unless you opt in to HTML (XSS protection, see [Security](#security))
 - 📦 **Single Bundle** - Only 2 files (JS + CSS) - **63.85KB compressed**
 - 🎯 **Zero Dependencies** - Pure Vanilla JavaScript, framework agnostic
 - 🧪 **High Performance** - Optimized for datasets up to 25,000+ records
@@ -1136,9 +1142,9 @@ npm run docs
 ## 📋 Changelog
 
 ### [v2.0.0] - 2026-07-07
-- **🏛️ Community Edition**: Free and Pro editions consolidated into a single MIT-licensed package — no license checks, no paid tier
+- **🏗️ Core Refactor**: centralized state, typed event bus, and a safe-by-default renderer
 - **⚠️ Breaking**: `render()`/`formatter()` string returns are now plain text by default (XSS protection). Return a `Node` or opt in with `allowUnsafeHtml: true` — see the [migration guide](https://skargrid.com/migration/1x-to-community)
-- **🆕 From Pro, now free**: server-side processing, state persistence, frozen columns, footer aggregates
+- **🆕 New features**: server-side processing, state persistence, frozen columns, footer aggregates
 - **🆕 API**: `getState()`/`setState()`, event bus (`on`/`off`/`emit`), reliable `destroy()`
 - **📚 New docs**: https://skargrid.com — with `llms.txt` and JSON Schemas for AI agents
 - Full details in [CHANGELOG.md](CHANGELOG.md)
